@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "89828760475",
+    "project_id": "fitlocker-c6959",
+    "storage_bucket": "fitlocker-c6959.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:89828760475:android:68a3e7b4115a3f820e5f3e",
+        "android_client_info": {
+          "package_name": "it.polito.database"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVkW5foIzQNz8jP2NmcCtFmd8A5rS_bIY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
