@@ -21,8 +21,6 @@ import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import it.polito.database.ui.theme.DatabaseTheme
-
-
 class MainActivity : ComponentActivity() {
     private lateinit var database: DatabaseReference
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +50,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         modifier = modifier
     )
 }
-
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
@@ -60,7 +57,6 @@ fun GreetingPreview() {
         Greeting("Android")
     }
 }
-
 fun writeNewUser(userId: String, name: String, email: String) {
     val user = User(1, "Anna", "anna@gmail.com")
 
