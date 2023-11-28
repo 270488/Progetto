@@ -26,6 +26,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         FirebaseApp.initializeApp(this.baseContext)
+
+
+
         super.onCreate(savedInstanceState)
         setContent {
             DatabaseTheme {
@@ -34,19 +37,35 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-
+                    writeNewUser("elsa96", "Elsa", "elsa@gmail.com")
                     Greeting("Android")
                 }
             }
         }
     }
 }
+
 val database = Firebase.database.reference
+
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
-    
+    var text=""
+    /*myRef.setValue("Hello, World!")
+    myRef.addValueEventListener(object : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            // This method is called once with the initial value and again
+            // whenever data at this location is updated.
+            val value = dataSnapshot.getValue<String>()
+            Log.d(TAG, "Value is: $value")
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            // Failed to read value
+            Log.w(TAG, "Failed to read value.", error.toException())
+        }
+    })*/
     Text(
-        text = "Hello!",
+        text = text,
         modifier = modifier
     )
 }
@@ -58,7 +77,12 @@ fun GreetingPreview() {
     }
 }
 fun writeNewUser(userId: String, name: String, email: String) {
-    val user = User(1, "Anna", "anna@gmail.com")
+    val user = User(userId, name, email)
 
     database.child("users").child(userId).setValue(user)
+    database.child("users").child("anna00").child("name").get().addOnSuccessListener {
+        Log.i("firebase", "Got value ${it.value}")
+    }.addOnFailureListener{
+        Log.e("firebase", "Error getting data", it)
+    }
 }
