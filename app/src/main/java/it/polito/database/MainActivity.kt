@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -18,18 +19,22 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import it.polito.database.ui.theme.DatabaseTheme
 import androidx.compose.material3.Button
+import androidx.lifecycle.ViewModel
+import com.google.firebase.storage.ktx.storage
 
 
 val database = Firebase.database.reference
-class MainActivity : ComponentActivity() {
+val storage= Firebase.storage.reference
 
+class MainActivity : ComponentActivity() {
+    val viewModel by viewModels<AppViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
-        val viewModel=AppViewModel()
+
 
         FirebaseApp.initializeApp(this.baseContext)
         super.onCreate(savedInstanceState)
         setContent {
-            HomePage()
+            HomePage(viewModel)
 
         }
     }

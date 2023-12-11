@@ -1,10 +1,8 @@
 package it.polito.database
 
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,16 +16,29 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.database.values
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.AsyncImage
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+
 
 class AppViewModel: ViewModel() {
+
+    var products=MutableLiveData<List<DataSnapshot>>(emptyList())
     fun writeNewUser(userId: String, name: String, email: String) {
         val user = User(userId, name, email)
 
@@ -39,10 +50,23 @@ class AppViewModel: ViewModel() {
         }
 
     }
+    fun addProduct(prod: DataSnapshot){
+        val productName = prod.child("nome").value.toString()
+
+        // Verifica se esiste già un prodotto con lo stesso nome
+        val productExists = products.value?.any { it.child("nome").value.toString() == productName } ?: false
+
+        if (!productExists) {
+            // Aggiungi il prodotto solo se non esiste già
+            val currentList = products.value.orEmpty()
+            val updatedList = currentList + prod
+            products.value = updatedList
+        }
+    }
 }
 
 @Composable
-fun HomePage(){
+fun HomePage(viewModel: AppViewModel){
     Column(modifier = Modifier
         .fillMaxSize()
         .background(Color.Black)
@@ -51,10 +75,9 @@ fun HomePage(){
     {
         IntestazioneHome()
         Spacer(modifier = Modifier.height(5.dp))
-        ScrollableColumn()
+        ScrollableColumn(viewModel)
         Spacer(modifier = Modifier
-            .height(5.dp)
-            .weight(1f))
+            .height(5.dp))
         Footer()
 
     }
@@ -88,15 +111,38 @@ fun IntestazioneHome(){
         }
     }
 }
+
 @Composable
-fun ScrollableColumn() {
+fun ScrollableColumn(viewModel: AppViewModel) {
+
+    val children= database.child("prodotti") //prende dal db il nodo prodotti e aggiunge un listener
+    children.addValueEventListener(object : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) { //fa una foto al db in quel momento e la mette in dataSnapshot
+            // Itera sui figli del nodo
+
+            for (childSnapshot in dataSnapshot.children) { //prende i figli di prodotti, quindi 0, 1...
+                // Aggiungi il prodotto alla lista
+                viewModel.addProduct(childSnapshot)
+
+            }
+        }
+
+        override fun onCancelled(databaseError: DatabaseError) {
+            // Gestisci gli errori qui
+            println("Errore nel leggere i dati dal database: ${databaseError.message}")
+        }
+    })
+
+    val prod by viewModel.products.observeAsState()
+
+
     Column(
         modifier = Modifier
             .padding(10.dp)
             .verticalScroll(rememberScrollState()),
     ) {
         Spacer(modifier=Modifier.weight(0.25f))
-        //Prima riga da non perdere
+        //prima riga "DA NON PERDERE"
         Column(modifier = Modifier){
 
             Row(modifier=Modifier.fillMaxWidth()){
@@ -107,27 +153,24 @@ fun ScrollableColumn() {
                     modifier = Modifier.weight(1f),
                     textAlign = TextAlign.End)
             }
-            Row(modifier = Modifier.horizontalScroll(rememberScrollState())){
+        //Contiene i bottoni con i prodotti
+        Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
+            val nonperdere= listaFiltrata(categoria = "non perdere", viewModel = viewModel)
+
+            nonperdere?.forEach { p ->
                 Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Figura 1")
-                }
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Figura 2")
-                }
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Figura 3")
-                }
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Figura 3")
-                }
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Figura 4")
+                    val fileName=p.child("nome").value.toString()+".jpg"
+                    val url= FindUrl(fileName = fileName)
+                    LoadImageFromUrl(imageUrl = url)
+
                 }
             }
-            Text(text = "________________________________________________________________", color = Color.Yellow)
+
+        }
+        Text(text = "________________________________________________________________", color = Color.Yellow)
         }
         Spacer(modifier=Modifier.weight(0.25f))
-        //Seconda riga offerte per te
+        //Seconda riga OFFERTE PER TE
         Column(modifier = Modifier){
 
             Row(modifier=Modifier.fillMaxWidth()){
@@ -137,27 +180,24 @@ fun ScrollableColumn() {
 
             }
             Row(modifier = Modifier.horizontalScroll(rememberScrollState())){
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Figura 1")
+
+                val offerte= listaFiltrata(categoria = "offerte", viewModel = viewModel)
+
+                offerte?.forEach { p ->
+                    Button(onClick = { /*TODO*/ }) {
+                        val fileName=p.child("nome").value.toString()+".jpg"
+                        val url= FindUrl(fileName = fileName)
+                        LoadImageFromUrl(imageUrl = url)
+
+                    }
                 }
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Figura 2")
-                }
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Figura 3")
-                }
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Figura 3")
-                }
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Figura 4")
-                }
+
             }
             Text(text = "________________________________________________________________", color = Color.Yellow)
         }
         Spacer(modifier=Modifier.weight(0.25f))
 
-        //Terza riga acquista di nuovo
+        //Terza riga ACQUISTA DI NUOVO
         Column(modifier = Modifier){
 
             Row(modifier=Modifier.fillMaxWidth()){
@@ -167,31 +207,26 @@ fun ScrollableColumn() {
 
             }
             Row(modifier = Modifier.horizontalScroll(rememberScrollState())){
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Figura 1")
-                }
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Figura 2")
-                }
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Figura 3")
-                }
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Figura 3")
-                }
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Figura 4")
+                val acquista= listaFiltrata(categoria = "acquista", viewModel = viewModel)
+
+                acquista?.forEach { p ->
+                    Button(onClick = { /*TODO*/ }) {
+                        val fileName=p.child("nome").value.toString()+".jpg"
+                        val url= FindUrl(fileName = fileName)
+                        LoadImageFromUrl(imageUrl = url)
+
+                    }
                 }
             }
             Text(text = "________________________________________________________________", color = Color.Yellow)
         }
-        Spacer(modifier=Modifier.weight(0.25f))
+
     }
 }
 
 @Composable
 fun Footer(){
-    Row(modifier = Modifier.fillMaxWidth()){
+    Row(modifier = Modifier.fillMaxWidth().background(Color.Gray)){
         Button(onClick = { /*TODO*/ }, modifier = Modifier.weight(1f)) {
             Text(text = "Home")
         }
@@ -207,4 +242,36 @@ fun Footer(){
 
         
     }
+}
+
+//Funzione che carica l'immagine tramite URL
+@OptIn(ExperimentalCoilApi::class)
+@Composable
+fun LoadImageFromUrl(imageUrl: String) {
+
+    AsyncImage(
+        model = imageUrl,
+        contentDescription = null
+    )
+}
+
+//Funzione che scarica l'URL in base al nome del file
+@Composable
+fun FindUrl(fileName: String): String{
+    var url by remember { mutableStateOf<String>("") }
+    storage.child(fileName).downloadUrl.addOnSuccessListener {
+        // Got the download URL for 'users/me/profile.png'
+        url=it.toString()
+    }.addOnFailureListener {
+        // Handle any errors
+        Log.e("Foto Error", "Errore nel listener "+fileName)
+    }
+
+    return url
+}
+
+@Composable
+fun listaFiltrata(categoria: String, viewModel: AppViewModel): List<DataSnapshot>{
+    return viewModel.products.observeAsState(emptyList()).value
+        .filter { it.child("categoria").value.toString() == categoria }
 }
