@@ -1,28 +1,41 @@
 package it.polito.database
 
+import android.util.DisplayMetrics
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
@@ -32,8 +45,7 @@ import coil.compose.AsyncImage
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
+import kotlin.math.round
 
 
 class AppViewModel: ViewModel() {
@@ -70,25 +82,25 @@ fun HomePage(viewModel: AppViewModel){
     Column(modifier = Modifier
         .fillMaxSize()
         .background(Color.Black)
-        .height(600.dp)
+
         )
     {
         IntestazioneHome()
         Spacer(modifier = Modifier.height(5.dp))
         ScrollableColumn(viewModel)
-        Spacer(modifier = Modifier
-            .height(5.dp))
+        Spacer(modifier = Modifier.height(5.dp))
         Footer()
-
     }
 
 }
 
 @Composable
 fun IntestazioneHome(){
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .background(Color.Gray),
+    Row(
+        modifier = Modifier
+            .fillMaxHeight(0.1f)
+            .fillMaxWidth()
+            .background(Color.Gray),
         verticalAlignment = Alignment.CenterVertically,
     ){
         Row(modifier = Modifier
@@ -138,8 +150,10 @@ fun ScrollableColumn(viewModel: AppViewModel) {
 
     Column(
         modifier = Modifier
+            .fillMaxHeight(0.9f)
             .padding(10.dp)
-            .verticalScroll(rememberScrollState()),
+            .verticalScroll(rememberScrollState())
+            ,
     ) {
         Spacer(modifier=Modifier.weight(0.25f))
         //prima riga "DA NON PERDERE"
@@ -158,12 +172,14 @@ fun ScrollableColumn(viewModel: AppViewModel) {
             val nonperdere= listaFiltrata(categoria = "non perdere", viewModel = viewModel)
 
             nonperdere?.forEach { p ->
-                Button(onClick = { /*TODO*/ }) {
-                    val fileName=p.child("nome").value.toString()+".jpg"
-                    val url= FindUrl(fileName = fileName)
+                val fileName=p.child("nome").value.toString()+".jpg"
+                val url= FindUrl(fileName = fileName)
+                IconButton(onClick = { /*TODO*/ },
+                    modifier=Modifier.size(200.dp, 150.dp)
+                    .background(Color.Gray)) {
                     LoadImageFromUrl(imageUrl = url)
-
                 }
+
             }
 
         }
@@ -184,7 +200,7 @@ fun ScrollableColumn(viewModel: AppViewModel) {
                 val offerte= listaFiltrata(categoria = "offerte", viewModel = viewModel)
 
                 offerte?.forEach { p ->
-                    Button(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { /*TODO*/ }, modifier=Modifier.size(200.dp, 150.dp)) {
                         val fileName=p.child("nome").value.toString()+".jpg"
                         val url= FindUrl(fileName = fileName)
                         LoadImageFromUrl(imageUrl = url)
@@ -210,7 +226,7 @@ fun ScrollableColumn(viewModel: AppViewModel) {
                 val acquista= listaFiltrata(categoria = "acquista", viewModel = viewModel)
 
                 acquista?.forEach { p ->
-                    Button(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { /*TODO*/ }, modifier=Modifier.size(200.dp, 150.dp)) {
                         val fileName=p.child("nome").value.toString()+".jpg"
                         val url= FindUrl(fileName = fileName)
                         LoadImageFromUrl(imageUrl = url)
@@ -226,7 +242,12 @@ fun ScrollableColumn(viewModel: AppViewModel) {
 
 @Composable
 fun Footer(){
-    Row(modifier = Modifier.fillMaxWidth().background(Color.Gray)){
+    Row(
+        modifier = Modifier
+
+            .fillMaxWidth(),
+    ){
+
         Button(onClick = { /*TODO*/ }, modifier = Modifier.weight(1f)) {
             Text(text = "Home")
         }
@@ -248,10 +269,10 @@ fun Footer(){
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 fun LoadImageFromUrl(imageUrl: String) {
-
     AsyncImage(
         model = imageUrl,
-        contentDescription = null
+        contentDescription = null,
+        modifier = Modifier.clip(RoundedCornerShape(160.dp)).fillMaxSize(),
     )
 }
 
