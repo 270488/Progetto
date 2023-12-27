@@ -89,11 +89,11 @@ fun HomePage(viewModel: AppViewModel){
         Spacer(modifier = Modifier.height(5.dp))
         ScrollableColumn(viewModel)
         Spacer(modifier = Modifier.height(5.dp))
-        Footer()
+       // Footer()
     }
 
 }
-
+//da modificare con un qualcosa di simile alla Bottom Bar, implementare una Top Bar
 @Composable
 fun IntestazioneHome(){
     Row(
@@ -240,7 +240,7 @@ fun ScrollableColumn(viewModel: AppViewModel) {
     }
 }
 
-@Composable
+/*@Composable
 fun Footer(){
     Row(
         modifier = Modifier
@@ -264,6 +264,8 @@ fun Footer(){
         
     }
 }
+*/
+
 
 //Funzione che carica l'immagine tramite URL
 @OptIn(ExperimentalCoilApi::class)
