@@ -85,7 +85,7 @@ fun HomePage(viewModel: AppViewModel){
 
         )
     {
-        IntestazioneHome()
+       // IntestazioneHome()
         Spacer(modifier = Modifier.height(5.dp))
         ScrollableColumn(viewModel)
         Spacer(modifier = Modifier.height(5.dp))
@@ -93,7 +93,7 @@ fun HomePage(viewModel: AppViewModel){
     }
 
 }
-//da modificare con un qualcosa di simile alla Bottom Bar, implementare una Top Bar
+/*
 @Composable
 fun IntestazioneHome(){
     Row(
@@ -123,7 +123,7 @@ fun IntestazioneHome(){
         }
     }
 }
-
+*/
 @Composable
 fun ScrollableColumn(viewModel: AppViewModel) {
 

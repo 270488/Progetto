@@ -16,19 +16,18 @@ fun BottomNavGraph(navController: NavHostController){
     NavHost(
         navController = navController,
         startDestination = BottomBarScreen.Home.route
-    ){
-        composable( route = BottomBarScreen.Home.route){
+    ) {
+        composable(route = BottomBarScreen.Home.route) {
             HomePage(viewModel = AppViewModel())
         }
-        composable( route = BottomBarScreen.Category.route){
+        composable(route = BottomBarScreen.Category.route) {
             Category()
         }
-        composable( route = BottomBarScreen.Cart.route){
+        composable(route = BottomBarScreen.Cart.route) {
             Cart()
         }
-        composable( route = BottomBarScreen.Profile.route){
+        composable(route = BottomBarScreen.Profile.route) {
             Profile()
         }
-
     }
 }

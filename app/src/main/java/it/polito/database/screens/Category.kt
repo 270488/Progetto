@@ -1,7 +1,11 @@
 package it.polito.database.screens
 
-class Category {
-    fun Category(){
+import androidx.compose.runtime.Composable
+import it.polito.database.AppViewModel
 
+
+class Category() {
+
+    fun Category(){
     }
 }
