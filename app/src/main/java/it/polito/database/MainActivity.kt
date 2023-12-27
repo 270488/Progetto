@@ -21,6 +21,7 @@ import it.polito.database.ui.theme.DatabaseTheme
 import androidx.compose.material3.Button
 import androidx.lifecycle.ViewModel
 import com.google.firebase.storage.ktx.storage
+import it.polito.database.ui.theme.MainScreen
 
 
 val database = Firebase.database.reference
@@ -34,7 +35,10 @@ class MainActivity : ComponentActivity() {
         FirebaseApp.initializeApp(this.baseContext)
         super.onCreate(savedInstanceState)
         setContent {
-            HomePage(viewModel)
+           // HomePage(viewModel)
+            DatabaseTheme {
+                MainScreen()
+            }
 
         }
     }
