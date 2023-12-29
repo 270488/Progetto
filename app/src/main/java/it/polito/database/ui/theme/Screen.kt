@@ -4,34 +4,46 @@ import android.provider.ContactsContract.CommonDataKinds.Im
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.ui.graphics.vector.ImageVector
 
-sealed class BottomBarScreen (
+sealed class Screen (
     val route: String,
     val title: String,
     val icon: ImageVector
  ) {
-    object Home: BottomBarScreen(
+    object Home: Screen(
         route = "home",
         title = "Home",
         icon = Icons.Default.Home
     )
-    object Category: BottomBarScreen(
-        route = "categoria",
-        title = "Categoria",
+    object Category: Screen(
+        route = "category",
+        title = "Category",
         icon = Icons.Default.List
     )
-    object Cart: BottomBarScreen(
-        route = "carrello",
-        title = "Carrello",
+    object Cart: Screen(
+        route = "cart",
+        title = "Cart",
         icon = Icons.Default.ShoppingCart
     )
-    object Profile: BottomBarScreen(
+    object Profile: Screen(
         route = "profile",
         title = "Profile",
         icon = Icons.Default.Person
+    )
+    object Notifications: Screen(
+        route = "notifications",
+        title = "Notifications",
+        icon = Icons.Default.Notifications
+    )
+    object Settings: Screen(
+        route = "settings",
+        title = "Settings",
+        icon = Icons.Default.Settings
     )
 
 }

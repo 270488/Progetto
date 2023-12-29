@@ -1,7 +1,10 @@
 package it.polito.database.screens
 
-class Cart {
-    fun Cart(){
+import androidx.compose.runtime.Composable
+
+
+    @Composable
+    fun CartScreen(){
 
     }
-}
+

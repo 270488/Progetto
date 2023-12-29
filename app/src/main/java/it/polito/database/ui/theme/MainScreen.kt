@@ -32,62 +32,24 @@ fun MainScreen(){
     val navController = rememberNavController()
    Scaffold(
        topBar = {
-           TopAppBar(
-                   title = {
-               Box(
-                   modifier = Modifier.fillMaxWidth(),
-                   contentAlignment = Alignment.Center)
-               {
-                   Text(text = "McFIT")
-                   //aggiungere il logo
-               }
-           },
-               navigationIcon = {
-                   IconButton(
-                       onClick = {
-                       //TODO
-                       }
-                   ){
-                       BadgedBox( //è il pallino per le notifiche
-                           //capire come abilitarlo quando il databse la manda
-                           badge = {
-                               Badge(modifier = Modifier.size(10.dp)) {
-
-                               }
-                           }) {
-                           Icon(
-                               imageVector = Icons.Default.Notifications ,
-                               contentDescription = "Notifiche"
-                           )
-                       }
-
-                   }
-               },
-               actions = {
-                   IconButton(onClick = { /*TODO*/ }) {
-                       Icon(
-                           imageVector = Icons.Default.Settings,
-                           contentDescription = "Impostazioni"
-                       )
-                   }
-               }
-               )
+           TopBar(navController = navController)
        },
-
-       bottomBar = { BottomBar(navController = navController) }
-   ) {
-       BottomNavGraph(navController = navController)
+       bottomBar = {
+           BottomBar(navController = navController)
+       }
+   )
+   {
+       NavGraph(navController = navController)
    }
 }
 
 @Composable
 fun BottomBar(navController: NavHostController){
     val screens = listOf(
-        BottomBarScreen.Home,
-        BottomBarScreen.Category,
-        BottomBarScreen.Cart,
-        BottomBarScreen.Profile,
-
+        Screen.Home,
+        Screen.Category,
+        Screen.Cart,
+        Screen.Profile,
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 //serve ad osservare lo stato ed essere notificati quando questo cambia
@@ -107,7 +69,7 @@ fun BottomBar(navController: NavHostController){
 
 @Composable
 fun RowScope.AddItem(
-        screen: BottomBarScreen,
+        screen: Screen,
         currentDestination: NavDestination?,
         navController: NavHostController
     ){
@@ -128,3 +90,70 @@ fun RowScope.AddItem(
             }
         )
     }
+@Composable
+fun TopBar(navController: NavHostController){
+    val screens = listOf(
+        Screen.Notifications,
+        Screen.Settings,
+    )
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+//serve ad osservare lo stato ed essere notificati quando questo cambia
+    val currentDestination = navBackStackEntry?.destination
+    NavigationBar{
+        screens.forEach {screen ->
+            AddItem2(
+                navController = navController
+            )
+        }
+
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AddItem2(
+    navController: NavHostController
+){
+    TopAppBar(
+        title = {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center)
+            {
+                Text(text = "McFIT")
+            //aggiungere il logo
+            }
+                },
+        navigationIcon = {
+            IconButton(
+                onClick = {
+                    navController.navigate(Screen.Notifications.route)
+                }
+            ){
+                BadgedBox( //è il pallino per le notifiche
+                    //capire come abilitarlo quando il databse la manda
+                        badge = {
+                            Badge(modifier = Modifier.size(10.dp)) {
+                            }
+                        })
+                {
+                    Icon(
+                        imageVector = Screen.Notifications.icon,
+                        contentDescription = "Notifiche"
+                    )
+                }
+            }
+                         },
+        actions = {
+            IconButton(onClick = {  navController.navigate(Screen.Settings.route) }) {
+                Icon(
+                    imageVector = Screen.Settings.icon,
+                    contentDescription = "Impostazioni"
+                )
+            }
+        }
+    )
+}
+
+

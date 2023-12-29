@@ -1,7 +1,9 @@
 package it.polito.database.screens
 
-class Settings {
-    fun Settings(){
+import androidx.compose.runtime.Composable
+
+
+    @Composable
+    fun SettingsScreen(){
 
     }
-}

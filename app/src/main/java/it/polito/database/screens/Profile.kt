@@ -1,7 +1,9 @@
 package it.polito.database.screens
 
-class Profile {
-    fun Profile(){
+import androidx.compose.runtime.Composable
+
+
+    @Composable
+    fun ProfileScreen(){
 
     }
-}
