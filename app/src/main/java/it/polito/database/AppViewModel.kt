@@ -79,6 +79,8 @@ class AppViewModel: ViewModel() {
 
 @Composable
 fun HomePage(viewModel: AppViewModel){
+    val prod by viewModel.products.observeAsState()
+
     Column(modifier = Modifier
         .fillMaxSize()
         .background(Color.Black)

@@ -22,13 +22,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import it.polito.database.AppViewModel
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 
 @Composable
-fun MainScreen(){
+fun MainScreen(viewModel: AppViewModel){
     val navController = rememberNavController()
    Scaffold(
        topBar = {
@@ -39,7 +40,7 @@ fun MainScreen(){
        }
    )
    {
-       NavGraph(navController = navController)
+       NavGraph(navController = navController,viewModel)
    }
 }
 

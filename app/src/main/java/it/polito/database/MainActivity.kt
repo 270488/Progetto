@@ -28,18 +28,14 @@ val database = Firebase.database.reference
 val storage= Firebase.storage.reference
 
 class MainActivity : ComponentActivity() {
-    val viewModel by viewModels<AppViewModel>()
+    private val viewModel by viewModels<AppViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
-
-
         FirebaseApp.initializeApp(this.baseContext)
         super.onCreate(savedInstanceState)
         setContent {
-           // HomePage(viewModel)
             DatabaseTheme {
-                MainScreen()
+                MainScreen(viewModel)
             }
-
         }
     }
 }

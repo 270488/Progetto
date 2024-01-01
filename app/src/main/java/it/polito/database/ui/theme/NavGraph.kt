@@ -13,28 +13,28 @@ import it.polito.database.screens.ProfileScreen
 import it.polito.database.screens.SettingsScreen
 
 @Composable
-fun NavGraph(navController: NavHostController){
+fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
     NavHost(
         navController = navController,
         startDestination = Screen.Home.route
     ) {
         composable(route = Screen.Home.route) {
-            HomePage(viewModel = AppViewModel())
+            HomePage(viewModel)
         }
         composable(route = Screen.Category.route) {
-           CategoryScreen()
+           CategoryScreen(viewModel)
         }
         composable(route = Screen.Cart.route) {
-            CartScreen()
+            CartScreen(viewModel)
         }
         composable(route = Screen.Profile.route) {
-            ProfileScreen()
+            ProfileScreen(viewModel)
         }
         composable(route = Screen.Notifications.route) {
-            NotificationsScreen()
+            NotificationsScreen(viewModel)
         }
         composable(route = Screen.Settings.route) {
-            SettingsScreen()
+            SettingsScreen(viewModel)
         }
     }
 }
