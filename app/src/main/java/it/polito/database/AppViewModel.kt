@@ -153,7 +153,7 @@ fun ScrollableColumn(viewModel: AppViewModel) {
     Column(
         modifier = Modifier
             .fillMaxHeight(0.9f)
-            .padding(10.dp)
+            .padding(10.dp, 74.dp, 10.dp, 10.dp)
             .verticalScroll(rememberScrollState())
             ,
     ) {
