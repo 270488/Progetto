@@ -298,5 +298,5 @@ fun FindUrl(fileName: String): String{
 @Composable
 fun listaFiltrata(categoria: String, viewModel: AppViewModel): List<DataSnapshot>{
     return viewModel.products.observeAsState(emptyList()).value
-        .filter { it.child("categoria").value.toString() == categoria }
+        .filter { it.child("sezione").value.toString() == categoria }
 }
