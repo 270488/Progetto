@@ -78,10 +78,15 @@ dependencies {
     implementation("com.google.firebase:firebase-storage-ktx")
     implementation ("com.google.firebase:firebase-storage:20.3.0")
     implementation("com.google.firebase:firebase-database")
-    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
     implementation("com.google.firebase:firebase-storage")
     implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
     implementation("androidx.navigation:navigation-compose:2.7.6")
+    implementation ("com.firebaseui:firebase-ui-auth:7.2.0")
+    implementation ("androidx.appcompat:appcompat:1.6.1")
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation("com.google.firebase:firebase-auth:22.3.0")
+    implementation ("androidx.navigation:navigation-fragment-ktx:2.7.6")
+    implementation ("androidx.navigation:navigation-ui-ktx:2.7.6")
 
 
 

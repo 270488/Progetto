@@ -31,6 +31,7 @@ class MainActivity : ComponentActivity() {
     private val viewModel by viewModels<AppViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         FirebaseApp.initializeApp(this.baseContext)
+
         super.onCreate(savedInstanceState)
         setContent {
             DatabaseTheme {
