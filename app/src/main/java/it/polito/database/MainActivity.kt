@@ -21,6 +21,8 @@ import it.polito.database.ui.theme.DatabaseTheme
 import androidx.compose.material3.Button
 import androidx.lifecycle.ViewModel
 import com.google.firebase.storage.ktx.storage
+import it.polito.database.screens.AuthenticationActivity
+import it.polito.database.screens.AuthenticationScreen
 import it.polito.database.ui.theme.MainScreen
 
 
@@ -35,7 +37,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             DatabaseTheme {
-                MainScreen(viewModel)
+                //MainScreen(viewModel)
+                AuthenticationScreen(context = AuthenticationActivity())
             }
         }
     }

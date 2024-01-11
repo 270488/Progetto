@@ -6,6 +6,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import it.polito.database.AppViewModel
 import it.polito.database.HomePage
+import it.polito.database.screens.AuthenticationActivity
+import it.polito.database.screens.AuthenticationScreen
 import it.polito.database.screens.CartScreen
 import it.polito.database.screens.CategoryScreen
 import it.polito.database.screens.NotificationsScreen
@@ -35,6 +37,9 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
         }
         composable(route = Screen.Settings.route) {
             SettingsScreen(viewModel)
+        }
+        composable(route = Screen.AuthenticationScreen.route) {
+            AuthenticationScreen(AuthenticationActivity())
         }
     }
 }
