@@ -20,10 +20,20 @@ import com.google.firebase.ktx.Firebase
 import it.polito.database.ui.theme.DatabaseTheme
 import androidx.compose.material3.Button
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+import com.google.firebase.BuildConfig
+import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
+import com.google.firebase.appcheck.ktx.appCheck
+import com.google.firebase.ktx.initialize
 import com.google.firebase.storage.ktx.storage
 import it.polito.database.screens.AuthenticationActivity
 import it.polito.database.screens.AuthenticationScreen
 import it.polito.database.ui.theme.MainScreen
+import it.polito.database.ui.theme.NavGraph
+import it.polito.database.ui.theme.Screen
 
 
 val database = Firebase.database.reference
@@ -31,19 +41,21 @@ val storage= Firebase.storage.reference
 
 class MainActivity : ComponentActivity() {
     private val viewModel by viewModels<AppViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        FirebaseApp.initializeApp(this.baseContext)
+        Firebase.initialize(context = this)
 
         super.onCreate(savedInstanceState)
         setContent {
+            val navController = rememberNavController()
             DatabaseTheme {
-                //MainScreen(viewModel)
-                AuthenticationScreen(context = AuthenticationActivity())
+              MainScreen(viewModel)
+
+              //AuthenticationScreen(navController = navController,context = AuthenticationActivity())
             }
         }
     }
 }
-
 
 
 /*@Composable

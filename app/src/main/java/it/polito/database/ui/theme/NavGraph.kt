@@ -18,7 +18,7 @@ import it.polito.database.screens.SettingsScreen
 fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
     NavHost(
         navController = navController,
-        startDestination = Screen.Home.route
+        startDestination = Screen.AuthenticationScreen.route
     ) {
         composable(route = Screen.Home.route) {
             HomePage(viewModel)
@@ -39,7 +39,7 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
             SettingsScreen(viewModel)
         }
         composable(route = Screen.AuthenticationScreen.route) {
-            AuthenticationScreen(AuthenticationActivity())
+            AuthenticationScreen(navController,AuthenticationActivity())
         }
     }
 }

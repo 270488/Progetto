@@ -18,16 +18,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import it.polito.database.ui.theme.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
+
+//email: elena@gmail.com
+//passwore: elena18
 @Composable
-fun AuthenticationScreen(context: AuthenticationActivity){
+fun AuthenticationScreen(navController: NavHostController,context: AuthenticationActivity){
     val auth=Firebase.auth
 
     Column(modifier= Modifier
         .fillMaxSize()
+        .padding(top = 74.dp)
         .padding(8.dp)) {
         val emailValue= remember{ mutableStateOf(TextFieldValue()) }
         val passwordValue= remember{ mutableStateOf(TextFieldValue()) }
@@ -59,6 +66,7 @@ fun AuthenticationScreen(context: AuthenticationActivity){
                             task->
                         if(task.isSuccessful) {
                                 Log.d("AUTH", "Success")
+                            navController.navigate(Screen.Home.route)
                         }
                         else {Log.d("AUTH", "Failed: ${task.exception}")
                         //errore login fallito

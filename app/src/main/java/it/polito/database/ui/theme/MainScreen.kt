@@ -23,6 +23,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import it.polito.database.AppViewModel
+import it.polito.database.screens.AuthenticationActivity
+import it.polito.database.screens.AuthenticationScreen
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -45,7 +47,7 @@ fun MainScreen(viewModel: AppViewModel){
 }
 
 @Composable
-fun BottomBar(navController: NavHostController){
+fun BottomBar(navController: NavHostController) {
     val screens = listOf(
         Screen.Home,
         Screen.Category,
@@ -55,17 +57,20 @@ fun BottomBar(navController: NavHostController){
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 //serve ad osservare lo stato ed essere notificati quando questo cambia
     val currentDestination = navBackStackEntry?.destination
-    NavigationBar{
-        screens.forEach {screen ->
-            AddItem(
-                screen = screen,
-                currentDestination = currentDestination,
-                navController = navController
+
+    if (currentDestination?.route !== Screen.AuthenticationScreen.route) {
+        NavigationBar {
+            screens.forEach { screen ->
+                AddItem(
+                    screen = screen,
+                    currentDestination = currentDestination,
+                    navController = navController
                 )
-        }
+            }
 
         }
     }
+}
 
 
 @Composable
@@ -92,7 +97,7 @@ fun RowScope.AddItem(
         )
     }
 @Composable
-fun TopBar(navController: NavHostController){
+fun TopBar(navController: NavHostController) {
     val screens = listOf(
         Screen.Notifications,
         Screen.Settings,
@@ -100,13 +105,16 @@ fun TopBar(navController: NavHostController){
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 //serve ad osservare lo stato ed essere notificati quando questo cambia
     val currentDestination = navBackStackEntry?.destination
-    NavigationBar{
-        screens.forEach {screen ->
-            AddItem2(
-                navController = navController
-            )
-        }
 
+    if (currentDestination?.route !== Screen.AuthenticationScreen.route) {
+        NavigationBar {
+            screens.forEach { screen ->
+                AddItem2(
+                    navController = navController
+                )
+            }
+
+        }
     }
 }
 
