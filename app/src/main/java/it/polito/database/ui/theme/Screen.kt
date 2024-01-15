@@ -51,5 +51,10 @@ sealed class Screen (
         title = "AuthenticationScreen",
         icon = Icons.Default.Person
     )
+    object NewAccount: Screen(
+        route = "newAccount",
+        title = "NewAccount",
+        icon = Icons.Default.Person
+    )
 
 }

@@ -58,7 +58,8 @@ fun BottomBar(navController: NavHostController) {
 //serve ad osservare lo stato ed essere notificati quando questo cambia
     val currentDestination = navBackStackEntry?.destination
 
-    if (currentDestination?.route !== Screen.AuthenticationScreen.route) {
+    if (currentDestination?.route !== Screen.AuthenticationScreen.route &&
+        currentDestination?.route !== Screen.NewAccount.route) {
         NavigationBar {
             screens.forEach { screen ->
                 AddItem(
@@ -106,7 +107,8 @@ fun TopBar(navController: NavHostController) {
 //serve ad osservare lo stato ed essere notificati quando questo cambia
     val currentDestination = navBackStackEntry?.destination
 
-    if (currentDestination?.route !== Screen.AuthenticationScreen.route) {
+    if (currentDestination?.route !== Screen.AuthenticationScreen.route &&
+        currentDestination?.route !== Screen.NewAccount.route ) {
         NavigationBar {
             screens.forEach { screen ->
                 AddItem2(

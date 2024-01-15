@@ -1,5 +1,6 @@
 package it.polito.database.ui.theme
 
+import NewAccount
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -40,6 +41,9 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
         }
         composable(route = Screen.AuthenticationScreen.route) {
             AuthenticationScreen(navController,AuthenticationActivity())
+        }
+        composable(route = Screen.NewAccount.route) {
+           NewAccount(navController, AuthenticationActivity())
         }
     }
 }
