@@ -39,7 +39,7 @@ import it.polito.database.ui.theme.Screen
 @OptIn(ExperimentalMaterial3Api::class)
 
 //email: elena@gmail.com
-//passwore: elena18
+//password: elena18
 @Composable
 fun NewAccount(navController: NavHostController,context: AuthenticationActivity) {
     val auth = Firebase.auth
