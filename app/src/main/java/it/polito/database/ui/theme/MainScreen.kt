@@ -6,8 +6,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavDestination
@@ -22,9 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import it.polito.database.AppViewModel
-import it.polito.database.screens.AuthenticationActivity
-import it.polito.database.screens.AuthenticationScreen
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -33,18 +31,36 @@ import it.polito.database.screens.AuthenticationScreen
 @Composable
 fun MainScreen(viewModel: AppViewModel){
     val navController = rememberNavController()
-   Scaffold(
-       topBar = {
-           TopBar(navController = navController)
-       },
-       bottomBar = {
-           BottomBar(navController = navController)
-       }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+
+
+        Scaffold(
+
+                topBar = {
+                    if(currentDestination?.route !== Screen.AuthenticationScreen.route
+                        && currentDestination?.route !== Screen.NewAccount.route) {
+                    if (currentDestination?.route == Screen.Settings.route
+                        || currentDestination?.route == Screen.Notifications.route
+                    ) {
+                        SmallTopAppBar(navController = navController)
+                    } else {
+                        TopBar(navController = navController)
+                    }
+                }},
+                bottomBar = {
+                    if(currentDestination?.route !== Screen.AuthenticationScreen.route
+                        && currentDestination?.route !== Screen.NewAccount.route) {
+                        BottomBar(navController = navController)
+                    }
+                }
+
    )
    {
        NavGraph(navController = navController,viewModel)
    }
-}
+    }
+
 
 @Composable
 fun BottomBar(navController: NavHostController) {
@@ -58,8 +74,6 @@ fun BottomBar(navController: NavHostController) {
 //serve ad osservare lo stato ed essere notificati quando questo cambia
     val currentDestination = navBackStackEntry?.destination
 
-    if (currentDestination?.route !== Screen.AuthenticationScreen.route &&
-        currentDestination?.route !== Screen.NewAccount.route) {
         NavigationBar {
             screens.forEach { screen ->
                 AddItem(
@@ -70,7 +84,6 @@ fun BottomBar(navController: NavHostController) {
             }
 
         }
-    }
 }
 
 
@@ -107,8 +120,7 @@ fun TopBar(navController: NavHostController) {
 //serve ad osservare lo stato ed essere notificati quando questo cambia
     val currentDestination = navBackStackEntry?.destination
 
-    if (currentDestination?.route !== Screen.AuthenticationScreen.route &&
-        currentDestination?.route !== Screen.NewAccount.route ) {
+    if (currentDestination?.route !== Screen.AuthenticationScreen.route ) {
         NavigationBar {
             screens.forEach { screen ->
                 AddItem2(
@@ -118,14 +130,13 @@ fun TopBar(navController: NavHostController) {
 
         }
     }
+
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddItem2(
-    navController: NavHostController
-){
+fun AddItem2(navController: NavHostController){
     TopAppBar(
         title = {
             Box(
@@ -162,6 +173,77 @@ fun AddItem2(
                     imageVector = Screen.Settings.icon,
                     contentDescription = "Impostazioni"
                 )
+            }
+        }
+    )
+}
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+fun SmallTopAppBar(navController: NavHostController) {
+    val screens = listOf(
+        Screen.Settings,
+        Screen.Notifications,
+    )
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+
+        NavigationBar {
+            screens.forEach { screen ->
+                AddItem3(
+                    navController = navController,
+                    currentDestination = currentDestination,
+                    )
+            }
+
+        }
+    }
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AddItem3(
+    navController: NavHostController,
+    currentDestination: NavDestination?,
+) {
+    TopAppBar(
+        title = {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center)
+            {
+                if (currentDestination?.route == Screen.Notifications.route)
+                    Text(text = "Notifiche")
+                else if (currentDestination?.route == Screen.Settings.route)
+                    Text(text = "Impostazioni")
+                //tante condizioni quante sono le schermate che hanno questa top Bar
+                //( con freccia per tornare indietro, impostazioni a destra
+            }
+        },
+        navigationIcon = {
+            IconButton(
+                onClick = {
+                    navController.navigateUp()
+                }
+            ){
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Back" ,
+                    )
+                }
+        },
+        actions = {
+            if(currentDestination?.route !== Screen.Settings.route
+                && currentDestination?.route !== Screen.NewAccount.route){
+            IconButton(
+                onClick = {
+                    navController.navigate(Screen.Settings.route)
+                }
+            ) {
+                Icon(
+                    imageVector = Screen.Settings.icon,
+                    contentDescription = "Impostazioni"
+                )
+            }
             }
         }
     )
