@@ -1,13 +1,7 @@
 
-import android.annotation.SuppressLint
-import android.icu.text.CaseMap.Title
 import android.util.Log
-import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.Companion.End
-import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.Companion.Start
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Arrangement.Absolute.Center
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,38 +11,26 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.navigation.Navigation
-import androidx.navigation.compose.rememberNavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import it.polito.database.screens.AuthenticationActivity
 import it.polito.database.ui.theme.Screen
-/*import com.hbb20.CCPDropDown
-import com.hbb20.ccp.CCP
-import com.hbb20.ccp.Country*/
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 
 //email: elena@gmail.com
@@ -79,7 +61,9 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
         val confermaPassword = remember { mutableStateOf(TextFieldValue())}
 
             Text("Paese*")
-           // CountryDropdown()
+
+       // CountryListScreen(navController)
+        // TODO modificare le funzioni a fondo pagina affinchè i paesi compaiano in una lista drop down
 
 
         OutlinedTextField(
@@ -207,52 +191,133 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
         }
     }
 }
-/*
-@OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("RememberReturnType")
-@Composable
-fun CountryDropdown() {
-    val context = LocalContext.current
-    val countryCodePicker = remember {
-        CCPDropDown(context)
-    }
 
+/*
+@Composable
+fun CountryListScreen(navController: NavHostController) {
+    val textVal = remember { mutableStateOf(TextFieldValue("")) }
+    Column {
+        SearchCountryList(textVal)
+        CountryList(textVal)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchCountryList(textVal: MutableState<TextFieldValue>) {
     TextField(
-        value = "",
-        onValueChange = {},
-        keyboardOptions = KeyboardOptions.Default.copy(
-            imeAction = ImeAction.Done
-        ),
+        value = textVal.value,
+        onValueChange = { textVal.value = it },
+        placeholder = { Text(text = "Search Country Name") },
+        modifier = Modifier
+            .fillMaxWidth(),
+        textStyle = TextStyle(Color.Black, fontSize = 18.sp),
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Filled.Search,
+                contentDescription = "Search",
+                modifier = Modifier
+                    .padding(15.dp)
+                    .size(24.dp)
+            )
+        },
+        trailingIcon = {
+            if (textVal.value != TextFieldValue("")) {
+                IconButton(
+                    onClick = {
+                        textVal.value = TextFieldValue("")
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Close,
+                        contentDescription = "Close",
+                        modifier = Modifier
+                            .padding(15.dp)
+                            .size(24.dp)
+                    )
+                }
+            }
+        },
+        singleLine = true,
+        shape = RectangleShape,
         colors = TextFieldDefaults.textFieldColors(
+            textColor = Color.Black,
+            cursorColor = Color.Black,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            cursorColor = MaterialTheme.colorScheme.primary
-        ),
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(
-                onClick = {
-                    countryCodePicker.performClick()
-                },
-                indication = rememberRipple(bounded = false)
-            )
+            disabledIndicatorColor = Color.Transparent
+        )
     )
 }
 
 @Composable
-fun CCPCountryList(
-    countryList: List<Country>,
-    onCountrySelected: (Country) -> Unit
-) {
-    // Implementazione del composable per visualizzare la lista dei paesi
-    // e gestire la selezione del paese
+fun CountryList(textVal: MutableState<TextFieldValue>) {
+    val context = LocalContext.current
+    val countries = getListOfCountries()
+    var filteredCountries: ArrayList<String>
+    LazyColumn(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        val searchText = textVal.value.text
+        filteredCountries = if (searchText.isEmpty()) {
+            countries
+        } else {
+            val resultList = ArrayList<String>()
+            for (country in countries) {
+                if (country.lowercase(Locale.getDefault()).contains(searchText.lowercase(Locale.getDefault()))) {
+                    resultList.add(country)
+                }
+            }
+            resultList
+        }
+        items(filteredCountries) { filteredCountries ->
+            CountryListItem(
+                countryText = filteredCountries,
+                onItemClick = { selectedCountry ->
+                    Toast.makeText(context, selectedCountry, Toast.LENGTH_SHORT).show()
+                }
+            )
+        }
+    }
 }
 
+@Composable
+fun CountryListItem(
+    countryText: String,
+    onItemClick: (String) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .clickable {
+                onItemClick(countryText)
+            }
+            .fillMaxWidth()
+            .padding(5.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = countryText,
+            fontSize = 16.sp,
+            color = Color.Black,
+            modifier = Modifier.padding(start = 10.dp)
+        )
+    }
+}
 
 @Composable
-fun CCPCountryListItem(
-    country: Country,
-    onCountrySelected: (Country) -> Unit
-) {
-    // Implementazione del composable per visualizzare singoli elementi della lista dei paesi
-}*/
+fun getListOfCountries(): ArrayList<String> {
+    val isoCountryCodes = Locale.getISOCountries()
+    val countryListWithEmojis = ArrayList<String>()
+    for (countryCode in isoCountryCodes) {
+        val locale = Locale("", countryCode)
+        val countryName = locale.displayCountry
+        val flagOffset = 0x1F1E6
+        val asciiOffset = 0x41
+        val firstChar = Character.codePointAt(countryCode, 0) - asciiOffset + flagOffset
+        val secondChar = Character.codePointAt(countryCode, 1) - asciiOffset + flagOffset
+        val flag = (String(Character.toChars(firstChar)) + String(Character.toChars(secondChar)))
+        countryListWithEmojis.add("$countryName (${locale.country}) $flag")
+    }
+    return countryListWithEmojis
+}
+*/
