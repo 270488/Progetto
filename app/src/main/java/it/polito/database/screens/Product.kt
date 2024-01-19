@@ -40,7 +40,7 @@ fun ProductScreen(viewModel: AppViewModel) {
 @Composable
 private fun ProductDetail() {
 Scaffold (
-    topBar = {
+   /* topBar = {
         TopAppBar(
             title = {
                 Text(
@@ -74,7 +74,7 @@ Scaffold (
                 }
             }
         )
-    }
+    } */
 ){
     ProductContent()
 }

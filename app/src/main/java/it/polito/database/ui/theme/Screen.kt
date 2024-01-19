@@ -3,6 +3,7 @@ package it.polito.database.ui.theme
 import android.provider.ContactsContract.CommonDataKinds.Im
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
@@ -56,5 +57,9 @@ sealed class Screen (
         title = "NewAccount",
         icon = Icons.Default.Person
     )
-
+    object Product: Screen(
+        route = "Product",
+        title = "Product",
+        icon = Icons.Default.Info
+    )
 }
