@@ -1,4 +1,5 @@
 
+import android.annotation.SuppressLint
 import android.icu.text.CaseMap.Title
 import android.util.Log
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.Companion.End
@@ -22,13 +23,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -40,8 +46,9 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import it.polito.database.screens.AuthenticationActivity
 import it.polito.database.ui.theme.Screen
-import okhttp3.internal.http2.Header
-
+/*import com.hbb20.CCPDropDown
+import com.hbb20.ccp.CCP
+import com.hbb20.ccp.Country*/
 @OptIn(ExperimentalMaterial3Api::class)
 
 //email: elena@gmail.com
@@ -71,7 +78,9 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
         val password = remember { mutableStateOf(TextFieldValue())}
         val confermaPassword = remember { mutableStateOf(TextFieldValue())}
 
-        //TODO DropdownMenu per Paese
+            Text("Paese*")
+           // CountryDropdown()
+
 
         OutlinedTextField(
             value = nome.value,
@@ -198,3 +207,52 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
         }
     }
 }
+/*
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("RememberReturnType")
+@Composable
+fun CountryDropdown() {
+    val context = LocalContext.current
+    val countryCodePicker = remember {
+        CCPDropDown(context)
+    }
+
+    TextField(
+        value = "",
+        onValueChange = {},
+        keyboardOptions = KeyboardOptions.Default.copy(
+            imeAction = ImeAction.Done
+        ),
+        colors = TextFieldDefaults.textFieldColors(
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            cursorColor = MaterialTheme.colorScheme.primary
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(
+                onClick = {
+                    countryCodePicker.performClick()
+                },
+                indication = rememberRipple(bounded = false)
+            )
+    )
+}
+
+@Composable
+fun CCPCountryList(
+    countryList: List<Country>,
+    onCountrySelected: (Country) -> Unit
+) {
+    // Implementazione del composable per visualizzare la lista dei paesi
+    // e gestire la selezione del paese
+}
+
+
+@Composable
+fun CCPCountryListItem(
+    country: Country,
+    onCountrySelected: (Country) -> Unit
+) {
+    // Implementazione del composable per visualizzare singoli elementi della lista dei paesi
+}*/

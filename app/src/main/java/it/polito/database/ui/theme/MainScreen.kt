@@ -25,7 +25,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import it.polito.database.AppViewModel
 
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
 
 @Composable
@@ -42,6 +42,7 @@ fun MainScreen(viewModel: AppViewModel){
                         && currentDestination?.route !== Screen.NewAccount.route) {
                     if (currentDestination?.route == Screen.Settings.route
                         || currentDestination?.route == Screen.Notifications.route
+                        || currentDestination?.route == Screen.Product.route
                     ) {
                         SmallTopAppBar(navController = navController)
                     } else {

@@ -90,5 +90,8 @@ dependencies {
     implementation ("androidx.navigation:navigation-ui-ktx:2.7.6")
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
     implementation("com.google.firebase:firebase-appcheck-debug")
+    implementation ("com.hbb20:ccp:2.5.1")
+
+
 
 }
