@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.drawable.Icon
 import android.media.Image
 import android.widget.ImageView
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -18,6 +19,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.KeyboardArrowLeft
 import androidx.compose.material.icons.rounded.Settings
@@ -28,6 +32,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardElevation
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
@@ -40,11 +46,16 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -162,6 +173,38 @@ fun ProductContent(
             .fillMaxSize()
             .padding(top = 80.dp, bottom = 300.dp)
     )
+        var filledHeart by remember{ mutableStateOf(false) }
+        FloatingActionButton(
+            onClick = {
+                if(filledHeart==false) {
+                    filledHeart = true
+                }else{
+                    filledHeart = false
+                }
+            },
+            containerColor = Color.Transparent,
+            modifier = Modifier
+                .layoutId("btnHeart")
+                .padding(top = 320.dp, start = 320.dp, bottom = 8.dp),
+            elevation = FloatingActionButtonDefaults.elevation(
+                defaultElevation = 0.dp,
+                pressedElevation = 0.dp
+            )
+        ) {
+            if(filledHeart==false) {
+                Image(
+                    imageVector = Icons.Outlined.FavoriteBorder,
+                    contentDescription = "Empty Heart",
+                    modifier = Modifier.size(50.dp)
+                )}else{
+                Image(
+                    imageVector = Icons.Outlined.Favorite,
+                    contentDescription = "Filled Heart",
+                    modifier = Modifier.size(50.dp)
+                )
+            }
+
+        }
 
         Card(
             shape = RoundedCornerShape(
@@ -364,6 +407,24 @@ fun CardContent(){
            contentDescription = "Aggiungi quantità",
            tint = Color.White
        )
+    }
+
+    OutlinedButton(
+        onClick = { /*TODO*/ },
+        border = BorderStroke(
+            width = 1.dp,
+            color = Color.White
+        ),
+        shape = RoundedCornerShape(16.dp),
+        modifier = Modifier
+            .layoutId("btnAddtoCart")
+            .padding(top = 32.dp)
+    ) {
+        Image(
+            imageVector = Icons.Default.ShoppingCart,
+            contentDescription = "Add Cart",
+            modifier = Modifier.size(25.dp)
+        )
     }
 }
 
