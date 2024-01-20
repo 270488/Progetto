@@ -5,16 +5,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -44,17 +46,20 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
 
     Column(
         modifier = Modifier
-            .padding(top = 74.dp)
+            .fillMaxSize()
+            .padding(16.dp)
             .padding(8.dp)
-
+            .verticalScroll(rememberScrollState())
     )
+
+
     {
         Text(text = "Crea account", style = MaterialTheme.typography.headlineSmall)
 
         val paese = remember { mutableStateOf(TextFieldValue())}
         val nome = remember { mutableStateOf(TextFieldValue())}
         val cognome = remember { mutableStateOf(TextFieldValue())}
-        val genere = remember { mutableStateOf(TextFieldValue())}
+        //val genere = remember { mutableStateOf(TextFieldValue())}
         val dataDiNascita = remember { mutableStateOf(TextFieldValue())}
         val email = remember { mutableStateOf(TextFieldValue()) }
         val username = remember { mutableStateOf(TextFieldValue()) }
@@ -195,61 +200,47 @@ fun GenderSelection() {
 
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically)
-    {
-        Text (text = "Sesso*")
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = "Sesso*")
 
-        GenderCheckbox(
+        GenderRadioButton(
             text = "Uomo",
-            isChecked = selectedGender == Gender.MALE,
-            onCheckedChange = {
-                selectedGender =
-                    if (it)
-                        Gender.MALE
-                    else null
-            })
-        GenderCheckbox(
-            text = "Donna",
-            isChecked = selectedGender == Gender.FEMALE,
-            onCheckedChange = {
-                selectedGender =
-                if (it)
-                    Gender.FEMALE
-                else null
-            })
+            isSelected = selectedGender == Gender.MALE
+        ) {
+            selectedGender = Gender.MALE
+        }
 
-        GenderCheckbox(
+        GenderRadioButton(
+            text = "Donna",
+            isSelected = selectedGender == Gender.FEMALE
+        ) {
+            selectedGender = Gender.FEMALE
+        }
+
+        GenderRadioButton(
             text = "Altro",
-            isChecked = selectedGender == Gender.OTHER,
-            onCheckedChange = {
-                selectedGender =
-                    if (it)
-                        Gender.OTHER
-                    else null
-            })
+            isSelected = selectedGender == Gender.OTHER
+        ) {
+            selectedGender = Gender.OTHER
+        }
     }
 }
 
-
 @Composable
-fun GenderCheckbox(
+fun GenderRadioButton(
     text: String,
-    isChecked: Boolean,
-    onCheckedChange: (Boolean) -> Unit) {
+    isSelected: Boolean,
+    onSelected: () -> Unit
+) {
     Row(
         modifier = Modifier
             .padding(vertical = 2.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Checkbox(
-            checked = isChecked,
-            onCheckedChange = onCheckedChange,
-            modifier = Modifier
-                .toggleable(
-                    value = isChecked,
-                    onValueChange = { onCheckedChange(!isChecked) }
-                )
-
+        RadioButton(
+            selected = isSelected,
+            onClick = onSelected
         )
         Text(text = text)
     }
