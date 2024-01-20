@@ -5,19 +5,22 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -40,9 +43,7 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
     val auth = Firebase.auth
 
     Column(
-
         modifier = Modifier
-            .fillMaxSize()
             .padding(top = 74.dp)
             .padding(8.dp)
 
@@ -86,13 +87,9 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
-        Row(modifier = Modifier.align(Alignment.Start))
-        {
-            Text(
-                text = "Sesso*"
-            )
-        }
-        //TODO checkbox per genere
+
+        GenderSelection()
+
         OutlinedTextField(
             value = email.value,
             label = { Text("Email*") },
@@ -192,6 +189,75 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
     }
 }
 
+@Composable
+fun GenderSelection() {
+    var selectedGender by remember { mutableStateOf<Gender?>(null) }
+
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically)
+    {
+        Text (text = "Sesso*")
+
+        GenderCheckbox(
+            text = "Uomo",
+            isChecked = selectedGender == Gender.MALE,
+            onCheckedChange = {
+                selectedGender =
+                    if (it)
+                        Gender.MALE
+                    else null
+            })
+        GenderCheckbox(
+            text = "Donna",
+            isChecked = selectedGender == Gender.FEMALE,
+            onCheckedChange = {
+                selectedGender =
+                if (it)
+                    Gender.FEMALE
+                else null
+            })
+
+        GenderCheckbox(
+            text = "Altro",
+            isChecked = selectedGender == Gender.OTHER,
+            onCheckedChange = {
+                selectedGender =
+                    if (it)
+                        Gender.OTHER
+                    else null
+            })
+    }
+}
+
+
+@Composable
+fun GenderCheckbox(
+    text: String,
+    isChecked: Boolean,
+    onCheckedChange: (Boolean) -> Unit) {
+    Row(
+        modifier = Modifier
+            .padding(vertical = 2.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Checkbox(
+            checked = isChecked,
+            onCheckedChange = onCheckedChange,
+            modifier = Modifier
+                .toggleable(
+                    value = isChecked,
+                    onValueChange = { onCheckedChange(!isChecked) }
+                )
+
+        )
+        Text(text = text)
+    }
+}
+
+enum class Gender {
+    MALE, FEMALE, OTHER
+}
 /*
 @Composable
 fun CountryListScreen(navController: NavHostController) {
