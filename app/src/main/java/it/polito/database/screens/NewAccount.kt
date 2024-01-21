@@ -8,17 +8,22 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,30 +53,28 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp)
+            .padding(16.dp)
             .verticalScroll(rememberScrollState())
     )
 
 
     {
         Text(text = "Crea account", style = MaterialTheme.typography.headlineSmall)
+        Spacer(modifier = Modifier.height(8.dp) )
 
         val paese = remember { mutableStateOf(TextFieldValue())}
         val nome = remember { mutableStateOf(TextFieldValue())}
         val cognome = remember { mutableStateOf(TextFieldValue())}
-        //val genere = remember { mutableStateOf(TextFieldValue())}
-        val dataDiNascita = remember { mutableStateOf(TextFieldValue())}
+
+        //val dataDiNascita = remember { mutableStateOf(TextFieldValue())} per ora non la includo
         val email = remember { mutableStateOf(TextFieldValue()) }
         val username = remember { mutableStateOf(TextFieldValue()) }
         val password = remember { mutableStateOf(TextFieldValue())}
         val confermaPassword = remember { mutableStateOf(TextFieldValue())}
 
-            Text("Paese*")
 
-       // CountryListScreen(navController)
-        // TODO modificare le funzioni a fondo pagina affinchè i paesi compaiano in una lista drop down
-
-
+        CitySelection()
+        Spacer(modifier = Modifier.height(16.dp) )
         OutlinedTextField(
             value = nome.value,
             label = { Text("Nome*") },
@@ -199,10 +202,75 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CitySelection() {
+    var selectedCity by remember {
+        mutableStateOf<City?>(null)
+    }
+
+    var isExpanded by remember {
+        mutableStateOf(false) //default: menù chiuso
+    }
+    val cities = enumValues<City>().toList()
+
+    Column(
+        Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.Start)
+        ) {
+            Text("Città*")
+        }
+
+        // Dropdown Row
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+
+        ){
+            ExposedDropdownMenuBox(
+                expanded = isExpanded,
+                onExpandedChange = { isExpanded = it },
+
+            ) {
+                TextField(
+                    value = selectedCity.toString(),
+                    onValueChange = {},
+                    readOnly = true,
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
+                    }, modifier = Modifier.menuAnchor()
+                )
+                ExposedDropdownMenu(
+                    expanded = isExpanded,
+                    onDismissRequest = { isExpanded = false }
+                ) {
+                    cities.forEach { city ->
+                        DropdownMenuItem(
+                            text = {
+                                Text(text = city.toString())
+                            },
+                            onClick = {
+                                selectedCity = city
+                                isExpanded =
+                                    false
+                            })
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 @Composable
 fun GenderSelection() {
-    var selectedGender by remember { mutableStateOf<Gender?>(null) }
-
+    var selectedGender by remember {
+        mutableStateOf<Gender?>(null)
+    }
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -254,132 +322,9 @@ fun GenderRadioButton(
 enum class Gender {
     MALE, FEMALE, OTHER
 }
-/*
-@Composable
-fun CountryListScreen(navController: NavHostController) {
-    val textVal = remember { mutableStateOf(TextFieldValue("")) }
-    Column {
-        SearchCountryList(textVal)
-        CountryList(textVal)
-    }
-}
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SearchCountryList(textVal: MutableState<TextFieldValue>) {
-    TextField(
-        value = textVal.value,
-        onValueChange = { textVal.value = it },
-        placeholder = { Text(text = "Search Country Name") },
-        modifier = Modifier
-            .fillMaxWidth(),
-        textStyle = TextStyle(Color.Black, fontSize = 18.sp),
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Filled.Search,
-                contentDescription = "Search",
-                modifier = Modifier
-                    .padding(15.dp)
-                    .size(24.dp)
-            )
-        },
-        trailingIcon = {
-            if (textVal.value != TextFieldValue("")) {
-                IconButton(
-                    onClick = {
-                        textVal.value = TextFieldValue("")
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Close,
-                        contentDescription = "Close",
-                        modifier = Modifier
-                            .padding(15.dp)
-                            .size(24.dp)
-                    )
-                }
-            }
-        },
-        singleLine = true,
-        shape = RectangleShape,
-        colors = TextFieldDefaults.textFieldColors(
-            textColor = Color.Black,
-            cursorColor = Color.Black,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent
-        )
-    )
+enum class City {
+    Bari, Bergamo, Bologna, Brescia, Como, Cremona, Catania, Ferrara,
+    Milano, Napoli, Piacenza, Padova, Perugia, Parma, Pavia, Roma,
+    Torino, Treviso, Udine, Varese, Venezia, Vicenza, Verona
 }
-
-@Composable
-fun CountryList(textVal: MutableState<TextFieldValue>) {
-    val context = LocalContext.current
-    val countries = getListOfCountries()
-    var filteredCountries: ArrayList<String>
-    LazyColumn(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        val searchText = textVal.value.text
-        filteredCountries = if (searchText.isEmpty()) {
-            countries
-        } else {
-            val resultList = ArrayList<String>()
-            for (country in countries) {
-                if (country.lowercase(Locale.getDefault()).contains(searchText.lowercase(Locale.getDefault()))) {
-                    resultList.add(country)
-                }
-            }
-            resultList
-        }
-        items(filteredCountries) { filteredCountries ->
-            CountryListItem(
-                countryText = filteredCountries,
-                onItemClick = { selectedCountry ->
-                    Toast.makeText(context, selectedCountry, Toast.LENGTH_SHORT).show()
-                }
-            )
-        }
-    }
-}
-
-@Composable
-fun CountryListItem(
-    countryText: String,
-    onItemClick: (String) -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .clickable {
-                onItemClick(countryText)
-            }
-            .fillMaxWidth()
-            .padding(5.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = countryText,
-            fontSize = 16.sp,
-            color = Color.Black,
-            modifier = Modifier.padding(start = 10.dp)
-        )
-    }
-}
-
-@Composable
-fun getListOfCountries(): ArrayList<String> {
-    val isoCountryCodes = Locale.getISOCountries()
-    val countryListWithEmojis = ArrayList<String>()
-    for (countryCode in isoCountryCodes) {
-        val locale = Locale("", countryCode)
-        val countryName = locale.displayCountry
-        val flagOffset = 0x1F1E6
-        val asciiOffset = 0x41
-        val firstChar = Character.codePointAt(countryCode, 0) - asciiOffset + flagOffset
-        val secondChar = Character.codePointAt(countryCode, 1) - asciiOffset + flagOffset
-        val flag = (String(Character.toChars(firstChar)) + String(Character.toChars(secondChar)))
-        countryListWithEmojis.add("$countryName (${locale.country}) $flag")
-    }
-    return countryListWithEmojis
-}
-*/
