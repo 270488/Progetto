@@ -233,8 +233,7 @@ fun CitySelection() {
         ){
             ExposedDropdownMenuBox(
                 expanded = isExpanded,
-                onExpandedChange = { isExpanded = it },
-
+                onExpandedChange = { isExpanded = it }
             ) {
                 TextField(
                     value = selectedCity.toString(),
@@ -246,7 +245,9 @@ fun CitySelection() {
                 )
                 ExposedDropdownMenu(
                     expanded = isExpanded,
-                    onDismissRequest = { isExpanded = false }
+                    onDismissRequest = { isExpanded = false },
+                    modifier = Modifier
+                        .height(200.dp)
                 ) {
                     cities.forEach { city ->
                         DropdownMenuItem(
