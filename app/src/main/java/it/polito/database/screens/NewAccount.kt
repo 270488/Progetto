@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -136,7 +137,8 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 singleLine = true,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f) ,
+                visualTransformation = PasswordVisualTransformation(),
             )
             Spacer(modifier = Modifier.width(2.dp) )
             OutlinedTextField(
@@ -147,7 +149,8 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 singleLine = true,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                visualTransformation = PasswordVisualTransformation(),
             )
         }
        Row(modifier = Modifier.align(CenterHorizontally))
