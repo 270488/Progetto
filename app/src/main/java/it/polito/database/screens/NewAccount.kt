@@ -38,6 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.database.FirebaseDatabase
+import it.polito.database.User
 import it.polito.database.screens.AuthenticationActivity
 import it.polito.database.ui.theme.Screen
 
@@ -62,10 +64,10 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
         Text(text = "Crea account", style = MaterialTheme.typography.headlineSmall)
         Spacer(modifier = Modifier.height(8.dp) )
 
-        val paese = remember { mutableStateOf(TextFieldValue())}
+        var selectedCity = remember { mutableStateOf<City?>(null)}
         val nome = remember { mutableStateOf(TextFieldValue())}
         val cognome = remember { mutableStateOf(TextFieldValue())}
-
+        var selectedGender = remember { mutableStateOf<Gender?>(null)}
         //val dataDiNascita = remember { mutableStateOf(TextFieldValue())} per ora non la includo
         val email = remember { mutableStateOf(TextFieldValue()) }
         val username = remember { mutableStateOf(TextFieldValue()) }
@@ -73,7 +75,9 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
         val confermaPassword = remember { mutableStateOf(TextFieldValue())}
 
 
-        CitySelection()
+        CitySelection( selectedCity = selectedCity.value){
+            city -> selectedCity.value = city
+        }
         Spacer(modifier = Modifier.height(16.dp) )
         OutlinedTextField(
             value = nome.value,
@@ -96,7 +100,9 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
             modifier = Modifier.fillMaxWidth()
         )
 
-        GenderSelection()
+        GenderSelection(selectedGender = selectedGender.value){
+            gen -> selectedGender.value = gen
+        }
 
         OutlinedTextField(
             value = email.value,
@@ -153,28 +159,55 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
         Spacer(modifier = Modifier.padding(8.dp))
         Button(modifier = Modifier.fillMaxWidth(),
             onClick = {
+                val user = User(
+                    nome = nome.value.text.trim(),
+                    cognome = cognome.value.text.trim(),
+                    city = selectedCity.value?.name ?: "",
+                    gender = selectedGender.value?.name ?: "",
+                    email = email.value.text.trim(),
+                    username = username.value.text.trim(),
+                    password = password.value.text.trim()
+                )
+
                 auth.createUserWithEmailAndPassword(
-                    email.value.text.trim(),
-                    password.value.text.trim()
+                    user.email,
+                    user.password
                 ).addOnCompleteListener(context) { task ->
-                    if (task.isSuccessful && password == confermaPassword) {
+                    if (task.isSuccessful) {
                         //TODO finire il controllo sul match delle password
                         Log.d("AUTH", "Registration Success")
-                        auth.signInWithEmailAndPassword(
-                            email.value.text.trim(),
-                            password.value.text.trim()
-                        ).addOnCompleteListener(context) { signInTask ->
-                            if (signInTask.isSuccessful) {
-                                Log.d("AUTH", "Login Success")
-                                navController.navigate(Screen.Home.route)
-                            } else {
-                                Log.d("AUTH", "Login Failed: ${signInTask.exception}")
+                        val userId = task.result?.user?.uid
+                        if (userId != null) {
+                            val databaseReference = FirebaseDatabase.getInstance().getReference("utenti")
+                            val userReference = databaseReference.child(userId)
+
+                            userReference.child("nome").setValue(user.nome)
+                            userReference.child("cognome").setValue(user.cognome)
+                            userReference.child("città").setValue(user.city)
+                            userReference.child("genere").setValue(user.gender)
+                            userReference.child("email").setValue(user.email)
+                            userReference.child("username").setValue(user.username)
+                            userReference.child("password").setValue(user.password)
+
+                            auth.signInWithEmailAndPassword(
+                                user.email,
+                                user.password
+                            ).addOnCompleteListener(context) { signInTask ->
+                                if (signInTask.isSuccessful) {
+                                    Log.d("AUTH", "Login Success")
+                                    navController.navigate(Screen.Home.route)
+                                } else {
+                                    Log.d("AUTH", "Login Failed: ${signInTask.exception}")
+                                }
                             }
                         }
+                    } else {
+                        Log.e("AUTH", "Registration Failed: ${task.exception?.message}")
                     }
                 }
-            }
-        )
+            })
+
+
         {
             Text(text = "Registrati")
         }
@@ -204,10 +237,10 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CitySelection() {
-    var selectedCity by remember {
-        mutableStateOf<City?>(null)
-    }
+fun CitySelection(
+    selectedCity: City?,
+    onCitySelected: (City) -> Unit
+) {
 
     var isExpanded by remember {
         mutableStateOf(false) //default: menù chiuso
@@ -255,9 +288,8 @@ fun CitySelection() {
                                 Text(text = city.toString())
                             },
                             onClick = {
-                                selectedCity = city
-                                isExpanded =
-                                    false
+                                onCitySelected(city)
+                                isExpanded = false
                             })
                     }
                 }
@@ -268,10 +300,10 @@ fun CitySelection() {
 
 
 @Composable
-fun GenderSelection() {
-    var selectedGender by remember {
-        mutableStateOf<Gender?>(null)
-    }
+fun GenderSelection(
+    selectedGender : Gender?,
+    onGenderSelected: (Gender?) ->Unit) {
+
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -282,21 +314,21 @@ fun GenderSelection() {
             text = "Uomo",
             isSelected = selectedGender == Gender.MALE
         ) {
-            selectedGender = Gender.MALE
+            onGenderSelected(Gender.MALE)
         }
 
         GenderRadioButton(
             text = "Donna",
             isSelected = selectedGender == Gender.FEMALE
         ) {
-            selectedGender = Gender.FEMALE
+            onGenderSelected(Gender.FEMALE)
         }
 
         GenderRadioButton(
             text = "Altro",
             isSelected = selectedGender == Gender.OTHER
         ) {
-            selectedGender = Gender.OTHER
+            onGenderSelected(Gender.OTHER)
         }
     }
 }
@@ -324,7 +356,7 @@ enum class Gender {
     MALE, FEMALE, OTHER
 }
 
-enum class City {
+enum class City  {
     Bari, Bergamo, Bologna, Brescia, Como, Cremona, Catania, Ferrara,
     Milano, Napoli, Piacenza, Padova, Perugia, Parma, Pavia, Roma,
     Torino, Treviso, Udine, Varese, Venezia, Vicenza, Verona
