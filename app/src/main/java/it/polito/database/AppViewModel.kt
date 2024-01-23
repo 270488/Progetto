@@ -176,7 +176,7 @@ fun ScrollableColumn(viewModel: AppViewModel) {
             nonperdere?.forEach { p ->
                 val fileName=p.child("nome").value.toString()+".jpg"
                 val url= FindUrl(fileName = fileName)
-                IconButton(onClick = { /*TODO*/ },
+                IconButton(onClick = { /*TODO*/ }, //CAMBIARE CON DELLE CARDS
                     modifier=Modifier.size(200.dp, 150.dp)
                     .background(Color.Gray)) {
                     LoadImageFromUrl(imageUrl = url)
