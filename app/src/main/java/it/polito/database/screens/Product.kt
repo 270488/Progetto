@@ -1,8 +1,10 @@
 package it.polito.database.screens
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -151,7 +153,6 @@ fun ProductContent(
                 .layoutId("bgCard")
                 .height(400.dp)
                 .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
         ) {
             ConstraintLayout(
                 constraintSet = ConstraintSet(
@@ -280,12 +281,12 @@ fun CardContent(){
             .padding(top = 120.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ){
-       // RatingBar()
+      // RatingBar()
     }
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 140.dp),
+            .padding(top = 120.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ){
         OptionSelection()
@@ -297,32 +298,41 @@ fun CardContent(){
         fontWeight = FontWeight.SemiBold,
         modifier = Modifier
             .layoutId("txtDescriptionTitle")
-            .padding(top = 160.dp),
+            .padding(top = 140.dp),
         color = Color.White
     )
 
-    Text(
-        text = "Lo shaker proteico permette di mescolare rapidamente e facilmente le proteine in polvere; versare il latte o l'acqua, aggiungere la polvere, chiudere, agitare e la bevanda proteica è subito pronta.\n" +
-                "\n" +
-                "L'agitatore con setaccio previene la formazione di grumi e residui; lo shaker da palestra presenta inoltre una pratica scala a livelli di 50 ml fino a 700 ml\n" +
-                "\n" +
-                "Lo shaker proteico IronMaxx con filtro e tappo a vite è particolarmente adatto per i viaggi ed è pratico da portare nella borsa sportiva\n" +
-                "\n" +
-                "È possibile riempire e pulire con facilità lo shaker per frullati di proteine rimuovendo il grande tappo a vite: l'apertura per bere si trova sotto il tappo a vite più piccolo\n" +
-                "\n" +
-                "Cos'è incluso: 1 x IronMaxx Protein Shaker da 700 ml - Shaker Stabile con Setaccio per Frullati Proteici - Facile da Pulire - Color Nero Notte",
+    Card(
         modifier = Modifier
+            .height(120.dp)
             .layoutId("txtDescription")
             .padding(top = 8.dp),
-        color = Color.White
-    )
+        colors = CardDefaults.cardColors(Color.Gray),
+        border = BorderStroke(2.dp,Color.Black)
+        ) {
+        Text(
+            text = "Lo shaker proteico permette di mescolare rapidamente e facilmente le proteine in polvere; versare il latte o l'acqua, aggiungere la polvere, chiudere, agitare e la bevanda proteica è subito pronta.\n" +
+                    "\n" +
+                    "L'agitatore con setaccio previene la formazione di grumi e residui; lo shaker da palestra presenta inoltre una pratica scala a livelli di 50 ml fino a 700 ml\n" +
+                    "\n" +
+                    "Lo shaker proteico IronMaxx con filtro e tappo a vite è particolarmente adatto per i viaggi ed è pratico da portare nella borsa sportiva\n" +
+                    "\n" +
+                    "È possibile riempire e pulire con facilità lo shaker per frullati di proteine rimuovendo il grande tappo a vite: l'apertura per bere si trova sotto il tappo a vite più piccolo\n" +
+                    "\n" +
+                    "Cos'è incluso: 1 x IronMaxx Protein Shaker da 700 ml - Shaker Stabile con Setaccio per Frullati Proteici - Facile da Pulire - Color Nero Notte",
+            color = Color.White,
+            modifier = Modifier
+                .padding(8.dp)
+                .verticalScroll(rememberScrollState())
+        )
+    }
 
     Button(
         onClick = {/*TODO*/},
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
             .layoutId("btnBuy")
-            .padding(top = 32.dp, start = 90.dp, bottom = 16.dp)
+            .padding(top = 16.dp, start = 90.dp, bottom = 16.dp)
             .width(250.dp),
         colors = ButtonDefaults.buttonColors(Color.Yellow),
         elevation = ButtonDefaults.buttonElevation(
@@ -390,7 +400,8 @@ fun OptionSelection() {
     ){
         ExposedDropdownMenuBox(
             expanded = isExpanded,
-            onExpandedChange = { isExpanded = it }
+            onExpandedChange = { isExpanded = it },
+            modifier = Modifier.border(BorderStroke(2.dp,Color.Black), RoundedCornerShape(4.dp))
         ) {
             TextField(
                 value = selectedOption,
@@ -407,6 +418,7 @@ fun OptionSelection() {
                 modifier = Modifier
                     .height(100.dp)
                     .background(Color.Gray)
+                    .border(BorderStroke(2.dp,Color.Black), RoundedCornerShape(4.dp))
             ) {
                 options.forEach { o ->
                     DropdownMenuItem(
@@ -444,7 +456,8 @@ fun QtySelection() {
     ){
         ExposedDropdownMenuBox(
             expanded = isExpanded,
-            onExpandedChange = { isExpanded = it }
+            onExpandedChange = { isExpanded = it },
+            modifier = Modifier.border(BorderStroke(2.dp,Color.Black), RoundedCornerShape(4.dp))
         ) {
             TextField(
                 value = selectedQty,
@@ -461,6 +474,8 @@ fun QtySelection() {
                 modifier = Modifier
                     .height(100.dp)
                     .background(Color.Gray)
+                    .border(BorderStroke(2.dp,Color.Black), RoundedCornerShape(4.dp))
+
             ) {
                 qty.forEach { q ->
                     DropdownMenuItem(
