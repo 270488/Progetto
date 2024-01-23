@@ -26,7 +26,7 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
             HomePage(viewModel)
         }
         composable(route = Screen.Category.route) {
-           CategoryScreen(viewModel)
+           CategoryScreen()
         }
         composable(route = Screen.Cart.route) {
             CartScreen(viewModel)

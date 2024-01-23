@@ -33,21 +33,23 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ValueEventListener
 import it.polito.database.AppViewModel
 import it.polito.database.database
+import androidx.compose.ui.tooling.preview.Preview
 
-
+@Preview
 @Composable
-    fun CategoryScreen(viewModel: AppViewModel) {
-    Greetings()
-    }
+fun CategoryScreen() {
+Greetings()
+}
+
+
 @OptIn(ExperimentalMaterial3Api::class)
-
 @Composable
+
 // list of items
 private fun Greetings(
     modifier: Modifier = Modifier
         .padding(top = 74.dp)
-        .padding(bottom = 74.dp), //per non far coprire l'inizio da top e bottom bar
-    names : List<String> = List(6) { "$it" }
+        .padding(bottom = 74.dp) //per non far coprire l'inizio da top e bottom bar
 ) {
     var listaCategorie by remember { mutableStateOf<List<String>>(emptyList()) }
 
@@ -96,7 +98,33 @@ private fun Greeting(name: String) {
 // ui for card content
 @Composable
 private fun CardContent(name: String) {
-    
+
+    var listaSottoCategorie by remember { mutableStateOf<Map<String, List<String>>>(emptyMap()) }
+
+    database.child("categorie").get().addOnSuccessListener { dataSnapshot ->
+        if (dataSnapshot.exists()) {
+            val sottoCategorie = mutableMapOf<String, List<String>>()
+
+
+            for (childSnapshot in dataSnapshot.children) {
+                val list= mutableListOf<String>() //List value
+                val categoria = childSnapshot.key.toString() //key
+
+                for(item in childSnapshot.children){
+
+                    list.add(item.value.toString())
+                }
+
+                sottoCategorie[categoria]=list
+
+            }
+            listaSottoCategorie = sottoCategorie
+            println("Lista sotto categorie: ${listaSottoCategorie}")
+        }
+    }.addOnFailureListener { e ->
+        // Gestisci eventuali errori durante il recupero dei dati dal database
+        println("Errore durante il recupero delle categorie: ${e.message}")
+    }
     var expanded by remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
@@ -112,7 +140,20 @@ private fun CardContent(name: String) {
                 text = name,
                 style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Medium)
             )
-            if(name == "Nutrizione sportiva"){
+
+            val sottoCategorie=listaSottoCategorie.get(name)
+            if(expanded){
+                sottoCategorie?.forEach{sottocategoria->
+                    Column{
+                        Text(text = sottocategoria )
+                    }
+                }
+            }
+
+
+
+
+            /*if(name == "Nutrizione sportiva"){
             if (expanded) {
                 Column{
                     Text(text = "Proteine" )
@@ -130,7 +171,9 @@ private fun CardContent(name: String) {
                     Text(text = "Salute dell'atleta")
                 }
             }
-        }}
+        }*/
+        }
+
 
         IconButton(onClick = { expanded = !expanded }) {
             Icon(
