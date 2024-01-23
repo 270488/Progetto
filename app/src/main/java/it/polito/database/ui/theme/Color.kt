@@ -2,10 +2,17 @@ package it.polito.database.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+val Blue40 = Color(0xFF28303B) //colore sfondo
+val Blue20 = Color(0xFF1D232C) //sfondo elementi in risalto
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+val Yellow40 = Color(0xFFFFED37) //colore secondario
+
+val Red40 = Color(0xFFA20000) //colore undo buttons
+val Red20 = Color(0xFF520000) //colore logout
+
+val Black00 = Color(0xFF000000) //colore scritte su sfondo impostazioni
+val Grey40 = Color(0xFF9A9EA3) //colore caselle
+val Grey90 = Color(0xFFE5E5E5) //colore sfondo secondario
+val White00 = Color(0xFFFFFFFF) //colore scritte e icone su sfondi scuri e placeholder
+
+
