@@ -29,7 +29,6 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -53,61 +52,16 @@ import androidx.constraintlayout.compose.ConstraintSet
 import it.polito.database.AppViewModel
 import it.polito.database.R
 
+@SuppressLint("RememberReturnType")
+
 @Composable
 fun ProductScreen(viewModel: AppViewModel) {
-    ProductDetail()
+        ProductDetail()
 }
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-private fun ProductDetail() {
-Scaffold (
-   /* topBar = {
-        TopAppBar(
-            title = {
-                Text(
-                    text = "Pagina prodotto",
-                    color = Color.Transparent
-                )
-            },
-            modifier = Modifier.background(Color.Black),
-            navigationIcon = {
-               IconButton(
-                   onClick = {  }
-               ) {
-                   Icon(
-                       imageVector = Icons.Rounded.ArrowBack,
-                       contentDescription = "Torna indietro",
-                       modifier = Modifier
-                           .size(40.dp),
-                       tint = Color.Black
-                   )
-               }
-            },
-            actions = {
-                IconButton(onClick = { /*TODO*/ }) {
-                    androidx.compose.material3.Icon(
-                        imageVector = Icons.Rounded.Settings,
-                        contentDescription = "Impostazioni",
-                        modifier = Modifier
-                            .size(40.dp),
-                        tint = Color.Black,
-                    )
-                }
-            }
-        )
-    } */
-){
-    ProductContent()
-}
-}
-
-@Composable
-fun ProductContent(
-    // product: Screen.Product = mProduct
-) {
+fun ProductDetail() {
     ConstraintLayout(
         constraintSet = ConstraintSet(
             content =
@@ -211,11 +165,7 @@ fun ProductContent(
         var filledHeart by remember{ mutableStateOf(false) }
         FloatingActionButton(
             onClick = {
-                if(filledHeart==false) {
-                    filledHeart = true
-                }else{
-                    filledHeart = false
-                }
+                filledHeart = !filledHeart
             },
             containerColor = Color.Transparent,
             modifier = Modifier
@@ -247,7 +197,7 @@ fun ProductContent(
 @Composable
 fun CardContent(){
     Text(
-        text = "Accessori per l'allenamento",
+        text = "Categoria" ,
         modifier = Modifier
             .layoutId("productCategory")
             .padding(top = 10.dp, bottom = 16.dp),
@@ -278,11 +228,14 @@ fun CardContent(){
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 120.dp),
+            .padding(top = 24.dp)
+            .layoutId("ratings"),
         horizontalArrangement = Arrangement.SpaceBetween
     ){
+        Text(text = "★★★★★", fontSize = 32.sp) //temporaneo
       // RatingBar()
     }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -357,28 +310,9 @@ fun RatingBar(
     starsColor: Color = Color.Yellow,
     onRatingChange: (Double) -> Unit
     ) {
-
-    var isHalfStar = (rating % 1) != 0.0
-    Row {
-        for(index in 1 .. stars){
-          /*  Icon(
-                imageVector = if(index<= rating){
-                        Icons.Rounded.Star
-                    } else {
-                           if(isHalfStar){
-                               Icons.Rounded
-                           } else {
-
-                           }
-                          },
-                modifier = Modifier.clickable { onRatingChange(index.toDouble()) },
-                contentDescription = null,
-                tint = starsColor,
-
-            ) */
-        }
-    }
+     /*TODO*/
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -418,7 +352,7 @@ fun OptionSelection() {
                 modifier = Modifier
                     .height(100.dp)
                     .background(Color.Gray)
-                    .border(BorderStroke(2.dp,Color.Black), RoundedCornerShape(4.dp))
+                    .border(BorderStroke(2.dp, Color.Black), RoundedCornerShape(4.dp))
             ) {
                 options.forEach { o ->
                     DropdownMenuItem(
@@ -474,7 +408,7 @@ fun QtySelection() {
                 modifier = Modifier
                     .height(100.dp)
                     .background(Color.Gray)
-                    .border(BorderStroke(2.dp,Color.Black), RoundedCornerShape(4.dp))
+                    .border(BorderStroke(2.dp, Color.Black), RoundedCornerShape(4.dp))
 
             ) {
                 qty.forEach { q ->
@@ -492,3 +426,4 @@ fun QtySelection() {
         }
     }
 }
+
