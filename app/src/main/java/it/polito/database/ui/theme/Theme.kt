@@ -16,9 +16,20 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = Blue40, //colore blu chiaro sfondo
+    onPrimary = White00,
+    primaryContainer = Grey40, //colore caselle
+    secondary = Blue20, //colore blu scuro elementi in risalto
+    onSecondary = White00,
+    secondaryContainer = Red20, //colore logout
+    tertiary = Yellow40, //colore dettagli icone e bottoni
+    onTertiary = Blue40,
+    background = Grey90, //sfondo secondario
+    onBackground = Black00,
+    outline = Black00,
+    outlineVariant = Yellow40,
+    errorContainer = Red40, //colore undo buttons
+    onErrorContainer = White00,
 )
 //COMMENTATO LIGHT SCHEME PERCHE USIAMO UN SOLO TEMA
 /*private val LightColorScheme = lightColorScheme(
