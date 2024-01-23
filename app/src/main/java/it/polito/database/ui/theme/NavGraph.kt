@@ -40,7 +40,7 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
         composable(route = Screen.Settings.route) {
             SettingsScreen(viewModel)
         }
-        composable(route = Screen.Settings.route) {
+        composable(route = Screen.Product.route) {
             ProductScreen(viewModel)
         }
         composable(route = Screen.AuthenticationScreen.route) {

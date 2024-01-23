@@ -176,26 +176,20 @@ fun AddItem2(navController: NavHostController){
         }
     )
 }
+@SuppressLint("SuspiciousIndentation")
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun SmallTopAppBar(navController: NavHostController) {
-    val screens = listOf(
-        Screen.Settings,
-        Screen.Notifications,
-    )
+
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-
         NavigationBar {
-            screens.forEach { screen ->
                 AddItem3(
                     navController = navController,
                     currentDestination = currentDestination,
                     )
             }
-
         }
-    }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -210,10 +204,11 @@ fun AddItem3(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center)
             {
-                if (currentDestination?.route == Screen.Notifications.route)
-                    Text(text = "Notifiche")
-                else if (currentDestination?.route == Screen.Settings.route)
-                    Text(text = "Impostazioni")
+                when (currentDestination?.route) {
+                    Screen.Notifications.route -> Text(text = "Notifiche")
+                    Screen.Settings.route -> Text(text = "Impostazioni")
+                    Screen.Product.route -> Text(text = "")
+                }
                 //tante condizioni quante sono le schermate che hanno questa top Bar
                 //( con freccia per tornare indietro, impostazioni a destra
             }
