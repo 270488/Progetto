@@ -53,16 +53,16 @@ private fun Greetings(
 ) {
     var listaCategorie by remember { mutableStateOf<List<String>>(emptyList()) }
 
-    database.child("categorie").get().addOnSuccessListener { dataSnapshot ->
+    database.child("categorie").get().addOnSuccessListener { dataSnapshot -> //prende tutti i figli del nodo categorie
         if (dataSnapshot.exists()) {
             val categorie = mutableListOf<String>()
-            for (childSnapshot in dataSnapshot.children) {
-                val categoria = childSnapshot.key.toString()
+            for (childSnapshot in dataSnapshot.children) { //prende ogni figlio del nodo categorie
+                val categoria = childSnapshot.key.toString() //prende la chiave, quindi abbigliamento donna ecc...
                 categoria?.let {
-                    categorie.add(categoria)
+                    categorie.add(categoria) //aggiunge la chiave alla lista categoria, locale del for
                 }
             }
-            listaCategorie = categorie
+            listaCategorie = categorie //copia la lista locale del for nella listaCategorie fuori dalla funzione
         }
     }.addOnFailureListener { e ->
         // Gestisci eventuali errori durante il recupero dei dati dal database
@@ -105,20 +105,18 @@ private fun CardContent(name: String) {
         if (dataSnapshot.exists()) {
             val sottoCategorie = mutableMapOf<String, List<String>>()
 
-
-            for (childSnapshot in dataSnapshot.children) {
+            for (childSnapshot in dataSnapshot.children) { //prende ogni figlio di categorie, quindi abbigliamento donna ecc...
                 val list= mutableListOf<String>() //List value
-                val categoria = childSnapshot.key.toString() //key
+                val categoria = childSnapshot.key.toString() //chiave=abbigliamento donna
 
-                for(item in childSnapshot.children){
-
-                    list.add(item.value.toString())
+                for(item in childSnapshot.children){ //prende ogni figlio di abbigliamento donna
+                    list.add(item.value.toString()) //aggiunge il valore del figlio alla list
                 }
 
-                sottoCategorie[categoria]=list
+                sottoCategorie[categoria]=list //riempie mappa locale della funzione
 
             }
-            listaSottoCategorie = sottoCategorie
+            listaSottoCategorie = sottoCategorie //copia mappa locale nella mappa esterna alla funzione
             println("Lista sotto categorie: ${listaSottoCategorie}")
         }
     }.addOnFailureListener { e ->
@@ -141,7 +139,7 @@ private fun CardContent(name: String) {
                 style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Medium)
             )
 
-            val sottoCategorie=listaSottoCategorie.get(name)
+            val sottoCategorie=listaSottoCategorie.get(name) // prende la lista associata al nome della categoria
             if(expanded){
                 sottoCategorie?.forEach{sottocategoria->
                     Column{
@@ -149,29 +147,6 @@ private fun CardContent(name: String) {
                     }
                 }
             }
-
-
-
-
-            /*if(name == "Nutrizione sportiva"){
-            if (expanded) {
-                Column{
-                    Text(text = "Proteine" )
-                }
-                Column {
-                    Text(text = "Aumento della massa" )
-                }
-                Column {
-                    Text(text = "Energia e resistenza")
-                }
-                Column {
-                    Text(text = "Bruciagrassi e definizione")
-                }
-                Column {
-                    Text(text = "Salute dell'atleta")
-                }
-            }
-        }*/
         }
 
 

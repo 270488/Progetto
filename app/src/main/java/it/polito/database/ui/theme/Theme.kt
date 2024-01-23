@@ -16,12 +16,23 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = Blue40, //colore blu chiaro sfondo
+    onPrimary = White00,
+    primaryContainer = Grey40, //colore caselle
+    secondary = Blue20, //colore blu scuro elementi in risalto
+    onSecondary = White00,
+    secondaryContainer = Red20, //colore logout
+    tertiary = Yellow40, //colore dettagli icone e bottoni
+    onTertiary = Blue40,
+    background = Grey90, //sfondo secondario
+    onBackground = Black00,
+    outline = Black00,
+    outlineVariant = Yellow40,
+    errorContainer = Red40, //colore undo buttons
+    onErrorContainer = White00,
 )
-
-private val LightColorScheme = lightColorScheme(
+//COMMENTATO LIGHT SCHEME PERCHE USIAMO UN SOLO TEMA
+/*private val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40
@@ -35,29 +46,29 @@ private val LightColorScheme = lightColorScheme(
     onBackground = Color(0xFF1C1B1F),
     onSurface = Color(0xFF1C1B1F),
     */
-)
+)*/
 
 @Composable
 fun DatabaseTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false, //FALSE perchè non vogliamo i colori dinamici
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
+    /*val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
-    }
+    }*/
+    val colorScheme = DarkColorScheme //----> ASSEGNA IL TEMA ALL'APP CHE SARA SEMPRE QUELLO DARK
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
+            window.statusBarColor = colorScheme.background.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
