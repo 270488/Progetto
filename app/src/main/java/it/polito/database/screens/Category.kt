@@ -1,5 +1,6 @@
 package it.polito.database.screens
 
+import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -28,7 +29,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.ValueEventListener
 import it.polito.database.AppViewModel
+import it.polito.database.database
 
 
 @Composable
@@ -45,18 +49,37 @@ private fun Greetings(
         .padding(bottom = 74.dp), //per non far coprire l'inizio da top e bottom bar
     names : List<String> = List(6) { "$it" }
 ) {
+    var listaCategorie by remember { mutableStateOf<List<String>>(emptyList()) }
+
+    database.child("categorie").get().addOnSuccessListener { dataSnapshot ->
+        if (dataSnapshot.exists()) {
+            val categorie = mutableListOf<String>()
+            for (childSnapshot in dataSnapshot.children) {
+                val categoria = childSnapshot.key.toString()
+                categoria?.let {
+                    categorie.add(categoria)
+                }
+            }
+            listaCategorie = categorie
+        }
+    }.addOnFailureListener { e ->
+        // Gestisci eventuali errori durante il recupero dei dati dal database
+        println("Errore durante il recupero delle categorie: ${e.message}")
+    }
+
     LazyColumn(modifier = modifier.padding(vertical = 4.dp)) {
-        val names = listOf(
+        /*val names = listOf(
             "Alimentazione salutare",
             "Nutrizione sportiva",
             "Salute e dimagrimento",
             "Cosmetica e cura personale",
             "Abbigliamento da donna",
             "Abbigliamento da uomo"
-        )
-        items(items = names) {name ->
+        )*/
+        items(items = listaCategorie) { name ->
             Greeting(name = name)
         }
+
     }
 }
 
@@ -73,6 +96,7 @@ private fun Greeting(name: String) {
 // ui for card content
 @Composable
 private fun CardContent(name: String) {
+    
     var expanded by remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
