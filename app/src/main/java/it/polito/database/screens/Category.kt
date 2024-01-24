@@ -3,11 +3,15 @@ package it.polito.database.screens
 import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowRight
@@ -27,6 +31,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.google.firebase.database.DataSnapshot
@@ -34,11 +40,16 @@ import com.google.firebase.database.ValueEventListener
 import it.polito.database.AppViewModel
 import it.polito.database.database
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import it.polito.database.ui.theme.Screen
 
-@Preview
+
 @Composable
-fun CategoryScreen() {
-Greetings()
+fun CategoryScreen(viewModel: AppViewModel, navController: NavController) {
+    Greetings(viewModel, navController)
 }
 
 
@@ -46,7 +57,7 @@ Greetings()
 @Composable
 
 // list of items
-private fun Greetings(
+private fun Greetings(viewModel: AppViewModel,navController: NavController,
     modifier: Modifier = Modifier
         .padding(top = 74.dp)
         .padding(bottom = 74.dp) //per non far coprire l'inizio da top e bottom bar
@@ -70,34 +81,25 @@ private fun Greetings(
     }
 
     LazyColumn(modifier = modifier.padding(vertical = 4.dp)) {
-        /*val names = listOf(
-            "Alimentazione salutare",
-            "Nutrizione sportiva",
-            "Salute e dimagrimento",
-            "Cosmetica e cura personale",
-            "Abbigliamento da donna",
-            "Abbigliamento da uomo"
-        )*/
         items(items = listaCategorie) { name ->
-            Greeting(name = name)
+            Greeting(name = name, viewModel, navController)
         }
-
     }
 }
 
 // ui for card
 @Composable
-private fun Greeting(name: String) {
+private fun Greeting(name: String, viewModel: AppViewModel, navController: NavController) {
     Card(colors = CardDefaults.cardColors(
         containerColor = MaterialTheme.colorScheme.primary
     ), modifier = Modifier.padding(vertical = 4.dp, horizontal = 4.dp)) {
-        CardContent(name = name)
+        CardContent(name = name, viewModel, navController)
     }
 }
 
 // ui for card content
 @Composable
-private fun CardContent(name: String) {
+private fun CardContent(name: String, viewModel: AppViewModel,navController: NavController) {
 
     var listaSottoCategorie by remember { mutableStateOf<Map<String, List<String>>>(emptyMap()) }
 
@@ -142,14 +144,10 @@ private fun CardContent(name: String) {
             val sottoCategorie=listaSottoCategorie.get(name) // prende la lista associata al nome della categoria
             if(expanded){
                 sottoCategorie?.forEach{sottocategoria->
-                    Column{
-                        Text(text = sottocategoria )
-                    }
+                    sottoCategoriaCard(sottocategoria = sottocategoria, viewModel=viewModel, categoria = name,navController)
                 }
             }
         }
-
-
         IconButton(onClick = { expanded = !expanded }) {
             Icon(
                 imageVector = if (expanded) Icons.Filled.KeyboardArrowDown else Icons.Filled.KeyboardArrowRight,
@@ -160,6 +158,39 @@ private fun CardContent(name: String) {
                     "show more"
                 }
             )
+        }
+    }
+}
+
+@Composable
+fun sottoCategoriaCard(sottocategoria: String, viewModel: AppViewModel, categoria: String,navController: NavController){
+    var expanded by remember { mutableStateOf(false) }
+
+    Column (modifier= Modifier
+        .padding(2.dp)
+        .fillMaxWidth()
+        .border(width = 1.dp, color = Color.Black, shape = RectangleShape),
+        verticalArrangement = Arrangement.Center) {
+        Row(modifier= Modifier
+            .padding(2.dp)
+            .fillMaxWidth()
+            .padding(end = 2.dp), horizontalArrangement = Arrangement.SpaceBetween){
+            Text(text = sottocategoria, style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Medium) )
+            IconButton(onClick = { expanded = !expanded;
+                if (expanded) {
+                navController.navigate(Screen.ProductList.route)
+            } }) {
+
+                Icon(
+                    imageVector = if (expanded) Icons.Filled.KeyboardArrowDown else Icons.Filled.KeyboardArrowRight,
+                    contentDescription =
+                    if (expanded) {
+                        "show less"
+                    } else {
+                        "show more"
+                    }
+                )
+            }
         }
     }
 }

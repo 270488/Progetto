@@ -47,15 +47,17 @@ import it.polito.database.LoadImageFromUrl
 @OptIn(ExperimentalMaterial3Api::class)
 
 @Composable
-fun ProductListScreen(viewModel: AppViewModel) {
-    val sottocategoria="Proteine"
-    TopAndBottom(cat = sottocategoria, viewModel) //Va sostituito con il nome della sottocategoria
+fun ProductListScreen(viewModel: AppViewModel, sottocategoria: String, categoria: String) {
+    ProductList(viewModel = viewModel, sottocategoria = sottocategoria, categoria = categoria)
 }
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopAndBottom(cat: String, viewModel: AppViewModel){
+fun ProductList(modifier: Modifier = Modifier
+    .padding(top = 74.dp)
+    .padding(bottom = 74.dp), viewModel: AppViewModel, sottocategoria: String, categoria: String) {
+
+    val categoria=categoria
+    val sottocategoria=sottocategoria
 
     val children= database.child("prodotti") //prende dal db il nodo prodotti e aggiunge un listener
     children.addValueEventListener(object : ValueEventListener {
@@ -74,58 +76,8 @@ fun TopAndBottom(cat: String, viewModel: AppViewModel){
             println("Errore nel leggere i dati dal database: ${databaseError.message}")
         }
     })
-    val navController = rememberNavController()
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = cat,
-                        color = Color.Black
-                    )
-                },
-                modifier = Modifier.background(Color.Black),
-                navigationIcon = {
-                    IconButton(
-                        onClick = { }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.ArrowBack,
-                            contentDescription = "Torna indietro",
-                            modifier = Modifier
-                                .size(40.dp),
-                            tint = Color.Black
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = {  }) {
-                        androidx.compose.material3.Icon(
-                            imageVector = Icons.Rounded.Settings,
-                            contentDescription = "Impostazioni",
-                            modifier = Modifier
-                                .size(40.dp),
-                            tint = Color.Black,
-                        )
-                    }
-                }
-            )
-
-        },
-        bottomBar = { BottomBar(navController = navController) }
-    ){}
-
-    ProductList(viewModel=viewModel)
 
 
-}
-@Composable
-fun ProductList(modifier: Modifier = Modifier
-    .padding(top = 74.dp)
-    .padding(bottom = 74.dp), viewModel: AppViewModel) {
-
-    val categoria="Nutrizione Sportiva"
-    val sottocategoria="Proteine"
 
     val products= filtroCategorieProdotti(categoria = categoria, sottocategoria = sottocategoria, viewModel = viewModel)
 
@@ -156,12 +108,15 @@ private fun filtroCategorieProdotti(categoria: String,sottocategoria: String, vi
 @Composable
 fun contentCard(nome: String, prezzo: String, url: String){
 
-    Column (modifier=Modifier.padding(10.dp).border(width = 1.dp, shape = RectangleShape, color = Color.Black)) {
+    Column (modifier= Modifier
+        .padding(10.dp)
+        .border(width = 1.dp, shape = RectangleShape, color = Color.Black)) {
         Row(modifier= Modifier.fillMaxSize()){
             LoadImageFromUrl(imageUrl = url)
 
         }
-        Row (modifier=Modifier .fillMaxWidth()
+        Row (modifier= Modifier
+            .fillMaxWidth()
             .padding(32.dp),
             verticalAlignment = Alignment.CenterVertically) {
             Text(text = nome, modifier = Modifier.weight(1f), style = TextStyle(fontSize = 20.sp))

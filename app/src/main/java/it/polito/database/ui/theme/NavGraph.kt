@@ -12,9 +12,11 @@ import it.polito.database.screens.AuthenticationScreen
 import it.polito.database.screens.CartScreen
 import it.polito.database.screens.CategoryScreen
 import it.polito.database.screens.NotificationsScreen
+import it.polito.database.screens.ProductListScreen
 import it.polito.database.screens.ProductScreen
 import it.polito.database.screens.ProfileScreen
 import it.polito.database.screens.SettingsScreen
+import it.polito.database.screens.ProductListScreen
 
 @Composable
 fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
@@ -26,7 +28,7 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
             HomePage(viewModel)
         }
         composable(route = Screen.Category.route) {
-           CategoryScreen()
+           CategoryScreen(viewModel, navController)
         }
         composable(route = Screen.Cart.route) {
             CartScreen(viewModel)
@@ -48,6 +50,9 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
         }
         composable(route = Screen.NewAccount.route) {
            NewAccount(navController, AuthenticationActivity())
+        }
+        composable(route = Screen.ProductList.route) {
+            ProductListScreen(viewModel, sottocategoria = "Proteine", categoria = "Nutrizione Sportiva")
         }
     }
 }

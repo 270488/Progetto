@@ -61,4 +61,9 @@ sealed class Screen (
         title = "Product",
         icon = Icons.Default.Info
     )
+    object ProductList: Screen(
+        route = "productList",
+        title = "ProductList",
+        icon = Icons.Default.Info
+    )
 }

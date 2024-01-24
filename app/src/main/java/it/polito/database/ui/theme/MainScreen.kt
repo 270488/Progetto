@@ -45,6 +45,7 @@ fun MainScreen(viewModel: AppViewModel){
                     if (currentDestination?.route == Screen.Settings.route
                         || currentDestination?.route == Screen.Notifications.route
                         || currentDestination?.route == Screen.Product.route
+                        || currentDestination?.route == Screen.ProductList.route
                     ) {
                         SmallTopAppBar(navController = navController)
                     } else {
@@ -73,6 +74,7 @@ fun BottomBar(navController: NavHostController) {
         Screen.Category,
         Screen.Cart,
         Screen.Profile,
+
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 //serve ad osservare lo stato ed essere notificati quando questo cambia

@@ -36,6 +36,7 @@ import com.google.firebase.ktx.initialize
 import com.google.firebase.storage.ktx.storage
 import it.polito.database.screens.AuthenticationActivity
 import it.polito.database.screens.AuthenticationScreen
+import it.polito.database.screens.ProductListScreen
 import it.polito.database.ui.theme.MainScreen
 import it.polito.database.ui.theme.NavGraph
 import it.polito.database.ui.theme.Screen
@@ -57,7 +58,6 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             DatabaseTheme {
               MainScreen(viewModel)
-
               //AuthenticationScreen(navController = navController,context = AuthenticationActivity())
             }
         }
