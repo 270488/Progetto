@@ -36,8 +36,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import coil.annotation.ExperimentalCoilApi
@@ -45,7 +50,9 @@ import coil.compose.AsyncImage
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import it.polito.database.ui.theme.fontFamily
 import kotlin.math.round
+import kotlin.reflect.KClass
 
 
 class AppViewModel: ViewModel() {
@@ -77,6 +84,8 @@ class AppViewModel: ViewModel() {
     }
 }
 
+
+
 @Composable
 fun HomePage(viewModel: AppViewModel){
     val prod by viewModel.products.observeAsState()
@@ -95,6 +104,7 @@ fun HomePage(viewModel: AppViewModel){
     }
 
 }
+
 /*
 @Composable
 fun IntestazioneHome(){
@@ -163,7 +173,9 @@ fun ScrollableColumn(viewModel: AppViewModel) {
 
             Row(modifier=Modifier.fillMaxWidth()){
                 Text(text = "Da non perdere", color = Color.White,
-                    modifier = Modifier.weight(1f),
+                    fontFamily = fontFamily,
+                    fontSize = 8.sp,
+                    fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Start)
                 Text(text = "Cerca", color = Color.White,
                     modifier = Modifier.weight(1f),
@@ -177,8 +189,9 @@ fun ScrollableColumn(viewModel: AppViewModel) {
                 val fileName=p.child("nome").value.toString()+".jpg"
                 val url= FindUrl(fileName = fileName)
                 IconButton(onClick = { /*TODO*/ }, //CAMBIARE CON DELLE CARDS
-                    modifier=Modifier.size(200.dp, 150.dp)
-                    .background(Color.Gray)) {
+                    modifier= Modifier
+                        .size(200.dp, 150.dp)
+                        .background(Color.Gray)) {
                     LoadImageFromUrl(imageUrl = url)
                 }
 
@@ -242,6 +255,7 @@ fun ScrollableColumn(viewModel: AppViewModel) {
     }
 }
 
+
 /*@Composable
 fun Footer(){
     Row(
@@ -276,7 +290,9 @@ fun LoadImageFromUrl(imageUrl: String) {
     AsyncImage(
         model = imageUrl,
         contentDescription = null,
-        modifier = Modifier.clip(RoundedCornerShape(160.dp)).fillMaxSize(),
+        modifier = Modifier
+            .clip(RoundedCornerShape(160.dp))
+            .fillMaxSize(),
     )
 }
 

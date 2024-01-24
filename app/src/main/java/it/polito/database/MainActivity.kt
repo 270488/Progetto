@@ -19,6 +19,11 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import it.polito.database.ui.theme.DatabaseTheme
 import androidx.compose.material3.Button
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -46,6 +51,8 @@ class MainActivity : ComponentActivity() {
         Firebase.initialize(context = this)
 
         super.onCreate(savedInstanceState)
+
+
         setContent {
             val navController = rememberNavController()
             DatabaseTheme {
