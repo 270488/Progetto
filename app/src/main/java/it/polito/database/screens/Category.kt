@@ -167,10 +167,6 @@ private fun CardContent(name: String, viewModel: AppViewModel,navController: Nav
 @Composable
 fun sottoCategoriaCard(sottocategoria: String, viewModel: AppViewModel, categoria: String,navController: NavController){
     var expanded by remember { mutableStateOf(false) }
-
-
-
-
     Column (modifier= Modifier
         .padding(2.dp)
         .fillMaxWidth()

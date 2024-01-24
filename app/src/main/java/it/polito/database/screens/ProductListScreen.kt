@@ -1,11 +1,13 @@
 package it.polito.database.screens
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.animateContentSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,21 +17,29 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -43,6 +53,7 @@ import it.polito.database.AppViewModel
 import it.polito.database.FindUrl
 import it.polito.database.GlobalVariables
 import it.polito.database.LoadImageFromUrl
+import okhttp3.internal.notify
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -89,10 +100,55 @@ fun ProductList(modifier: Modifier = Modifier
         .verticalScroll(rememberScrollState())
     ) {
 
-        /*Row(modifier=Modifier.fillMaxWidth()){
+        //barra superiore con filtri
+        val filtri= listOf<String>("Prezzo", "Rating", "Taglia")
+
+        var expanded by remember { mutableStateOf(false) }
+
+        Row(modifier=Modifier.fillMaxWidth().padding(5.dp)){
+            Icon(
+                imageVector = Icons.Filled.List, //andrebbe messa icona del filtro
+                contentDescription = ""
+
+            )
+            Text(text = "Filtri",
+                style = MaterialTheme.typography.headlineSmall
+                    .copy(fontWeight = FontWeight.Medium, color = Color.Yellow))
+            Row(
+                modifier = Modifier
+                    .padding(12.dp)
+                    .animateContentSize()
+            ) {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(12.dp)
+                ) {
+                    Text(
+                        text = "Filtri",
+                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Medium)
+                    )
+                    if(expanded){
+                        filtri.forEach{f-> elementoFiltro(filtro = f)
+                        }
+
+                    }
+                }
+                IconButton(onClick = { expanded = !expanded }) {
+                    Icon(
+                        imageVector = if (expanded) Icons.Filled.KeyboardArrowDown else Icons.Filled.KeyboardArrowRight,
+                        contentDescription =
+                        if (expanded) {
+                            "show less"
+                        } else {
+                            "show more"
+                        }
+                    )
+                }
+            }
 
 
-        }*/
+        }
         products.forEach{ prod->
             val nome=prod.child("nome").value.toString()
             val prezzo=prod.child("prezzo").value.toString()
@@ -133,4 +189,20 @@ fun contentCard(nome: String, prezzo: String, url: String){
     }
 
 
+}
+
+@Composable
+fun elementoFiltro(filtro: String){
+    Column (modifier= Modifier
+        .padding(2.dp)
+        .fillMaxWidth()
+        .border(width = 1.dp, color = Color.Black, shape = RectangleShape),
+        verticalArrangement = Arrangement.Center) {
+        Row(modifier= Modifier
+            .padding(2.dp)
+            .fillMaxWidth()
+            .padding(end = 2.dp), horizontalArrangement = Arrangement.SpaceBetween){
+            Text(text = filtro, style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Medium) )
+        }
+    }
 }
