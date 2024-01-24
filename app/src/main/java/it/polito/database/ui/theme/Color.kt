@@ -6,6 +6,7 @@ val Blue40 = Color(0xFF28303B) //colore sfondo
 val Blue20 = Color(0xFF1D232C) //sfondo elementi in risalto
 
 val Yellow40 = Color(0xFFFFED37) //colore dettagli, icone e bottoni
+val Yellow60 = Color(0x19FFED37) //colore evidenziazione sezione corrente
 
 val Red40 = Color(0xFFA20000) //colore undo buttons
 val Red20 = Color(0xFF520000) //colore logout

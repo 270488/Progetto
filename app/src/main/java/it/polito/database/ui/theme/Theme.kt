@@ -28,6 +28,7 @@ private val DarkColorScheme = darkColorScheme(
     onBackground = Black00,
     outline = Black00,
     outlineVariant = Yellow40,
+    tertiaryContainer = Yellow60,
     errorContainer = Red40, //colore undo buttons
     onErrorContainer = White00,
 )

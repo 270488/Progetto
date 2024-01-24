@@ -2,6 +2,8 @@ package it.polito.database.ui.theme
 
 //import com.google.android.material.bottomNavigation
 import android.annotation.SuppressLint
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -75,7 +78,8 @@ fun BottomBar(navController: NavHostController) {
 //serve ad osservare lo stato ed essere notificati quando questo cambia
     val currentDestination = navBackStackEntry?.destination
 
-        NavigationBar {
+        NavigationBar(
+            containerColor = MaterialTheme.colorScheme.onBackground) {
             screens.forEach { screen ->
                 AddItem(
                     screen = screen,
@@ -103,6 +107,11 @@ fun RowScope.AddItem(
                     contentDescription = "Navigation Icon"
                 )
             },
+            colors = NavigationBarItemDefaults.colors(
+                indicatorColor = Color.Transparent,
+                selectedIconColor = MaterialTheme.colorScheme.onPrimary,
+                unselectedIconColor = MaterialTheme.colorScheme.tertiary,
+            ),
             selected = currentDestination?.hierarchy?.any(){
                 it.route == screen.route
             } == true,
@@ -122,7 +131,7 @@ fun TopBar(navController: NavHostController) {
     val currentDestination = navBackStackEntry?.destination
 
     if (currentDestination?.route !== Screen.AuthenticationScreen.route ) {
-        NavigationBar {
+        NavigationBar(containerColor = MaterialTheme.colorScheme.primary) {
             screens.forEach { screen ->
                 AddItem2(
                     navController = navController
@@ -148,11 +157,17 @@ fun AddItem2(navController: NavHostController){
             //aggiungere il logo
             }
                 },
+        colors = TopAppBarDefaults.smallTopAppBarColors(
+            containerColor =  MaterialTheme.colorScheme.primary,
+        ),
         navigationIcon = {
             IconButton(
                 onClick = {
                     navController.navigate(Screen.Notifications.route)
-                }
+                },
+                colors = IconButtonDefaults.iconButtonColors(
+                    contentColor = MaterialTheme.colorScheme.tertiary
+                ),
             ){
                 BadgedBox( //è il pallino per le notifiche
                     //capire come abilitarlo quando il databse la manda
@@ -169,7 +184,8 @@ fun AddItem2(navController: NavHostController){
             }
                          },
         actions = {
-            IconButton(onClick = {  navController.navigate(Screen.Settings.route) }) {
+            IconButton(onClick = {  navController.navigate(Screen.Settings.route) },
+                colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.tertiary)) {
                 Icon(
                     imageVector = Screen.Settings.icon,
                     contentDescription = "Impostazioni"
@@ -185,7 +201,7 @@ fun SmallTopAppBar(navController: NavHostController) {
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-        NavigationBar {
+        NavigationBar(containerColor = MaterialTheme.colorScheme.primary){
                 AddItem3(
                     navController = navController,
                     currentDestination = currentDestination,
@@ -215,6 +231,9 @@ fun AddItem3(
                 //( con freccia per tornare indietro, impostazioni a destra
             }
         },
+        colors = TopAppBarDefaults.smallTopAppBarColors(
+            containerColor =  MaterialTheme.colorScheme.primary
+        ),
         navigationIcon = {
             IconButton(
                 onClick = {

@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,6 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -92,8 +94,7 @@ fun HomePage(viewModel: AppViewModel){
 
     Column(modifier = Modifier
         .fillMaxSize()
-        .background(Color.Black)
-
+        .background(MaterialTheme.colorScheme.primary)
         )
     {
        // IntestazioneHome()
@@ -171,15 +172,15 @@ fun ScrollableColumn(viewModel: AppViewModel) {
         //prima riga "DA NON PERDERE"
         Column(modifier = Modifier){
 
-            Row(modifier=Modifier.fillMaxWidth()){
-                Text(text = "Da non perdere", color = Color.White,
+            Row(modifier=Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
+                Text(text = "Da non perdere", color = MaterialTheme.colorScheme.onPrimary,
                     fontFamily = fontFamily,
-                    fontSize = 8.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Start)
-                Text(text = "Cerca", color = Color.White,
-                    modifier = Modifier.weight(1f),
-                    textAlign = TextAlign.End)
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold)
+                Text(text = "Cerca", color = MaterialTheme.colorScheme.onPrimary,
+                    fontFamily = fontFamily,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold)
             }
         //Contiene i bottoni con i prodotti
         Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
@@ -189,26 +190,25 @@ fun ScrollableColumn(viewModel: AppViewModel) {
                 val fileName=p.child("nome").value.toString()+".jpg"
                 val url= FindUrl(fileName = fileName)
                 IconButton(onClick = { /*TODO*/ }, //CAMBIARE CON DELLE CARDS
-                    modifier= Modifier
-                        .size(200.dp, 150.dp)
-                        .background(Color.Gray)) {
+                    modifier= Modifier.size(200.dp, 150.dp)){
+                        //.background(Color.Gray)) {
                     LoadImageFromUrl(imageUrl = url)
                 }
 
             }
 
         }
-        Text(text = "________________________________________________________________", color = Color.Yellow)
+        Text(text = "__________________________________________________", color = MaterialTheme.colorScheme.tertiary)
         }
         Spacer(modifier=Modifier.weight(0.25f))
         //Seconda riga OFFERTE PER TE
         Column(modifier = Modifier){
 
             Row(modifier=Modifier.fillMaxWidth()){
-                Text(text = "Offerte per te", color = Color.White,
-                    modifier = Modifier.weight(1f),
-                    textAlign = TextAlign.Start)
-
+                Text(text = "Offerte per te", color = MaterialTheme.colorScheme.onPrimary,
+                    fontFamily = fontFamily,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold)
             }
             Row(modifier = Modifier.horizontalScroll(rememberScrollState())){
 
@@ -224,7 +224,7 @@ fun ScrollableColumn(viewModel: AppViewModel) {
                 }
 
             }
-            Text(text = "________________________________________________________________", color = Color.Yellow)
+            Text(text = "__________________________________________________", color = Color.Yellow)
         }
         Spacer(modifier=Modifier.weight(0.25f))
 
@@ -232,10 +232,10 @@ fun ScrollableColumn(viewModel: AppViewModel) {
         Column(modifier = Modifier){
 
             Row(modifier=Modifier.fillMaxWidth()){
-                Text(text = "Acquista di nuovo", color = Color.White,
-                    modifier = Modifier.weight(1f),
-                    textAlign = TextAlign.Start)
-
+                Text(text = "Acquista di nuovo", color = MaterialTheme.colorScheme.onPrimary,
+                    fontFamily = fontFamily,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold)
             }
             Row(modifier = Modifier.horizontalScroll(rememberScrollState())){
                 val acquista= listaFiltrata(categoria = "acquista", viewModel = viewModel)
@@ -249,7 +249,6 @@ fun ScrollableColumn(viewModel: AppViewModel) {
                     }
                 }
             }
-            Text(text = "________________________________________________________________", color = Color.Yellow)
         }
 
     }
