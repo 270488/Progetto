@@ -41,23 +41,24 @@ import it.polito.database.database
 import it.polito.database.ui.theme.BottomBar
 import it.polito.database.AppViewModel
 import it.polito.database.FindUrl
+import it.polito.database.GlobalVariables
 import it.polito.database.LoadImageFromUrl
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 
 @Composable
-fun ProductListScreen(viewModel: AppViewModel, sottocategoria: String, categoria: String) {
-    ProductList(viewModel = viewModel, sottocategoria = sottocategoria, categoria = categoria)
+fun ProductListScreen(viewModel: AppViewModel) {
+    ProductList(viewModel = viewModel)
 }
 
 @Composable
 fun ProductList(modifier: Modifier = Modifier
     .padding(top = 74.dp)
-    .padding(bottom = 74.dp), viewModel: AppViewModel, sottocategoria: String, categoria: String) {
+    .padding(bottom = 74.dp), viewModel: AppViewModel) {
 
-    val categoria=categoria
-    val sottocategoria=sottocategoria
+    val categoria=GlobalVariables.cat
+    val sottocategoria=GlobalVariables.sottocat
 
     val children= database.child("prodotti") //prende dal db il nodo prodotti e aggiunge un listener
     children.addValueEventListener(object : ValueEventListener {
@@ -80,13 +81,18 @@ fun ProductList(modifier: Modifier = Modifier
 
 
     val products= filtroCategorieProdotti(categoria = categoria, sottocategoria = sottocategoria, viewModel = viewModel)
-
+    println("Products $products")
     Column (modifier= Modifier
         .padding(top = 74.dp)
         .padding(bottom = 74.dp)
         .fillMaxSize()
         .verticalScroll(rememberScrollState())
     ) {
+
+        /*Row(modifier=Modifier.fillMaxWidth()){
+
+
+        }*/
         products.forEach{ prod->
             val nome=prod.child("nome").value.toString()
             val prezzo=prod.child("prezzo").value.toString()
@@ -100,6 +106,8 @@ fun ProductList(modifier: Modifier = Modifier
 
 @Composable
 private fun filtroCategorieProdotti(categoria: String,sottocategoria: String, viewModel: AppViewModel): List<DataSnapshot>{
+    println("Categoria $categoria , sottocateogria $sottocategoria")
+
     return viewModel.products.observeAsState(emptyList()).value
         .filter { it.child("categoria").value.toString() == categoria }
         .filter { it.child("sottocategoria").value.toString()==sottocategoria}
@@ -120,7 +128,7 @@ fun contentCard(nome: String, prezzo: String, url: String){
             .padding(32.dp),
             verticalAlignment = Alignment.CenterVertically) {
             Text(text = nome, modifier = Modifier.weight(1f), style = TextStyle(fontSize = 20.sp))
-            Text(text = prezzo, modifier = Modifier.weight(1f),style = TextStyle(fontSize = 20.sp))
+            Text(text = prezzo+"€", modifier = Modifier.weight(1f),style = TextStyle(fontSize = 20.sp))
         }
     }
 

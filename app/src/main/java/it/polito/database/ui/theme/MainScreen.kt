@@ -25,6 +25,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import it.polito.database.AppViewModel
+import it.polito.database.GlobalVariables
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "SuspiciousIndentation")
@@ -228,6 +229,7 @@ fun AddItem3(
                     Screen.Notifications.route -> Text(text = "Notifiche")
                     Screen.Settings.route -> Text(text = "Impostazioni")
                     Screen.Product.route -> Text(text = "")
+                    Screen.ProductList.route-> Text(text = GlobalVariables.sottocat)
                 }
                 //tante condizioni quante sono le schermate che hanno questa top Bar
                 //( con freccia per tornare indietro, impostazioni a destra

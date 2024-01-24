@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import it.polito.database.GlobalVariables
 import it.polito.database.ui.theme.Screen
 
 
@@ -119,7 +120,7 @@ private fun CardContent(name: String, viewModel: AppViewModel,navController: Nav
 
             }
             listaSottoCategorie = sottoCategorie //copia mappa locale nella mappa esterna alla funzione
-            println("Lista sotto categorie: ${listaSottoCategorie}")
+
         }
     }.addOnFailureListener { e ->
         // Gestisci eventuali errori durante il recupero dei dati dal database
@@ -143,6 +144,7 @@ private fun CardContent(name: String, viewModel: AppViewModel,navController: Nav
 
             val sottoCategorie=listaSottoCategorie.get(name) // prende la lista associata al nome della categoria
             if(expanded){
+                GlobalVariables.cat=name
                 sottoCategorie?.forEach{sottocategoria->
                     sottoCategoriaCard(sottocategoria = sottocategoria, viewModel=viewModel, categoria = name,navController)
                 }
@@ -166,6 +168,9 @@ private fun CardContent(name: String, viewModel: AppViewModel,navController: Nav
 fun sottoCategoriaCard(sottocategoria: String, viewModel: AppViewModel, categoria: String,navController: NavController){
     var expanded by remember { mutableStateOf(false) }
 
+
+
+
     Column (modifier= Modifier
         .padding(2.dp)
         .fillMaxWidth()
@@ -178,7 +183,10 @@ fun sottoCategoriaCard(sottocategoria: String, viewModel: AppViewModel, categori
             Text(text = sottocategoria, style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Medium) )
             IconButton(onClick = { expanded = !expanded;
                 if (expanded) {
-                navController.navigate(Screen.ProductList.route)
+                    GlobalVariables.sottocat=sottocategoria
+
+
+                    navController.navigate(Screen.ProductList.route)
             } }) {
 
                 Icon(
