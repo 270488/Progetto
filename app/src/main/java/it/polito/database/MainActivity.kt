@@ -36,11 +36,16 @@ import com.google.firebase.ktx.initialize
 import com.google.firebase.storage.ktx.storage
 import it.polito.database.screens.AuthenticationActivity
 import it.polito.database.screens.AuthenticationScreen
+import it.polito.database.screens.CategoryScreen
 import it.polito.database.screens.ProductListScreen
 import it.polito.database.ui.theme.MainScreen
 import it.polito.database.ui.theme.NavGraph
 import it.polito.database.ui.theme.Screen
 
+object GlobalVariables {
+    var cat: String = ""
+    var sottocat: String=""
+}
 
 val database = Firebase.database.reference
 val storage= Firebase.storage.reference
