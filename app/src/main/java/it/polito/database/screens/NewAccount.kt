@@ -173,15 +173,16 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
         Spacer(modifier = Modifier.padding(8.dp))
         Button(modifier = Modifier.fillMaxWidth(),
             onClick = {
-                val user = User(
-                    nome = nome.value.text.trim(),
-                    cognome = cognome.value.text.trim(),
-                    city = selectedCity.value?.name ?: "",
-                    gender = selectedGender.value?.name ?: "",
-                    email = email.value.text.trim(),
-                    username = username.value.text.trim(),
-                    password = password.value.text.trim()
-                )
+                if(password.value == confermaPassword.value) {
+                    val user = User(
+                        nome = nome.value.text.trim(),
+                        cognome = cognome.value.text.trim(),
+                        city = selectedCity.value?.name ?: "",
+                        gender = selectedGender.value?.name ?: "",
+                        email = email.value.text.trim(),
+                        username = username.value.text.trim(),
+                        password = password.value.text.trim()
+                    )
 
                 auth.createUserWithEmailAndPassword(
                     user.email,
@@ -219,6 +220,12 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
                         Log.e("AUTH", "Registration Failed: ${task.exception?.message}")
                     }
                 }
+                }
+                else{
+                    // Alert pop-up
+                    Log.e("AUTH", "Passwords don't match")
+                }
+
             })
 
 
