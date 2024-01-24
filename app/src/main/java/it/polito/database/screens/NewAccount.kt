@@ -32,6 +32,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
@@ -43,6 +47,7 @@ import com.google.firebase.database.FirebaseDatabase
 import it.polito.database.User
 import it.polito.database.screens.AuthenticationActivity
 import it.polito.database.ui.theme.Screen
+import it.polito.database.ui.theme.fontFamily
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,7 +67,7 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
 
 
     {
-        Text(text = "Crea account", style = MaterialTheme.typography.headlineSmall)
+        Text(text = "Crea account", style = MaterialTheme.typography.headlineSmall, fontFamily = fontFamily, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(8.dp) )
 
         var selectedCity = remember { mutableStateOf<City?>(null)}
@@ -82,23 +87,25 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
         Spacer(modifier = Modifier.height(16.dp) )
         OutlinedTextField(
             value = nome.value,
-            label = { Text("Nome*") },
+            label = { Text(text= "Nome*", fontFamily = fontFamily) },
             onValueChange = {
                 nome.value = it
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             singleLine = true,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            textStyle = TextStyle(color = Color.Black)
         )
         OutlinedTextField(
             value = cognome.value,
-            label = { Text("Cognome*") },
+            label = { Text("Cognome*",fontFamily = fontFamily) },
             onValueChange = {
                 cognome.value = it
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             singleLine = true,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            textStyle = TextStyle(color = Color.Black)
         )
 
         GenderSelection(selectedGender = selectedGender.value){
@@ -107,23 +114,25 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
 
         OutlinedTextField(
             value = email.value,
-            label = { Text("Email*") },
+            label = { Text("Email*",fontFamily = fontFamily) },
             onValueChange = {
                 email.value = it
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             singleLine = true,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            textStyle = TextStyle(color = Color.Black)
         )
         OutlinedTextField(
             value = username.value,
-            label = { Text("Username*") },
+            label = { Text("Username*",fontFamily = fontFamily) },
             onValueChange = {
                 username.value = it
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             singleLine = true,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            textStyle = TextStyle(color = Color.Black)
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -131,7 +140,7 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
         ){
             OutlinedTextField(
                 value = password.value,
-                label = { Text("Password*") },
+                label = { Text("Password*",fontFamily = fontFamily) },
                 onValueChange = {
                     password.value = it
                 },
@@ -139,11 +148,12 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
                 singleLine = true,
                 modifier = Modifier.weight(1f) ,
                 visualTransformation = PasswordVisualTransformation(),
+                textStyle = TextStyle(color = Color.Black)
             )
             Spacer(modifier = Modifier.width(2.dp) )
             OutlinedTextField(
                 value = confermaPassword.value,
-                label = { Text("Conferma Password*") },
+                label = { Text("Conferma Password*",fontFamily = fontFamily) },
                 onValueChange = {
                     confermaPassword.value = it
                 },
@@ -151,12 +161,13 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
                 singleLine = true,
                 modifier = Modifier.weight(1f),
                 visualTransformation = PasswordVisualTransformation(),
+                textStyle = TextStyle(color = Color.Black)
             )
         }
        Row(modifier = Modifier.align(CenterHorizontally))
        {
            Text(
-               text = "Tutti i campi contrassegnati da * sono obbligatori"
+               text = "\nTutti i campi contrassegnati da * sono obbligatori.",fontFamily = fontFamily
            )
        }
         Spacer(modifier = Modifier.padding(8.dp))
@@ -212,7 +223,7 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
 
 
         {
-            Text(text = "Registrati")
+            Text(text = "Registrati",fontFamily = fontFamily)
         }
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -221,12 +232,14 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
         ) {
             Text(
                 text = "Hai già un account?",
-
+                fontFamily = fontFamily
                 )
             Spacer(modifier = Modifier.width(8.dp)) // Aggiungi spazio tra i due testi
             Text(
                 text = "Log in",
+                fontFamily = fontFamily,
                 color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable(onClick = {
                     navController.navigate(Screen.AuthenticationScreen.route)
                 })
@@ -248,7 +261,11 @@ fun CitySelection(
     var isExpanded by remember {
         mutableStateOf(false) //default: menù chiuso
     }
+    var chosenCity = selectedCity.toString();
     val cities = enumValues<City>().toList()
+    if (selectedCity===null){
+        chosenCity="Città";
+    }
 
     Column(
         Modifier.fillMaxWidth()) {
@@ -257,7 +274,7 @@ fun CitySelection(
                 .fillMaxWidth()
                 .align(Alignment.Start)
         ) {
-            Text("Città*")
+            Text("Città*",fontFamily = fontFamily)
         }
 
         // Dropdown Row
@@ -269,15 +286,16 @@ fun CitySelection(
         ){
             ExposedDropdownMenuBox(
                 expanded = isExpanded,
-                onExpandedChange = { isExpanded = it }
+                onExpandedChange = { isExpanded = it },
             ) {
                 TextField(
-                    value = selectedCity.toString(),
+                    value = chosenCity,
                     onValueChange = {},
                     readOnly = true,
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
-                    }, modifier = Modifier.menuAnchor()
+                    }, modifier = Modifier.menuAnchor(),
+
                 )
                 ExposedDropdownMenu(
                     expanded = isExpanded,
@@ -311,7 +329,7 @@ fun GenderSelection(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = "Sesso*")
+        Text(text = "Sesso*",fontFamily = fontFamily)
 
         GenderRadioButton(
             text = "Uomo",
@@ -351,7 +369,7 @@ fun GenderRadioButton(
             selected = isSelected,
             onClick = onSelected
         )
-        Text(text = text)
+        Text(text = text, fontFamily = fontFamily)
     }
 }
 

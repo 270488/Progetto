@@ -45,7 +45,6 @@ sealed class Screen (
         title = "Settings",
         icon = Icons.Default.Settings
     )
-
     object AuthenticationScreen: Screen(
         route = "authenticationScreen",
         title = "AuthenticationScreen",
