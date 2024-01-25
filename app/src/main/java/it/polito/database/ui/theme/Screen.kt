@@ -1,6 +1,7 @@
 package it.polito.database.ui.theme
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.List
@@ -64,5 +65,10 @@ sealed class Screen (
         route = "productList",
         title = "ProductList",
         icon = Icons.Default.Info
+    )
+    object FavoritesScreen: Screen(
+        route = "favoritesScreen",
+        title = "Favorites",
+        icon = Icons.Default.FavoriteBorder
     )
 }

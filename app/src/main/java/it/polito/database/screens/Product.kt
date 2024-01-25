@@ -56,7 +56,8 @@ import it.polito.database.R
 
 @Composable
 fun ProductScreen(viewModel: AppViewModel) {
-        ProductDetail()
+
+    ProductDetail()
 }
 
 @Preview

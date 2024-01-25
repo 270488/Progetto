@@ -146,15 +146,12 @@ fun ProductList(modifier: Modifier = Modifier
                     )
                 }
             }
-
-
         }
         products.forEach{ prod->
             val nome=prod.child("nome").value.toString()
             val prezzo=prod.child("prezzo").value.toString()
             val fileName=nome+".jpg"
             val url= FindUrl(fileName = fileName)
-
             contentCard(nome = nome, prezzo = prezzo, url=url)
         }
     }

@@ -55,6 +55,7 @@ fun MainScreen(viewModel: AppViewModel){
                         || currentDestination?.route == Screen.Notifications.route
                         || currentDestination?.route == Screen.Product.route
                         || currentDestination?.route == Screen.ProductList.route
+                        || currentDestination?.route == Screen.FavoritesScreen.route
                     ) {
                         SmallTopAppBar(navController = navController)
                     } else {
@@ -239,6 +240,7 @@ fun AddItem3(
                     Screen.Settings.route -> Text(text = "Impostazioni")
                     Screen.Product.route -> Text(text = "")
                     Screen.ProductList.route-> Text(text = GlobalVariables.sottocat)
+                    Screen.FavoritesScreen.route-> Text(text = "I miei preferiti")
                 }
                 //tante condizioni quante sono le schermate che hanno questa top Bar
                 //( con freccia per tornare indietro, impostazioni a destra
