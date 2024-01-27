@@ -2,6 +2,7 @@ package it.polito.database.screens
 
 import android.text.Layout
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -26,6 +28,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -37,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import it.polito.database.R
 import it.polito.database.ui.theme.Screen
 import it.polito.database.ui.theme.fontFamily
 
@@ -52,9 +57,16 @@ fun AuthenticationScreen(navController: NavHostController,context: Authenticatio
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary)
-            .padding(top = 100.dp)
             .padding(6.dp)
     ) {
+        Spacer(modifier = Modifier.height(100.dp))
+        Image(
+            painter = painterResource(id = R.drawable.logomcfit),
+            contentDescription = "",
+            modifier = Modifier.width(250.dp).height(100.dp).align(Alignment.CenterHorizontally),
+            contentScale = ContentScale.FillBounds
+        )
+        Spacer(modifier = Modifier.height(36.dp))
         Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
             Text(
                 text = "Effettua il login per accedere al tuo profilo",
@@ -64,10 +76,9 @@ fun AuthenticationScreen(navController: NavHostController,context: Authenticatio
                 fontSize = 16.sp
             )
         }
-
         val emailValue = remember { mutableStateOf(TextFieldValue()) }
         val passwordValue = remember { mutableStateOf(TextFieldValue()) }
-        Spacer(modifier = Modifier.height(36.dp))
+        Spacer(modifier = Modifier.height(32.dp))
         Column (
             modifier = Modifier
                 .fillMaxSize()
