@@ -1,8 +1,12 @@
 
+import android.text.Layout
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.SpaceEvenly
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,8 +26,10 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,11 +41,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -58,119 +66,221 @@ import it.polito.database.ui.theme.fontFamily
 fun NewAccount(navController: NavHostController,context: AuthenticationActivity) {
     val auth = Firebase.auth
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState())
-    )
-
-
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(MaterialTheme.colorScheme.primary))
     {
-        Text(text = "Crea account", style = MaterialTheme.typography.headlineSmall, fontFamily = fontFamily, fontWeight = FontWeight.Bold)
-        Spacer(modifier = Modifier.height(8.dp) )
-
-        var selectedCity = remember { mutableStateOf<City?>(null)}
-        val nome = remember { mutableStateOf(TextFieldValue())}
-        val cognome = remember { mutableStateOf(TextFieldValue())}
-        var selectedGender = remember { mutableStateOf<Gender?>(null)}
-        //val dataDiNascita = remember { mutableStateOf(TextFieldValue())} per ora non la includo
-        val email = remember { mutableStateOf(TextFieldValue()) }
-        val username = remember { mutableStateOf(TextFieldValue()) }
-        val password = remember { mutableStateOf(TextFieldValue())}
-        val confermaPassword = remember { mutableStateOf(TextFieldValue())}
-
-
-        CitySelection( selectedCity = selectedCity.value){
-            city -> selectedCity.value = city
-        }
-        Spacer(modifier = Modifier.height(16.dp) )
-        OutlinedTextField(
-            value = nome.value,
-            label = { Text(text= "Nome*", fontFamily = fontFamily) },
-            onValueChange = {
-                nome.value = it
-            },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
-            textStyle = TextStyle(color = Color.Black)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(12.dp)
+                .verticalScroll(rememberScrollState())
+                .background(MaterialTheme.colorScheme.primary)
         )
-        OutlinedTextField(
-            value = cognome.value,
-            label = { Text("Cognome*",fontFamily = fontFamily) },
-            onValueChange = {
-                cognome.value = it
-            },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
-            textStyle = TextStyle(color = Color.Black)
-        )
+        {
+            Text(
+                text = "Crea account",
+                fontFamily = fontFamily,
+                fontWeight = FontWeight.Bold,
+                fontSize = 24.sp,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+            Spacer(modifier = Modifier.height(16.dp) )
 
-        GenderSelection(selectedGender = selectedGender.value){
-            gen -> selectedGender.value = gen
-        }
+            var selectedCity = remember { mutableStateOf<City?>(null)}
+            val nome = remember { mutableStateOf(TextFieldValue())}
+            val cognome = remember { mutableStateOf(TextFieldValue())}
+            var selectedGender = remember { mutableStateOf<Gender?>(null)}
+            //val dataDiNascita = remember { mutableStateOf(TextFieldValue())} per ora non la includo
+            val email = remember { mutableStateOf(TextFieldValue()) }
+            val username = remember { mutableStateOf(TextFieldValue()) }
+            val password = remember { mutableStateOf(TextFieldValue())}
+            val confermaPassword = remember { mutableStateOf(TextFieldValue())}
 
-        OutlinedTextField(
-            value = email.value,
-            label = { Text("Email*",fontFamily = fontFamily) },
-            onValueChange = {
-                email.value = it
-            },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
-            textStyle = TextStyle(color = Color.Black)
-        )
-        OutlinedTextField(
-            value = username.value,
-            label = { Text("Username*",fontFamily = fontFamily) },
-            onValueChange = {
-                username.value = it
-            },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
-            textStyle = TextStyle(color = Color.Black)
-        )
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = SpaceEvenly
-        ){
+
+            CitySelection( selectedCity = selectedCity.value){
+                    city -> selectedCity.value = city
+            }
+
+            Spacer(modifier = Modifier.height(16.dp) )
+
+            Row (modifier = Modifier.fillMaxWidth())
+            {
+                OutlinedTextField(
+                    value = nome.value,
+                    shape = MaterialTheme.shapes.large,
+                    placeholder = { Text(
+                        text = "Nome*",
+                        color = MaterialTheme.colorScheme.onSecondary,
+                        fontFamily = fontFamily,
+                        fontWeight = FontWeight.Light,
+                        fontStyle = FontStyle.Italic,
+                        fontSize = 18.sp)
+                    },
+                    onValueChange = {
+                        nome.value = it
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                    singleLine = true,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        focusedBorderColor = MaterialTheme.colorScheme.onSecondary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.onBackground,
+                        textColor = MaterialTheme.colorScheme.onBackground
+                    ),
+                    modifier = Modifier.weight(1F),
+                )
+
+                Spacer(modifier = Modifier.width(8.dp) )
+
+                OutlinedTextField(
+                    value = cognome.value,
+                    shape = MaterialTheme.shapes.large,
+                    placeholder = { Text(
+                        text = "Cognome*",
+                        color = MaterialTheme.colorScheme.onSecondary,
+                        fontFamily = fontFamily,
+                        fontWeight = FontWeight.Light,
+                        fontStyle = FontStyle.Italic,
+                        fontSize = 18.sp)
+                    },
+                    onValueChange = {
+                        cognome.value = it
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                    singleLine = true,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        focusedBorderColor = MaterialTheme.colorScheme.onSecondary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.onBackground,
+                        textColor = MaterialTheme.colorScheme.onBackground
+                    ),
+                    modifier = Modifier.weight(1F),
+                )
+            }
+
+            GenderSelection(selectedGender = selectedGender.value){
+                    gen -> selectedGender.value = gen
+            }
+
+            OutlinedTextField(
+                value = email.value,
+                shape = MaterialTheme.shapes.large,
+                placeholder = { Text(
+                    text = "Email*",
+                    color = MaterialTheme.colorScheme.onSecondary,
+                    fontFamily = fontFamily,
+                    fontWeight = FontWeight.Light,
+                    fontStyle = FontStyle.Italic,
+                    fontSize = 18.sp)
+                },
+                onValueChange = {
+                    email.value = it
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                singleLine = true,
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    focusedBorderColor = MaterialTheme.colorScheme.onSecondary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onBackground,
+                    textColor = MaterialTheme.colorScheme.onBackground
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                textStyle = TextStyle(color = Color.Black)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            OutlinedTextField(
+                value = username.value,
+                shape = MaterialTheme.shapes.large,
+                placeholder = { Text(
+                    text = "Username*",
+                    color = MaterialTheme.colorScheme.onSecondary,
+                    fontFamily = fontFamily,
+                    fontWeight = FontWeight.Light,
+                    fontStyle = FontStyle.Italic,
+                    fontSize = 18.sp)
+                },
+                onValueChange = {
+                    username.value = it
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                singleLine = true,
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    focusedBorderColor = MaterialTheme.colorScheme.onSecondary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onBackground,
+                    textColor = MaterialTheme.colorScheme.onBackground
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                textStyle = TextStyle(color = Color.Black)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
             OutlinedTextField(
                 value = password.value,
-                label = { Text("Password*",fontFamily = fontFamily) },
+                shape = MaterialTheme.shapes.large,
+                placeholder = { Text(
+                    text = "Password*",
+                    color = MaterialTheme.colorScheme.onSecondary,
+                    fontFamily = fontFamily,
+                    fontWeight = FontWeight.Light,
+                    fontStyle = FontStyle.Italic,
+                    fontSize = 18.sp)
+                },
                 onValueChange = {
                     password.value = it
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 singleLine = true,
-                modifier = Modifier.weight(1f) ,
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    focusedBorderColor = MaterialTheme.colorScheme.onSecondary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onBackground,
+                    textColor = MaterialTheme.colorScheme.onBackground
+                ),
+                modifier = Modifier.fillMaxWidth() ,
                 visualTransformation = PasswordVisualTransformation(),
                 textStyle = TextStyle(color = Color.Black)
             )
-            Spacer(modifier = Modifier.width(2.dp) )
+            Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
                 value = confermaPassword.value,
-                label = { Text("Conferma Password*",fontFamily = fontFamily) },
+                shape = MaterialTheme.shapes.large,
+                placeholder = { Text(
+                    text = "Conferma password*",
+                    color = MaterialTheme.colorScheme.onSecondary,
+                    fontFamily = fontFamily,
+                    fontWeight = FontWeight.Light,
+                    fontStyle = FontStyle.Italic,
+                    fontSize = 18.sp)
+                },
                 onValueChange = {
                     confermaPassword.value = it
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 singleLine = true,
-                modifier = Modifier.weight(1f),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    focusedBorderColor = MaterialTheme.colorScheme.onSecondary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onBackground,
+                    textColor = MaterialTheme.colorScheme.onBackground
+                ),
+                modifier = Modifier.fillMaxWidth(),
                 visualTransformation = PasswordVisualTransformation(),
                 textStyle = TextStyle(color = Color.Black)
             )
+
+        Row(modifier = Modifier.fillMaxWidth().align(Alignment.End))
+        {
+            Text(
+                text = "\nTutti i campi contrassegnati da * sono obbligatori.",
+                color = MaterialTheme.colorScheme.onSecondary,
+                fontSize = 14.sp,
+                fontFamily = fontFamily,
+                fontWeight = FontWeight.Normal,
+            )
         }
-       Row(modifier = Modifier.align(CenterHorizontally))
-       {
-           Text(
-               text = "\nTutti i campi contrassegnati da * sono obbligatori.",fontFamily = fontFamily
-           )
-       }
-        Spacer(modifier = Modifier.padding(8.dp))
+        Spacer(modifier = Modifier.width(8.dp))
         Button(modifier = Modifier.fillMaxWidth(),
             onClick = {
                 if(password.value == confermaPassword.value) {
@@ -184,42 +294,42 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
                         password = password.value.text.trim()
                     )
 
-                auth.createUserWithEmailAndPassword(
-                    user.email,
-                    user.password
-                ).addOnCompleteListener(context) { task ->
-                    if (task.isSuccessful) {
-                        //TODO finire il controllo sul match delle password
-                        Log.d("AUTH", "Registration Success")
-                        val userId = task.result?.user?.uid
-                        if (userId != null) {
-                            val databaseReference = FirebaseDatabase.getInstance().getReference("utenti")
-                            val userReference = databaseReference.child(userId)
+                    auth.createUserWithEmailAndPassword(
+                        user.email,
+                        user.password
+                    ).addOnCompleteListener(context) { task ->
+                        if (task.isSuccessful) {
+                            //TODO finire il controllo sul match delle password
+                            Log.d("AUTH", "Registration Success")
+                            val userId = task.result?.user?.uid
+                            if (userId != null) {
+                                val databaseReference = FirebaseDatabase.getInstance().getReference("utenti")
+                                val userReference = databaseReference.child(userId)
 
-                            userReference.child("nome").setValue(user.nome)
-                            userReference.child("cognome").setValue(user.cognome)
-                            userReference.child("città").setValue(user.city)
-                            userReference.child("genere").setValue(user.gender)
-                            userReference.child("email").setValue(user.email)
-                            userReference.child("username").setValue(user.username)
-                            userReference.child("password").setValue(user.password)
+                                userReference.child("nome").setValue(user.nome)
+                                userReference.child("cognome").setValue(user.cognome)
+                                userReference.child("città").setValue(user.city)
+                                userReference.child("genere").setValue(user.gender)
+                                userReference.child("email").setValue(user.email)
+                                userReference.child("username").setValue(user.username)
+                                userReference.child("password").setValue(user.password)
 
-                            auth.signInWithEmailAndPassword(
-                                user.email,
-                                user.password
-                            ).addOnCompleteListener(context) { signInTask ->
-                                if (signInTask.isSuccessful) {
-                                    Log.d("AUTH", "Login Success")
-                                    navController.navigate(Screen.Home.route)
-                                } else {
-                                    Log.d("AUTH", "Login Failed: ${signInTask.exception}")
+                                auth.signInWithEmailAndPassword(
+                                    user.email,
+                                    user.password
+                                ).addOnCompleteListener(context) { signInTask ->
+                                    if (signInTask.isSuccessful) {
+                                        Log.d("AUTH", "Login Success")
+                                        navController.navigate(Screen.Home.route)
+                                    } else {
+                                        Log.d("AUTH", "Login Failed: ${signInTask.exception}")
+                                    }
                                 }
                             }
+                        } else {
+                            Log.e("AUTH", "Registration Failed: ${task.exception?.message}")
                         }
-                    } else {
-                        Log.e("AUTH", "Registration Failed: ${task.exception?.message}")
                     }
-                }
                 }
                 else{
                     // Alert pop-up
@@ -228,34 +338,35 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
 
             })
 
-
-        {
-            Text(text = "Registrati",fontFamily = fontFamily)
-        }
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.End,
-            modifier = Modifier.align(Alignment.End)
-        ) {
-            Text(
-                text = "Hai già un account?",
-                fontFamily = fontFamily
+            {
+                Text(text = "Registrati",fontFamily = fontFamily)
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier.align(Alignment.End)
+            ) {
+                Text(
+                    text = "Hai già un account?",
+                    fontFamily = fontFamily
                 )
-            Spacer(modifier = Modifier.width(8.dp)) // Aggiungi spazio tra i due testi
-            Text(
-                text = "Log in",
-                fontFamily = fontFamily,
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.clickable(onClick = {
-                    navController.navigate(Screen.AuthenticationScreen.route)
-                })
-            )
+                Spacer(modifier = Modifier.width(8.dp)) // Aggiungi spazio tra i due testi
+                Text(
+                    text = "Log in",
+                    fontFamily = fontFamily,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.clickable(onClick = {
+                        navController.navigate(Screen.AuthenticationScreen.route)
+                    })
+                )
 
 
 
+            }
         }
     }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -281,7 +392,13 @@ fun CitySelection(
                 .fillMaxWidth()
                 .align(Alignment.Start)
         ) {
-            Text("Città*",fontFamily = fontFamily)
+            Text(
+                text = "Città*",
+                color = MaterialTheme.colorScheme.onSecondary,
+                fontFamily = fontFamily,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp
+            )
         }
 
         // Dropdown Row
@@ -333,18 +450,25 @@ fun GenderSelection(
     onGenderSelected: (Gender?) ->Unit) {
 
     Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 2.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = "Sesso*",fontFamily = fontFamily)
-
+        Text(
+            text = "Sesso*",
+            color = MaterialTheme.colorScheme.onSecondary,
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp
+        )
         GenderRadioButton(
             text = "Uomo",
             isSelected = selectedGender == Gender.MALE
         ) {
             onGenderSelected(Gender.MALE)
         }
-
         GenderRadioButton(
             text = "Donna",
             isSelected = selectedGender == Gender.FEMALE
@@ -373,10 +497,19 @@ fun GenderRadioButton(
         verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(
+            colors = RadioButtonDefaults.colors(
+                selectedColor = MaterialTheme.colorScheme.onPrimary
+            ),
             selected = isSelected,
             onClick = onSelected
         )
-        Text(text = text, fontFamily = fontFamily)
+        Text(
+            text = text,
+            color = MaterialTheme.colorScheme.onSecondary,
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Light,
+            fontSize = 18.sp
+        )
     }
 }
 

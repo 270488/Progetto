@@ -67,7 +67,7 @@ fun AuthenticationScreen(navController: NavHostController,context: Authenticatio
 
         val emailValue = remember { mutableStateOf(TextFieldValue()) }
         val passwordValue = remember { mutableStateOf(TextFieldValue()) }
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(36.dp))
         Column (
             modifier = Modifier
                 .fillMaxSize()
@@ -103,7 +103,7 @@ fun AuthenticationScreen(navController: NavHostController,context: Authenticatio
                     /*.border(BorderStroke(width = 3.dp, MaterialTheme.colorScheme.onBackground),
                             shape = MaterialTheme.shapes.large)*/
             )
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(26.dp))
             OutlinedTextField(
                 value = passwordValue.value,
                 shape = MaterialTheme.shapes.large,
@@ -131,13 +131,12 @@ fun AuthenticationScreen(navController: NavHostController,context: Authenticatio
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(26.dp))
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
                     .border(width = 1.dp, color = MaterialTheme.colorScheme.tertiary,
-                        shape = MaterialTheme.shapes.large)
-                    .height(45.dp),
+                        shape = MaterialTheme.shapes.large),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.secondary
                 ),
@@ -160,29 +159,29 @@ fun AuthenticationScreen(navController: NavHostController,context: Authenticatio
             {
                 Text(
                     text = "Log In",
-                    fontSize = 18.sp,
+                    fontSize = 22.sp,
                     fontFamily = fontFamily,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.tertiary
                 )
             }
             Row(
-                verticalAlignment = Alignment.CenterVertically,
+                verticalAlignment = Alignment.Bottom,
                 modifier = Modifier.align(Alignment.End)
             ) {
-                Spacer(modifier = Modifier.height(45.dp))
+                Spacer(modifier = Modifier.height(42.dp))
                 Text(
                     text = "Non hai un account?",
                     color = MaterialTheme.colorScheme.onSecondary,
-                    fontSize = 15.sp,
+                    fontSize = 14.sp,
                     fontFamily = fontFamily,
                     fontWeight = FontWeight.Normal,
                     )
-                Spacer(modifier = Modifier.width(3.dp)) // Aggiungi spazio tra i due testi
+                Spacer(modifier = Modifier.width(4.dp)) // Aggiungi spazio tra i due testi
                 Text(
                     text = "Registrati",
                     color = MaterialTheme.colorScheme.tertiary,
-                    fontSize = 15.sp,
+                    fontSize = 18.sp,
                     fontFamily = fontFamily,
                     fontWeight = FontWeight.Normal,
                     modifier = Modifier.clickable(onClick = {
