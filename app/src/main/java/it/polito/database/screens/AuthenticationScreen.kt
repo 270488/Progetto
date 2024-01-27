@@ -1,5 +1,6 @@
 package it.polito.database.screens
 
+import android.text.Layout
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -30,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -50,8 +52,8 @@ fun AuthenticationScreen(navController: NavHostController,context: Authenticatio
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary)
-            .padding(top = 74.dp)
-            .padding(8.dp)
+            .padding(top = 100.dp)
+            .padding(6.dp)
     ) {
         Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
             Text(
@@ -59,13 +61,13 @@ fun AuthenticationScreen(navController: NavHostController,context: Authenticatio
                 color = MaterialTheme.colorScheme.onPrimary,
                 fontFamily = fontFamily,
                 fontWeight = FontWeight.Normal,
-                fontSize = 18.sp
+                fontSize = 16.sp
             )
         }
 
         val emailValue = remember { mutableStateOf(TextFieldValue()) }
         val passwordValue = remember { mutableStateOf(TextFieldValue()) }
-        Spacer(modifier = Modifier.padding(14.dp))
+        Spacer(modifier = Modifier.height(40.dp))
         Column (
             modifier = Modifier
                 .fillMaxSize()
@@ -82,7 +84,7 @@ fun AuthenticationScreen(navController: NavHostController,context: Authenticatio
                     fontFamily = fontFamily,
                     fontWeight = FontWeight.Light,
                     fontStyle = FontStyle.Italic,
-                    fontSize = 20.sp)
+                    fontSize = 18.sp)
                 },
                 onValueChange = {
                     emailValue.value = it
@@ -101,7 +103,7 @@ fun AuthenticationScreen(navController: NavHostController,context: Authenticatio
                     /*.border(BorderStroke(width = 3.dp, MaterialTheme.colorScheme.onBackground),
                             shape = MaterialTheme.shapes.large)*/
             )
-            Spacer(modifier = Modifier.padding(10.dp))
+            Spacer(modifier = Modifier.height(30.dp))
             OutlinedTextField(
                 value = passwordValue.value,
                 shape = MaterialTheme.shapes.large,
@@ -113,7 +115,7 @@ fun AuthenticationScreen(navController: NavHostController,context: Authenticatio
                     fontFamily = fontFamily,
                     fontWeight = FontWeight.Light,
                     fontStyle = FontStyle.Italic,
-                    fontSize = 20.sp)
+                    fontSize = 18.sp)
                 },
                 onValueChange = {
                     passwordValue.value = it
@@ -129,13 +131,13 @@ fun AuthenticationScreen(navController: NavHostController,context: Authenticatio
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.padding(8.dp))
+            Spacer(modifier = Modifier.height(30.dp))
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
                     .border(width = 1.dp, color = MaterialTheme.colorScheme.tertiary,
                         shape = MaterialTheme.shapes.large)
-                    .height(40.dp),
+                    .height(45.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.secondary
                 ),
@@ -158,16 +160,17 @@ fun AuthenticationScreen(navController: NavHostController,context: Authenticatio
             {
                 Text(
                     text = "Log In",
-                    fontSize = 20.sp,
+                    fontSize = 18.sp,
                     fontFamily = fontFamily,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.tertiary,
+                    color = MaterialTheme.colorScheme.tertiary
                 )
             }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.align(Alignment.End).padding(top = 10.dp)
+                modifier = Modifier.align(Alignment.End)
             ) {
+                Spacer(modifier = Modifier.height(45.dp))
                 Text(
                     text = "Non hai un account?",
                     color = MaterialTheme.colorScheme.onSecondary,
