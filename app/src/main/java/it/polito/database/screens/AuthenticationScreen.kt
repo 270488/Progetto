@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -143,6 +144,7 @@ fun AuthenticationScreen(navController: NavHostController,context: Authenticatio
             )
 
             Spacer(modifier = Modifier.height(26.dp))
+
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -173,7 +175,8 @@ fun AuthenticationScreen(navController: NavHostController,context: Authenticatio
                     fontSize = 22.sp,
                     fontFamily = fontFamily,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.tertiary
+                    color = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier.offset(x = 0.dp, y = (-2).dp)
                 )
             }
             Row(

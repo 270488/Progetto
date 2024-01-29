@@ -3,6 +3,7 @@ import android.text.Layout
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.SpaceEvenly
@@ -13,16 +14,22 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
@@ -36,9 +43,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -46,12 +58,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.toSize
 import androidx.navigation.NavHostController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.database.FirebaseDatabase
+import it.polito.database.R
 import it.polito.database.User
 import it.polito.database.screens.AuthenticationActivity
 import it.polito.database.ui.theme.Screen
@@ -73,16 +89,17 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(12.dp)
+                .padding(20.dp)
                 .verticalScroll(rememberScrollState())
                 .background(MaterialTheme.colorScheme.primary)
         )
         {
+            Spacer(modifier = Modifier.height(16.dp) )
             Text(
                 text = "Crea account",
                 fontFamily = fontFamily,
                 fontWeight = FontWeight.Bold,
-                fontSize = 24.sp,
+                fontSize = 26.sp,
                 color = MaterialTheme.colorScheme.onPrimary
             )
             Spacer(modifier = Modifier.height(16.dp) )
@@ -97,6 +114,17 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
             val password = remember { mutableStateOf(TextFieldValue())}
             val confermaPassword = remember { mutableStateOf(TextFieldValue())}
 
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = "Città*",
+                    color = MaterialTheme.colorScheme.onSecondary,
+                    fontFamily = fontFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    textAlign = TextAlign.Start
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp) )
 
             CitySelection( selectedCity = selectedCity.value){
                     city -> selectedCity.value = city
@@ -129,6 +157,11 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
                         textColor = MaterialTheme.colorScheme.onBackground
                     ),
                     modifier = Modifier.weight(1F),
+                    textStyle = TextStyle(
+                        fontFamily = fontFamily,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 18.sp,
+                        color = Color.Black)
                 )
 
                 Spacer(modifier = Modifier.width(8.dp) )
@@ -156,6 +189,11 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
                         textColor = MaterialTheme.colorScheme.onBackground
                     ),
                     modifier = Modifier.weight(1F),
+                    textStyle = TextStyle(
+                        fontFamily = fontFamily,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 18.sp,
+                        color = Color.Black)
                 )
             }
 
@@ -186,9 +224,15 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
                     textColor = MaterialTheme.colorScheme.onBackground
                 ),
                 modifier = Modifier.fillMaxWidth(),
-                textStyle = TextStyle(color = Color.Black)
+                textStyle = TextStyle(
+                    fontFamily = fontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 18.sp,
+                    color = Color.Black)
             )
+
             Spacer(modifier = Modifier.height(16.dp))
+
             OutlinedTextField(
                 value = username.value,
                 shape = MaterialTheme.shapes.large,
@@ -212,8 +256,13 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
                     textColor = MaterialTheme.colorScheme.onBackground
                 ),
                 modifier = Modifier.fillMaxWidth(),
-                textStyle = TextStyle(color = Color.Black)
+                textStyle = TextStyle(
+                    fontFamily = fontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 18.sp,
+                    color = Color.Black)
             )
+
             Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(
@@ -240,9 +289,15 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
                 ),
                 modifier = Modifier.fillMaxWidth() ,
                 visualTransformation = PasswordVisualTransformation(),
-                textStyle = TextStyle(color = Color.Black)
+                textStyle = TextStyle(
+                    fontFamily = fontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 18.sp,
+                    color = Color.Black)
             )
+
             Spacer(modifier = Modifier.height(16.dp))
+
             OutlinedTextField(
                 value = confermaPassword.value,
                 shape = MaterialTheme.shapes.large,
@@ -267,21 +322,34 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
                 ),
                 modifier = Modifier.fillMaxWidth(),
                 visualTransformation = PasswordVisualTransformation(),
-                textStyle = TextStyle(color = Color.Black)
+                textStyle = TextStyle(
+                    fontFamily = fontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 18.sp,
+                    color = Color.Black)
             )
 
-        Row(modifier = Modifier.fillMaxWidth().align(Alignment.End))
-        {
-            Text(
-                text = "\nTutti i campi contrassegnati da * sono obbligatori.",
-                color = MaterialTheme.colorScheme.onSecondary,
-                fontSize = 14.sp,
-                fontFamily = fontFamily,
-                fontWeight = FontWeight.Normal,
-            )
-        }
-        Spacer(modifier = Modifier.width(8.dp))
-        Button(modifier = Modifier.fillMaxWidth(),
+                Text(
+                    text = "\nTutti i campi contrassegnati da * sono obbligatori.",
+                    color = MaterialTheme.colorScheme.onSecondary,
+                    fontSize = 14.sp,
+                    fontFamily = fontFamily,
+                    fontWeight = FontWeight.Normal,
+                    modifier = Modifier.align(CenterHorizontally)
+                )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(
+                    width = 1.dp, color = MaterialTheme.colorScheme.tertiary,
+                    shape = MaterialTheme.shapes.large
+                ),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.secondary
+            ),
             onClick = {
                 if(password.value == confermaPassword.value) {
                     val user = User(
@@ -337,33 +405,41 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
                 }
 
             })
+        {
+            Text(
+                text = "Registrati",
+                fontSize = 22.sp,
+                fontFamily = fontFamily,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.tertiary,
+                modifier = Modifier.offset(x = 0.dp, y = (-2).dp)
+            )
+        }
 
-            {
-                Text(text = "Registrati",fontFamily = fontFamily)
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End,
-                modifier = Modifier.align(Alignment.End)
-            ) {
+            Spacer(modifier = Modifier.height(20.dp))
+            Row(verticalAlignment = Alignment.Bottom,
+                modifier = Modifier.align(Alignment.End)) {
                 Text(
                     text = "Hai già un account?",
-                    fontFamily = fontFamily
-                )
-                Spacer(modifier = Modifier.width(8.dp)) // Aggiungi spazio tra i due testi
-                Text(
-                    text = "Log in",
+                    color = MaterialTheme.colorScheme.onSecondary,
+                    fontSize = 14.sp,
                     fontFamily = fontFamily,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Normal,
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = "Login",
+                    color = MaterialTheme.colorScheme.tertiary,
+                    fontSize = 18.sp,
+                    fontFamily = fontFamily,
+                    fontWeight = FontWeight.Normal,
                     modifier = Modifier.clickable(onClick = {
                         navController.navigate(Screen.AuthenticationScreen.route)
                     })
                 )
 
-
-
             }
+
         }
     }
 
@@ -374,75 +450,86 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
 fun CitySelection(
     selectedCity: City?,
     onCitySelected: (City) -> Unit
-) {
-
-    var isExpanded by remember {
-        mutableStateOf(false) //default: menù chiuso
-    }
-    var chosenCity = selectedCity.toString();
+){
     val cities = enumValues<City>().toList()
+    var isExpanded by remember { mutableStateOf(false) }
+    var chosenCity = selectedCity.toString();
     if (selectedCity===null){
-        chosenCity="Città";
+        chosenCity="Italia";
     }
 
-    Column(
-        Modifier.fillMaxWidth()) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.Start)
-        ) {
-            Text(
-                text = "Città*",
-                color = MaterialTheme.colorScheme.onSecondary,
-                fontFamily = fontFamily,
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp
-            )
-        }
+    var textFiledSize by remember { mutableStateOf(Size.Zero) }
 
-        // Dropdown Row
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
+    val icon = if (isExpanded){
+        painterResource(id = R.drawable.frecciasopra)
+    } else painterResource(id = R.drawable.frecciasotto)
 
-        ){
-            ExposedDropdownMenuBox(
-                expanded = isExpanded,
-                onExpandedChange = { isExpanded = it },
-            ) {
-                TextField(
-                    value = chosenCity,
-                    onValueChange = {},
-                    readOnly = true,
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
-                    }, modifier = Modifier.menuAnchor(),
-
-                )
-                ExposedDropdownMenu(
-                    expanded = isExpanded,
-                    onDismissRequest = { isExpanded = false },
+    Column(modifier = Modifier.fillMaxWidth()){
+        OutlinedTextField(
+            shape = MaterialTheme.shapes.large,
+            value = chosenCity,
+            onValueChange = {},
+            readOnly = false,
+            trailingIcon = {
+                Icon(icon , "", tint = Color.Black,
                     modifier = Modifier
-                        .height(200.dp)
-                ) {
-                    cities.forEach { city ->
-                        DropdownMenuItem(
-                            text = {
-                                Text(text = city.toString())
-                            },
-                            onClick = {
-                                onCitySelected(city)
-                                isExpanded = false
-                            })
-                    }
+                        .clickable { isExpanded = !isExpanded }
+                        .size(16.dp))
+            },
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                focusedBorderColor = Color.Black,
+                unfocusedBorderColor = if (isExpanded) MaterialTheme.colorScheme.onSecondary else Color.Black,
+                textColor = MaterialTheme.colorScheme.onBackground
+            ),
+            textStyle = TextStyle(
+                fontFamily = fontFamily,
+                fontWeight = FontWeight.Normal,
+                fontSize = 18.sp,
+                color = Color.Black),
+            modifier = Modifier
+                .fillMaxWidth()
+                .onGloballyPositioned { coordinates ->
+                    textFiledSize = coordinates.size.toSize()
                 }
+
+        )
+        DropdownMenu(
+            offset = DpOffset(0.dp, (4).dp),
+            modifier = Modifier
+                .width(with(LocalDensity.current) { textFiledSize.width.toDp() })
+                .padding(vertical = 2.dp)
+                .background(MaterialTheme.colorScheme.primaryContainer)
+                .verticalScroll(rememberScrollState())
+                .height(400.dp)
+                .border(1.dp, MaterialTheme.colorScheme.onPrimary),
+            expanded = isExpanded,
+            onDismissRequest = { isExpanded = false },
+        ) {
+            for (index in cities.indices) {
+                val city = cities[index]
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = city.toString(),
+                            fontFamily = fontFamily,
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 18.sp,
+                            color = MaterialTheme.colorScheme.outline
+                        ) },
+                    onClick = {
+                        onCitySelected(city)
+                        isExpanded = false
+                    }
+                )
+                if (index < cities.size - 1){
+                    Divider(thickness = 2.dp, color = Color(0x1A000000))
+                }
+
             }
         }
     }
 }
-
 
 @Composable
 fun GenderSelection(
