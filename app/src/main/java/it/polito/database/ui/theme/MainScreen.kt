@@ -84,6 +84,7 @@ fun BottomBar(navController: NavHostController) {
         Screen.Category,
         Screen.Cart,
         Screen.Profile,
+        //Screen.Product
 
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()

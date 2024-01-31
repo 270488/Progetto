@@ -1,10 +1,12 @@
 package it.polito.database.screens
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,6 +36,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -50,6 +53,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import it.polito.database.AppViewModel
+import it.polito.database.FindUrl
 import it.polito.database.R
 
 @SuppressLint("RememberReturnType")
@@ -57,12 +61,35 @@ import it.polito.database.R
 @Composable
 fun ProductScreen(viewModel: AppViewModel) {
 
-    ProductDetail()
+    ProductDetail(viewModel)
 }
 
-@Preview
+//@Preview
 @Composable
-fun ProductDetail() {
+fun ProductDetail(viewModel: AppViewModel) {
+    val product= viewModel.products.observeAsState(emptyList()).value
+        .filter { it.child("nome").value.toString() == "shaker" }
+    Log.d("product: ", product.toString())
+
+    var nome=""
+    var prezzo=0.00
+    var url=""
+    var descrizione=""
+    var categoria=""
+    var sottocategoria=""
+
+
+    product.forEach { p ->
+        nome=p.child("nome").value.toString()
+        prezzo= p.child("prezzo").getValue() as Double
+        url= FindUrl(fileName = nome+".jpg")
+        categoria=p.child("categoria").value.toString()
+        sottocategoria=p.child("sottocategoria").value.toString()
+        descrizione=p.child("descrizione").value.toString()
+    }
+    Log.d("nome: ",nome)
+    Log.d("prezzo: ",prezzo.toString())
+    Log.d("url: ",url)
     ConstraintLayout(
         constraintSet = ConstraintSet(
             content =
@@ -87,6 +114,15 @@ fun ProductDetail() {
             .fillMaxSize()
             .background(Color.Black)
     ) {
+        /*AsyncImage(
+            model=url,
+        contentDescription = "Product Image",
+        contentScale = ContentScale.FillWidth,
+        modifier = Modifier
+            .layoutId("productImage")
+            .fillMaxSize()
+            .padding(bottom = 300.dp)
+    )*/
         Image(
         painter = painterResource(id = R.drawable.shaker700ml),
         contentDescription = "Product Image",
@@ -108,6 +144,7 @@ fun ProductDetail() {
                 .layoutId("bgCard")
                 .height(400.dp)
                 .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
         ) {
             ConstraintLayout(
                 constraintSet = ConstraintSet(
@@ -160,7 +197,7 @@ fun ProductDetail() {
                         end = 10.dp
                     )
             ) {
-              CardContent()
+              CardContent(nome=nome, prezzo = prezzo, categoria=categoria, sottocategoria=sottocategoria, descrizione=descrizione)
             }
         }
         var filledHeart by remember{ mutableStateOf(false) }
@@ -196,9 +233,9 @@ fun ProductDetail() {
 }
 
 @Composable
-fun CardContent(){
+fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: String, sottocategoria: String){
     Text(
-        text = "Categoria" ,
+        text = categoria+", "+sottocategoria,
         modifier = Modifier
             .layoutId("productCategory")
             .padding(top = 10.dp, bottom = 16.dp),
@@ -207,7 +244,7 @@ fun CardContent(){
     )
 
     Text(
-        text = "Shaker",
+        text = nome,
         fontSize = 32.sp,
         fontWeight = FontWeight.Bold,
         color = Color.White,
@@ -217,7 +254,7 @@ fun CardContent(){
     )
 
     Text(
-        text = "36€",
+        text = prezzo.toString()+"€",
         fontSize = 36.sp,
         fontWeight = FontWeight.Bold,
         color = Color.White,
@@ -265,15 +302,7 @@ fun CardContent(){
         border = BorderStroke(2.dp,Color.Black)
         ) {
         Text(
-            text = "Lo shaker proteico permette di mescolare rapidamente e facilmente le proteine in polvere; versare il latte o l'acqua, aggiungere la polvere, chiudere, agitare e la bevanda proteica è subito pronta.\n" +
-                    "\n" +
-                    "L'agitatore con setaccio previene la formazione di grumi e residui; lo shaker da palestra presenta inoltre una pratica scala a livelli di 50 ml fino a 700 ml\n" +
-                    "\n" +
-                    "Lo shaker proteico IronMaxx con filtro e tappo a vite è particolarmente adatto per i viaggi ed è pratico da portare nella borsa sportiva\n" +
-                    "\n" +
-                    "È possibile riempire e pulire con facilità lo shaker per frullati di proteine rimuovendo il grande tappo a vite: l'apertura per bere si trova sotto il tappo a vite più piccolo\n" +
-                    "\n" +
-                    "Cos'è incluso: 1 x IronMaxx Protein Shaker da 700 ml - Shaker Stabile con Setaccio per Frullati Proteici - Facile da Pulire - Color Nero Notte",
+            text = descrizione,
             color = Color.White,
             modifier = Modifier
                 .padding(8.dp)
