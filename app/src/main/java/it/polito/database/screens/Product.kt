@@ -52,9 +52,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
+import coil.compose.AsyncImage
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import it.polito.database.AppViewModel
 import it.polito.database.FindUrl
 import it.polito.database.R
+import it.polito.database.database
 
 @SuppressLint("RememberReturnType")
 
@@ -67,8 +72,12 @@ fun ProductScreen(viewModel: AppViewModel) {
 //@Preview
 @Composable
 fun ProductDetail(viewModel: AppViewModel) {
+    var id = "ZNa99YXVgfVWD1ioAeY9mLtQ8Dh2"
+
+    var prod=viewModel.prodottoSelezionato
+
     val product= viewModel.products.observeAsState(emptyList()).value
-        .filter { it.child("nome").value.toString() == "shaker" }
+        .filter { it.child("nome").value.toString() == prod }
     Log.d("product: ", product.toString())
 
     var nome=""
@@ -114,16 +123,16 @@ fun ProductDetail(viewModel: AppViewModel) {
             .fillMaxSize()
             .background(Color.Black)
     ) {
-        /*AsyncImage(
+        AsyncImage(
             model=url,
         contentDescription = "Product Image",
         contentScale = ContentScale.FillWidth,
         modifier = Modifier
             .layoutId("productImage")
-            .fillMaxSize()
+            .fillMaxWidth()
             .padding(bottom = 300.dp)
-    )*/
-        Image(
+    )
+        /*Image(
         painter = painterResource(id = R.drawable.shaker700ml),
         contentDescription = "Product Image",
         contentScale = ContentScale.FillWidth,
@@ -131,7 +140,7 @@ fun ProductDetail(viewModel: AppViewModel) {
             .layoutId("productImage")
             .fillMaxSize()
             .padding(bottom = 300.dp)
-    )
+    )*/
 
         Card(
             shape = RoundedCornerShape(
@@ -200,10 +209,42 @@ fun ProductDetail(viewModel: AppViewModel) {
               CardContent(nome=nome, prezzo = prezzo, categoria=categoria, sottocategoria=sottocategoria, descrizione=descrizione)
             }
         }
+        var listaPreferiti by remember { mutableStateOf<List<String>>(emptyList()) }
+
+        var preferiti= database.child("utenti").child(id).child("preferiti")
+        preferiti.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) { //fa una foto al db in quel momento e la mette in dataSnapshot
+                // Itera sui figli del nodo
+                var list= mutableListOf<String>()
+
+
+                for (childSnapshot in dataSnapshot.children) { //prende i figli di prodotti, quindi 0, 1...
+                    // Aggiungi il prodotto alla lista
+                    list.add(childSnapshot.value.toString())
+                }
+                listaPreferiti=list
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Gestisci gli errori qui
+                println("Errore nel leggere i dati dal database: ${databaseError.message}")
+            }
+        })
+
         var filledHeart by remember{ mutableStateOf(false) }
+        if(listaPreferiti.contains(nome)){
+            filledHeart=true
+        }
+        else
+            filledHeart=false
+
         FloatingActionButton(
             onClick = {
                 filledHeart = !filledHeart
+                if(filledHeart){
+                    aggiungiPreferito(prod = nome, id = id)
+                }
+                else
+                    eliminaPreferito(prod = nome, id = id)
             },
             containerColor = Color.Transparent,
             modifier = Modifier

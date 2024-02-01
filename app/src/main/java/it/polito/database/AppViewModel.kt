@@ -47,11 +47,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.AsyncImage
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import it.polito.database.ui.theme.Screen
 import it.polito.database.ui.theme.fontFamily
 import kotlin.math.round
 import kotlin.reflect.KClass
@@ -60,6 +62,7 @@ import kotlin.reflect.KClass
 class AppViewModel: ViewModel() {
 
     var products=MutableLiveData<List<DataSnapshot>>(emptyList())
+    var prodottoSelezionato="shaker"
     fun writeNewUser(userId: String, name: String, email: String) {
         val user = User(userId, name, email)
 
@@ -89,7 +92,7 @@ class AppViewModel: ViewModel() {
 
 
 @Composable
-fun HomePage(viewModel: AppViewModel){
+fun HomePage(viewModel: AppViewModel, navController: NavController){
     val prod by viewModel.products.observeAsState()
 
     Column(modifier = Modifier
@@ -97,48 +100,16 @@ fun HomePage(viewModel: AppViewModel){
         .background(MaterialTheme.colorScheme.primary)
         )
     {
-       // IntestazioneHome()
         Spacer(modifier = Modifier.height(5.dp))
-        ScrollableColumn(viewModel)
+        ScrollableColumn(viewModel, navController)
         Spacer(modifier = Modifier.height(5.dp))
-       // Footer()
+
     }
 
 }
 
-/*
 @Composable
-fun IntestazioneHome(){
-    Row(
-        modifier = Modifier
-            .fillMaxHeight(0.1f)
-            .fillMaxWidth()
-            .background(Color.Gray),
-        verticalAlignment = Alignment.CenterVertically,
-    ){
-        Row(modifier = Modifier
-            .padding(5.dp)
-            .weight(1f)){
-            Text(text = "Campanella", color = Color.White)
-        }
-        Row(modifier = Modifier
-            .padding(5.dp)
-            .weight(1f)){
-            Text(text = "MCFIT", color = Color.White)
-            Spacer(modifier = Modifier.width(5.dp))
-            Text(text = "Logo", color = Color.White)
-        }
-        
-        Row(modifier = Modifier
-            .padding(5.dp)
-            .weight(1f)){
-            Text(text = "Impostazioni", color = Color.White)
-        }
-    }
-}
-*/
-@Composable
-fun ScrollableColumn(viewModel: AppViewModel) {
+fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
 
     val children= database.child("prodotti") //prende dal db il nodo prodotti e aggiunge un listener
     children.addValueEventListener(object : ValueEventListener {
@@ -189,7 +160,8 @@ fun ScrollableColumn(viewModel: AppViewModel) {
             nonperdere?.forEach { p ->
                 val fileName=p.child("nome").value.toString()+".jpg"
                 val url= FindUrl(fileName = fileName)
-                IconButton(onClick = { /*TODO*/ }, //CAMBIARE CON DELLE CARDS
+                IconButton(onClick = { viewModel.prodottoSelezionato=p.child("nome").value.toString();
+                    navController.navigate(Screen.Product.route)}, //CAMBIARE CON DELLE CARDS
                     modifier= Modifier.size(200.dp, 150.dp)){
                         //.background(Color.Gray)) {
                     LoadImageFromUrl(imageUrl = url)
@@ -215,7 +187,8 @@ fun ScrollableColumn(viewModel: AppViewModel) {
                 val offerte= listaFiltrata(categoria = "offerte", viewModel = viewModel)
 
                 offerte?.forEach { p ->
-                    IconButton(onClick = { /*TODO*/ }, modifier=Modifier.size(200.dp, 150.dp)) {
+                    IconButton(onClick = { viewModel.prodottoSelezionato=p.child("nome").value.toString()
+                        navController.navigate(Screen.Product.route)  }, modifier=Modifier.size(200.dp, 150.dp)) {
                         val fileName=p.child("nome").value.toString()+".jpg"
                         val url= FindUrl(fileName = fileName)
                         LoadImageFromUrl(imageUrl = url)
@@ -241,7 +214,8 @@ fun ScrollableColumn(viewModel: AppViewModel) {
                 val acquista= listaFiltrata(categoria = "acquista", viewModel = viewModel)
 
                 acquista?.forEach { p ->
-                    IconButton(onClick = { /*TODO*/ }, modifier=Modifier.size(200.dp, 150.dp)) {
+                    IconButton(onClick = { viewModel.prodottoSelezionato=p.child("nome").value.toString();
+                        navController.navigate(Screen.Product.route)}, modifier=Modifier.size(200.dp, 150.dp)) {
                         val fileName=p.child("nome").value.toString()+".jpg"
                         val url= FindUrl(fileName = fileName)
                         LoadImageFromUrl(imageUrl = url)
@@ -255,33 +229,6 @@ fun ScrollableColumn(viewModel: AppViewModel) {
 }
 
 
-/*@Composable
-fun Footer(){
-    Row(
-        modifier = Modifier
-
-            .fillMaxWidth(),
-    ){
-
-        Button(onClick = { /*TODO*/ }, modifier = Modifier.weight(1f)) {
-            Text(text = "Home")
-        }
-        Button(onClick = { /*TODO*/ }, modifier = Modifier.weight(1f)) {
-            Text(text = "Catalogo")
-        }
-        Button(onClick = { /*TODO*/ }, modifier = Modifier.weight(1f)) {
-            Text(text = "Carrello")
-        }
-        Button(onClick = { /*TODO*/ }, modifier = Modifier.weight(1f)) {
-            Text(text = "Area Cliente")
-        }
-
-        
-    }
-}
-*/
-
-
 //Funzione che carica l'immagine tramite URL
 @OptIn(ExperimentalCoilApi::class)
 @Composable
@@ -292,6 +239,7 @@ fun LoadImageFromUrl(imageUrl: String) {
         modifier = Modifier
             .clip(RoundedCornerShape(160.dp))
             .fillMaxSize(),
+        contentScale = ContentScale.FillWidth
     )
 }
 
