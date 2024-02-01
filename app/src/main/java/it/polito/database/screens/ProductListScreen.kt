@@ -217,24 +217,25 @@ fun contentCard(nome: String, prezzo: String, url: String, navController: NavCon
             viewModel.prodottoSelezionato = nome
             navController.navigate(Screen.Product.route)
         },
-            modifier = Modifier.height(200.dp),
+            modifier = Modifier.height(200.dp).fillMaxWidth(),
         ) {
 
-            Row() {
+            Row(modifier = Modifier
+                .fillMaxHeight()
+                .padding(5.dp)) {
                 Card(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .padding(5.dp)
                         .weight(1f),
                 ) {
-
                     LoadImageFromUrl(imageUrl = url)
-
                 }
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .fillMaxHeight(), verticalArrangement = Arrangement.Center
+                        .fillMaxHeight()
+                        .padding(8.dp),
+                    verticalArrangement = Arrangement.Center
                 ) {
                     Text(text = nome)
                     Text(text = prezzo + "€")
@@ -249,9 +250,9 @@ fun contentCard(nome: String, prezzo: String, url: String, navController: NavCon
                             eliminaPreferito(prod = nome, id = id)
                     },
                     containerColor = Color.Transparent,
-                    modifier = Modifier
+                    modifier = Modifier.weight(1f)
                         .layoutId("btnHeart")
-                        .padding(top = 32.dp, start = 320.dp, bottom = 8.dp, end = 16.dp),
+                        .padding(end = 16.dp, top=70.dp),
                     elevation = FloatingActionButtonDefaults.elevation(
                         defaultElevation = 0.dp,
                         pressedElevation = 0.dp
