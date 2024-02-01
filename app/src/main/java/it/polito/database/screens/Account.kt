@@ -1,11 +1,11 @@
-package it.polito.database.screens
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -15,10 +15,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import it.polito.database.AppViewModel
@@ -27,22 +29,16 @@ import it.polito.database.ui.theme.Screen
 
 
 @Composable
-fun ProfileScreen(viewModel: AppViewModel, navController: NavHostController) {
-    Column(
+fun AccountScreen(viewModel: AppViewModel, navController: NavHostController) {
+    Row(
         modifier = Modifier
             .padding(top = 86.dp)
     ) {
         // Icona e Scritte
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        ) {
-            // Icona
-            Column(
-                modifier = Modifier
-                    .weight(.5F)
-            ) {
+            .padding(vertical = 16.dp))
+            {
                 val profileIcon = R.drawable.profile
                 Image(
                     painter = painterResource(id = profileIcon),
@@ -50,43 +46,29 @@ fun ProfileScreen(viewModel: AppViewModel, navController: NavHostController) {
                     modifier = Modifier
                         .size(150.dp)
                         .clip(MaterialTheme.shapes.medium)
+                        .align(Alignment.CenterHorizontally)
                 )
-            }
 
-            // Scritte
-            Column(
-                modifier = Modifier
-                    .weight(.5F)
-                    .padding(top = 36.dp)
-            ) {
-                Text(text = "Ciao,", modifier = Modifier.fillMaxWidth())
-                Text(text = "Pippo", modifier = Modifier.fillMaxWidth())
-                Text(
-                    text = "Cambia account/Esci",
-                    modifier = Modifier
-                        .clickable {
-                            navController.navigate(Screen.AuthenticationScreen.route)
+                Spacer(modifier = Modifier.height(16.dp))
 
-                            //TODO aggiungere un alert per chiedere conferma
-                        }
-                        .fillMaxWidth()
-                )
-            }
+                Text(text = "Pippo", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Opzioni(navController)
+
         }
-
-        // Card con opzioni
-        Opzioni(navController)
     }
 }
 
 @Composable
 fun Opzioni(navController: NavHostController) {
     val elenco = listOf(
-        "I miei ordini",
-        "I miei preferiti",
-        "I miei resi",
-        "Il mio account",
-        "Gestisci FitLocker"
+        "Accesso e sicurezza",
+        "Gestisci account",
+        "Iscriviti alla newsletter",
+        "Preferenze cookies",
+        "Logout"
     )
     elenco.forEach { name ->
         Row(
@@ -107,11 +89,11 @@ fun Opzioni(navController: NavHostController) {
             }
 
             IconButton(onClick = {
-                if (name =="I miei preferiti" )
-                    navController.navigate(Screen.FavoritesScreen.route)
-                else if (name == "Il mio account")
-                    navController.navigate(Screen.AccountScreen.route)
-                //TODO else if () per le altre sezioni
+                if (name =="Logout" ) {
+                    //TODO inserire alert
+                    navController.navigate(Screen.AuthenticationScreen.route)
+                }
+            //TODO else if () per le altre sezioni
             }) {
                 Icon(
                     imageVector =  Icons.Filled.KeyboardArrowRight,

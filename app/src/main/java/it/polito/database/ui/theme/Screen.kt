@@ -1,6 +1,7 @@
 package it.polito.database.ui.theme
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
@@ -70,5 +71,10 @@ sealed class Screen (
         route = "favoritesScreen",
         title = "Favorites",
         icon = Icons.Default.FavoriteBorder
+    )
+    object AccountScreen: Screen(
+        route = "accountScreen",
+        title = "AccountScreen",
+        icon = Icons.Default.AccountBox
     )
 }

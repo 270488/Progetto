@@ -1,13 +1,11 @@
 package it.polito.database.ui.theme
 
 //import com.google.android.material.bottomNavigation
+
 import android.annotation.SuppressLint
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -18,21 +16,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import it.polito.database.AppViewModel
-
-import it.polito.database.LoadImageFromUrl
 import it.polito.database.R
 
 
@@ -46,22 +37,24 @@ fun MainScreen(viewModel: AppViewModel){
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-
+    val schermateSmallTopBar = listOf(
+        Screen.Settings.route,
+        Screen.Notifications.route,
+        Screen.Product.route,
+        Screen.ProductList.route,
+        Screen.FavoritesScreen.route,
+        Screen.AccountScreen.route
+    )
         Scaffold(
 
                 topBar = {
                     if(currentDestination?.route !== Screen.AuthenticationScreen.route
                         && currentDestination?.route !== Screen.NewAccount.route) {
-                    if (currentDestination?.route == Screen.Settings.route
-                        || currentDestination?.route == Screen.Notifications.route
-                        || currentDestination?.route == Screen.Product.route
-                        || currentDestination?.route == Screen.ProductList.route
-                        || currentDestination?.route == Screen.FavoritesScreen.route
-                    ) {
+                    if (currentDestination?.route in schermateSmallTopBar)
                         SmallTopAppBar(navController = navController, viewModel = viewModel)
-                    } else {
+                    else
                         TopBar(navController = navController)
-                    }
+
                 }},
                 bottomBar = {
                     if(currentDestination?.route !== Screen.AuthenticationScreen.route
@@ -243,6 +236,7 @@ fun AddItem3(
                     Screen.Product.route -> Text(text = "")
                     Screen.ProductList.route-> Text(text = viewModel.sottocat)
                     Screen.FavoritesScreen.route-> Text(text = "I miei preferiti")
+                    Screen.AccountScreen.route-> Text(text = "")
                 }
                 //tante condizioni quante sono le schermate che hanno questa top Bar
                 //( con freccia per tornare indietro, impostazioni a destra

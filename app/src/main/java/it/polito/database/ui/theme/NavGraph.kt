@@ -1,5 +1,6 @@
 package it.polito.database.ui.theme
 
+import AccountScreen
 import NewAccount
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -57,6 +58,9 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
         }
         composable(route = Screen.FavoritesScreen.route) {
             FavoritesScreen(viewModel, navController)
+        }
+        composable(route = Screen.AccountScreen.route) {
+            AccountScreen(viewModel, navController)
         }
     }
 }
