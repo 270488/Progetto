@@ -72,7 +72,7 @@ fun ProductScreen(viewModel: AppViewModel) {
 //@Preview
 @Composable
 fun ProductDetail(viewModel: AppViewModel) {
-    var id = "ZNa99YXVgfVWD1ioAeY9mLtQ8Dh2"
+    var id = viewModel.uid
 
     var prod=viewModel.prodottoSelezionato
 

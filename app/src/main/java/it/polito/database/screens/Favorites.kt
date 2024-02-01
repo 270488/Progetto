@@ -1,5 +1,6 @@
 package it.polito.database.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,13 +12,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.firebase.database.DataSnapshot
@@ -44,7 +50,7 @@ import it.polito.database.ui.theme.Screen
 
 @Composable
 fun FavoritesScreen(viewModel: AppViewModel, navController: NavController){
-    var id="ZNa99YXVgfVWD1ioAeY9mLtQ8Dh2"
+    var id=viewModel.uid
 
     var listaPreferiti by remember { mutableStateOf<List<String>>(emptyList()) }
 
@@ -145,22 +151,28 @@ fun FavoriteCard(preferito: String, viewModel: AppViewModel, id:String, navContr
                     Text(text = nome)
                     Text(text = prezzo + "€")
                 }
-                Icon(
 
-                    imageVector = if (clicked) Icons.Filled.Favorite else Icons.Outlined.Favorite,
-                    contentDescription = "",
+                FloatingActionButton(
+                    onClick = {
+                        eliminaPreferito(prod = nome, id = id)
+                    },
+                    containerColor = Color.Transparent,
                     modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .clickable { clicked = !clicked },
-
-
+                        .layoutId("btnHeart")
+                        .padding(top = 32.dp, end = 16.dp),
+                    elevation = FloatingActionButtonDefaults.elevation(
+                        defaultElevation = 0.dp,
+                        pressedElevation = 0.dp
                     )
-                if (!clicked) {
-                    eliminaPreferito(prod = preferito, id = id)
-                    clicked = !clicked
+                ) {
 
+                    Image(
+                        imageVector = Icons.Outlined.Favorite,
+                        contentDescription = "Filled Heart",
+                        modifier = Modifier.size(50.dp)
+                    )
                 }
+
             }
         }
     }
@@ -169,7 +181,7 @@ fun FavoriteCard(preferito: String, viewModel: AppViewModel, id:String, navContr
 
 fun eliminaPreferito(prod: String, id: String){
     var preferiti= database.child("utenti").child(id).child("preferiti")
-    preferiti.addValueEventListener(object : ValueEventListener {
+    preferiti.addListenerForSingleValueEvent(object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) { //fa una foto al db in quel momento e la mette in dataSnapshot
             for (childSnapshot in dataSnapshot.children) {
                 if(childSnapshot.value.toString()==prod){
@@ -188,23 +200,26 @@ fun eliminaPreferito(prod: String, id: String){
 
 
 fun aggiungiPreferito(prod: String, id: String){
-    var flag=false
-    var count=0L
 
     //Verifica esistenza nodo "Preferiti"
     var preferiti= database.child("utenti").child(id).child("preferiti")
-    preferiti.addListenerForSingleValueEvent(object : ValueEventListener {
+    preferiti.orderByKey().limitToLast(1).addListenerForSingleValueEvent(object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) { //fa una foto al db in quel momento e la mette in dataSnapshot
+            var lastKey = 0
+            println("UID: "+id)
             if(dataSnapshot.exists()){
                 //Aggiunge preferito
+                for (childSnapshot in dataSnapshot.children) {
+                    val i = childSnapshot.key?.toInt() ?: 0
+                    lastKey= i+1
+                    println("LastKey: "+lastKey)
+                }
 
-                val childrenCount=dataSnapshot.childrenCount+1
-                database.child("utenti").child(id).child("preferiti").child(childrenCount.toString()).setValue(prod)
+                database.child("utenti").child(id).child("preferiti").child(lastKey.toString()).setValue(prod)
             }
             else{
-                database.child("utenti").child(id).child("preferiti")
-                database.child("utenti").child(id).child("preferiti").child(count.toString()).setValue(prod)
-
+                val preferitiMap = mapOf(lastKey.toString() to prod)
+                database.child("utenti").child(id).child("preferiti").setValue(preferitiMap)
             }
         }
         override fun onCancelled(databaseError: DatabaseError) {

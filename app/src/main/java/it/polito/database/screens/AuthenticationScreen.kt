@@ -39,10 +39,14 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.database.FirebaseDatabase
+import it.polito.database.AppViewModel
 import it.polito.database.R
+import it.polito.database.User
 import it.polito.database.ui.theme.Screen
 import it.polito.database.ui.theme.fontFamily
 
@@ -51,7 +55,7 @@ import it.polito.database.ui.theme.fontFamily
 //email: elena@gmail.com
 //passwore: elena18
 @Composable
-fun AuthenticationScreen(navController: NavHostController,context: AuthenticationActivity) {
+fun AuthenticationScreen(navController: NavHostController,context: AuthenticationActivity, viewModel: AppViewModel) {
     val auth = Firebase.auth
 
     Column(
@@ -64,7 +68,10 @@ fun AuthenticationScreen(navController: NavHostController,context: Authenticatio
         Image(
             painter = painterResource(id = R.drawable.logomcfit),
             contentDescription = "",
-            modifier = Modifier.width(250.dp).height(100.dp).align(Alignment.CenterHorizontally),
+            modifier = Modifier
+                .width(250.dp)
+                .height(100.dp)
+                .align(Alignment.CenterHorizontally),
             contentScale = ContentScale.FillBounds
         )
         Spacer(modifier = Modifier.height(36.dp))
@@ -148,12 +155,15 @@ fun AuthenticationScreen(navController: NavHostController,context: Authenticatio
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .border(width = 1.dp, color = MaterialTheme.colorScheme.tertiary,
-                        shape = MaterialTheme.shapes.large),
+                    .border(
+                        width = 1.dp, color = MaterialTheme.colorScheme.tertiary,
+                        shape = MaterialTheme.shapes.large
+                    ),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.secondary
                 ),
                 onClick = {
+
                     auth.signInWithEmailAndPassword(
                         emailValue.value.text.trim(),
                         passwordValue.value.text.trim()
@@ -162,6 +172,11 @@ fun AuthenticationScreen(navController: NavHostController,context: Authenticatio
                             if (task.isSuccessful) {
                                 Log.d("AUTH", "Success")
                                 navController.navigate(Screen.Home.route)
+
+                                val userId = task.result?.user?.uid
+                                if (userId != null) {
+                                    viewModel.uid=userId}
+
                             } else {
                                 Log.d("AUTH", "Failed: ${task.exception}")
                                 //errore login fallito

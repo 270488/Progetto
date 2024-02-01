@@ -44,7 +44,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import it.polito.database.GlobalVariables
 import it.polito.database.ui.theme.Screen
 
 
@@ -144,7 +143,7 @@ private fun CardContent(name: String, viewModel: AppViewModel,navController: Nav
 
             val sottoCategorie=listaSottoCategorie.get(name) // prende la lista associata al nome della categoria
             if(expanded){
-                GlobalVariables.cat=name
+                viewModel.cat=name
                 sottoCategorie?.forEach{sottocategoria->
                     sottoCategoriaCard(sottocategoria = sottocategoria, viewModel=viewModel, categoria = name,navController)
                 }
@@ -179,7 +178,7 @@ fun sottoCategoriaCard(sottocategoria: String, viewModel: AppViewModel, categori
             Text(text = sottocategoria, style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Medium) )
             IconButton(onClick = { expanded = !expanded;
                 if (expanded) {
-                    GlobalVariables.sottocat=sottocategoria
+                    viewModel.sottocat=sottocategoria
 
 
                     navController.navigate(Screen.ProductList.route)

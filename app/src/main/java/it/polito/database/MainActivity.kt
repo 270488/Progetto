@@ -44,10 +44,6 @@ import it.polito.database.ui.theme.MainScreen
 import it.polito.database.ui.theme.NavGraph
 import it.polito.database.ui.theme.Screen
 
-object GlobalVariables {
-    var cat: String = ""
-    var sottocat: String=""
-}
 
 val database = Firebase.database.reference
 val storage= Firebase.storage.reference

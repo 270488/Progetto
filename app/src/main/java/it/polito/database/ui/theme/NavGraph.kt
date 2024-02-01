@@ -23,7 +23,7 @@ import it.polito.database.screens.SettingsScreen
 fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
     NavHost(
         navController = navController,
-        startDestination = Screen.Home.route
+        startDestination = Screen.AuthenticationScreen.route
     ) {
         composable(route = Screen.Home.route) {
             HomePage(viewModel, navController)
@@ -47,10 +47,10 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
             ProductScreen(viewModel)
         }
         composable(route = Screen.AuthenticationScreen.route) {
-            AuthenticationScreen(navController,AuthenticationActivity())
+            AuthenticationScreen(navController,AuthenticationActivity(), viewModel)
         }
         composable(route = Screen.NewAccount.route) {
-           NewAccount(navController, AuthenticationActivity())
+           NewAccount(navController, AuthenticationActivity(), viewModel = viewModel)
         }
         composable(route = Screen.ProductList.route) {
             ProductListScreen(viewModel, navController)

@@ -24,13 +24,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import it.polito.database.AppViewModel
-import it.polito.database.GlobalVariables
+
 import it.polito.database.LoadImageFromUrl
 import it.polito.database.R
 
@@ -57,7 +58,7 @@ fun MainScreen(viewModel: AppViewModel){
                         || currentDestination?.route == Screen.ProductList.route
                         || currentDestination?.route == Screen.FavoritesScreen.route
                     ) {
-                        SmallTopAppBar(navController = navController)
+                        SmallTopAppBar(navController = navController, viewModel = viewModel)
                     } else {
                         TopBar(navController = navController)
                     }
@@ -211,14 +212,14 @@ fun AddItem2(navController: NavHostController){
 @SuppressLint("SuspiciousIndentation")
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun SmallTopAppBar(navController: NavHostController) {
+fun SmallTopAppBar(navController: NavHostController, viewModel: AppViewModel) {
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
         NavigationBar(containerColor = MaterialTheme.colorScheme.primary){
                 AddItem3(
                     navController = navController,
-                    currentDestination = currentDestination,
+                    currentDestination = currentDestination, viewModel
                     )
             }
         }
@@ -228,7 +229,7 @@ fun SmallTopAppBar(navController: NavHostController) {
 @Composable
 fun AddItem3(
     navController: NavHostController,
-    currentDestination: NavDestination?,
+    currentDestination: NavDestination?, viewModel: AppViewModel
 ) {
     TopAppBar(
         title = {
@@ -240,7 +241,7 @@ fun AddItem3(
                     Screen.Notifications.route -> Text(text = "Notifiche")
                     Screen.Settings.route -> Text(text = "Impostazioni")
                     Screen.Product.route -> Text(text = "")
-                    Screen.ProductList.route-> Text(text = GlobalVariables.sottocat)
+                    Screen.ProductList.route-> Text(text = viewModel.sottocat)
                     Screen.FavoritesScreen.route-> Text(text = "I miei preferiti")
                 }
                 //tante condizioni quante sono le schermate che hanno questa top Bar

@@ -54,7 +54,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import it.polito.database.AppViewModel
 import it.polito.database.FindUrl
-import it.polito.database.GlobalVariables
+
 import it.polito.database.LoadImageFromUrl
 import it.polito.database.database
 import it.polito.database.ui.theme.Screen
@@ -74,8 +74,8 @@ fun ProductList(modifier: Modifier = Modifier
 
 ) {
 
-    val categoria=GlobalVariables.cat
-    val sottocategoria=GlobalVariables.sottocat
+    val categoria=viewModel.cat
+    val sottocategoria=viewModel.sottocat
 
     val children= database.child("prodotti") //prende dal db il nodo prodotti e aggiunge un listener
     children.addValueEventListener(object : ValueEventListener {
@@ -177,7 +177,7 @@ private fun filtroCategorieProdotti(categoria: String,sottocategoria: String, vi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun contentCard(nome: String, prezzo: String, url: String, navController: NavController, viewModel: AppViewModel){
-    var id="ZNa99YXVgfVWD1ioAeY9mLtQ8Dh2"
+    var id=viewModel.uid
     var listaPreferiti by remember { mutableStateOf<List<String>>(emptyList()) }
     var filledHeart by remember{ mutableStateOf(false) }
     var preferiti= database.child("utenti").child(id).child("preferiti")

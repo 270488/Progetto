@@ -67,6 +67,7 @@ import androidx.navigation.NavHostController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.database.FirebaseDatabase
+import it.polito.database.AppViewModel
 import it.polito.database.R
 import it.polito.database.User
 import it.polito.database.screens.AuthenticationActivity
@@ -79,7 +80,7 @@ import it.polito.database.ui.theme.fontFamily
 //email: elena@gmail.com
 //password: elena18
 @Composable
-fun NewAccount(navController: NavHostController,context: AuthenticationActivity) {
+fun NewAccount(navController: NavHostController,context: AuthenticationActivity, viewModel: AppViewModel) {
     val auth = Firebase.auth
 
     Box(modifier = Modifier
@@ -359,7 +360,10 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity)
                         gender = selectedGender.value?.name ?: "",
                         email = email.value.text.trim(),
                         username = username.value.text.trim(),
-                        password = password.value.text.trim()
+                        password = password.value.text.trim(),
+                        preferiti = emptyMap(),
+                        resi = emptyMap(),
+                        ordini = emptyMap()
                     )
 
                     auth.createUserWithEmailAndPassword(

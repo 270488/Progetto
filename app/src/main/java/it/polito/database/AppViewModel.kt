@@ -63,17 +63,10 @@ class AppViewModel: ViewModel() {
 
     var products=MutableLiveData<List<DataSnapshot>>(emptyList())
     var prodottoSelezionato="shaker"
-    fun writeNewUser(userId: String, name: String, email: String) {
-        val user = User(userId, name, email)
+    var cat=""
+    var sottocat=""
+    var uid=""
 
-        database.child("users").child(userId).setValue(user)
-        database.child("users").child("anna00").child("name").get().addOnSuccessListener {
-            Log.i("firebase", "Got value ${it.value}")
-        }.addOnFailureListener{
-            Log.e("firebase", "Error getting data", it)
-        }
-
-    }
     fun addProduct(prod: DataSnapshot){
         val productName = prod.child("nome").value.toString()
 
