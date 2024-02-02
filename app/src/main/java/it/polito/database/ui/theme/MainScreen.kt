@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -138,7 +139,9 @@ fun TopBar(navController: NavHostController) {
     val currentDestination = navBackStackEntry?.destination
 
     if (currentDestination?.route !== Screen.AuthenticationScreen.route ) {
-        NavigationBar(containerColor = MaterialTheme.colorScheme.primary) {
+        NavigationBar(
+            containerColor = MaterialTheme.colorScheme.primary
+        ) {
             screens.forEach { screen ->
                 AddItem2(
                     navController = navController
@@ -161,7 +164,10 @@ fun AddItem2(navController: NavHostController){
                 contentAlignment = Alignment.Center)
             {
                 //Text(text = "McFIT")
-                Image(painter = painterResource(id = R.drawable.logomcfit), contentDescription = "")
+                Image(
+                    painter = painterResource(id = R.drawable.logomcfit),
+                    contentDescription = "",
+                )
             //aggiungere il logo
             }
                 },
@@ -249,7 +255,10 @@ fun AddItem3(
             IconButton(
                 onClick = {
                     navController.navigateUp()
-                }
+                },
+                colors = IconButtonDefaults.iconButtonColors(
+                    contentColor = MaterialTheme.colorScheme.tertiary
+                )
             ){
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
@@ -263,7 +272,10 @@ fun AddItem3(
             IconButton(
                 onClick = {
                     navController.navigate(Screen.Settings.route)
-                }
+                },
+                colors = IconButtonDefaults.iconButtonColors(
+                    contentColor = MaterialTheme.colorScheme.tertiary
+                )
             ) {
                 Icon(
                     imageVector = Screen.Settings.icon,

@@ -133,13 +133,22 @@ fun Opzioni(navController: NavHostController) {
                     .fillMaxWidth()
                     .animateContentSize()
             )  {
-                Text(
-                    text = name,
-                    fontFamily = fontFamily,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = name,
+                        fontFamily = fontFamily,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                    if(name == "Gestisci FitLocker"){
+                        Spacer(modifier = Modifier.width(30.dp))
+                        Image(
+                            painter = painterResource(id = R.drawable.fitlocker_logo),
+                            contentDescription = "Profile icon",
+                            modifier = Modifier.size(60.dp))
+                    }
+                }
 
                 IconButton(onClick = {
                     if (name =="I miei preferiti" )
