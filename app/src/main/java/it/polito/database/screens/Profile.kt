@@ -109,6 +109,8 @@ fun Opzioni(navController: NavHostController) {
             IconButton(onClick = {
                 if (name =="I miei preferiti" )
                     navController.navigate(Screen.FavoritesScreen.route)
+                else if (name =="I miei resi" )
+                    navController.navigate(Screen.ResiScreen.route)
                 else if (name == "Il mio account")
                     navController.navigate(Screen.AccountScreen.route)
                 //TODO else if () per le altre sezioni

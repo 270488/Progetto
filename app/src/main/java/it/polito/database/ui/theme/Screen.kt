@@ -77,4 +77,9 @@ sealed class Screen (
         title = "AccountScreen",
         icon = Icons.Default.AccountBox
     )
+    object ResiScreen: Screen(
+        route = "resiScreen",
+        title = "ResiScreen",
+        icon = Icons.Default.AccountBox
+    )
 }

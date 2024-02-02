@@ -53,6 +53,7 @@ import coil.compose.AsyncImage
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import it.polito.database.screens.GestioneArduino
 import it.polito.database.ui.theme.Screen
 import it.polito.database.ui.theme.fontFamily
 import kotlin.math.round
@@ -66,6 +67,8 @@ class AppViewModel: ViewModel() {
     var cat=""
     var sottocat=""
     var uid=""
+
+    var variabili=GestioneArduino()
 
     fun addProduct(prod: DataSnapshot){
         val productName = prod.child("nome").value.toString()

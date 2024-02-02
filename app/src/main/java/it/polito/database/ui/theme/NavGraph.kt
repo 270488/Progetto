@@ -17,6 +17,7 @@ import it.polito.database.screens.NotificationsScreen
 import it.polito.database.screens.ProductListScreen
 import it.polito.database.screens.ProductScreen
 import it.polito.database.screens.ProfileScreen
+import it.polito.database.screens.ResiScreen
 import it.polito.database.screens.SettingsScreen
 
 
@@ -61,6 +62,9 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
         }
         composable(route = Screen.AccountScreen.route) {
             AccountScreen(viewModel, navController)
+        }
+        composable(route = Screen.ResiScreen.route) {
+            ResiScreen(viewModel, navController)
         }
     }
 }

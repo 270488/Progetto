@@ -267,9 +267,7 @@ fun ProductDetail(viewModel: AppViewModel) {
                     modifier = Modifier.size(50.dp)
                 )
             }
-
         }
-
     }
 }
 
