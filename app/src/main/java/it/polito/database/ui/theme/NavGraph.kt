@@ -34,7 +34,7 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
            CategoryScreen(viewModel, navController)
         }
         composable(route = Screen.Cart.route) {
-            CartScreen(viewModel)
+            CartScreen(viewModel, navController)
         }
         composable(route = Screen.Profile.route) {
             ProfileScreen(viewModel,navController)

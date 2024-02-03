@@ -6,7 +6,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -45,9 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -58,7 +55,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import it.polito.database.AppViewModel
 import it.polito.database.FindUrl
-import it.polito.database.R
 import it.polito.database.database
 
 @SuppressLint("RememberReturnType")
@@ -206,7 +202,7 @@ fun ProductDetail(viewModel: AppViewModel) {
                         end = 10.dp
                     )
             ) {
-              CardContent(nome=nome, prezzo = prezzo, categoria=categoria, sottocategoria=sottocategoria, descrizione=descrizione)
+              CardContent(nome=nome, prezzo = prezzo, categoria=categoria, sottocategoria=sottocategoria, descrizione=descrizione, id=id)
             }
         }
         var listaPreferiti by remember { mutableStateOf<List<String>>(emptyList()) }
@@ -272,7 +268,7 @@ fun ProductDetail(viewModel: AppViewModel) {
 }
 
 @Composable
-fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: String, sottocategoria: String){
+fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: String, sottocategoria: String, id: String){
     Text(
         text = categoria+", "+sottocategoria,
         modifier = Modifier
@@ -322,7 +318,7 @@ fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: Str
         OptionSelection()
         QtySelection()
     }
-
+/*
     Text(
         text = "Descrizione",
         fontWeight = FontWeight.SemiBold,
@@ -348,9 +344,11 @@ fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: Str
                 .verticalScroll(rememberScrollState())
         )
     }
-
+*/
     Button(
-        onClick = {/*TODO*/},
+        onClick = {
+                  aggiungiAlCarrello(item = nome, id = id)
+        },
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
             .layoutId("btnBuy")
