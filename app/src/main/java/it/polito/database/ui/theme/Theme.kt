@@ -72,7 +72,7 @@ fun DatabaseTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = ContextCompat.getColor(view.context, R.color.primary) //DarkColorScheme.primary.toArgb()
+            window.statusBarColor = Color.Black.toArgb()  //DarkColorScheme.primary.toArgb() //ContextCompat.getColor(view.context, R.color.primary)
             window.navigationBarColor = Color.Black.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }

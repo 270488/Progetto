@@ -18,7 +18,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
@@ -107,12 +109,13 @@ fun RowScope.AddItem(
         navController: NavHostController
     ){
         NavigationBarItem(
-            label = {
-                Text(text = screen.title)
-            },
+            /*label = {
+                Text(text = screen.title, fontFamily = fontFamily, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+            },*/
             icon = {
                 Icon(imageVector = screen.icon,
-                    contentDescription = "Navigation Icon"
+                    contentDescription = "Navigation Icon",
+                    modifier = Modifier.size(40.dp) //.padding(bottom = 3.dp)
                 )
             },
             colors = NavigationBarItemDefaults.colors(
@@ -158,6 +161,7 @@ fun TopBar(navController: NavHostController) {
 @Composable
 fun AddItem2(navController: NavHostController){
     TopAppBar(
+        modifier = Modifier.padding(top = 6.dp),
         title = {
             Box(
                 modifier = Modifier.fillMaxWidth(),
@@ -192,7 +196,8 @@ fun AddItem2(navController: NavHostController){
                 {
                     Icon(
                         imageVector = Screen.Notifications.icon,
-                        contentDescription = "Notifiche"
+                        contentDescription = "Notifiche",
+                        modifier = Modifier.size(40.dp)
                     )
                 }
             }
@@ -202,7 +207,8 @@ fun AddItem2(navController: NavHostController){
                 colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.tertiary)) {
                 Icon(
                     imageVector = Screen.Settings.icon,
-                    contentDescription = "Impostazioni"
+                    contentDescription = "Impostazioni",
+                    modifier = Modifier.size(40.dp)
                 )
             }
         }
@@ -231,18 +237,19 @@ fun AddItem3(
     currentDestination: NavDestination?, viewModel: AppViewModel
 ) {
     TopAppBar(
+        modifier = Modifier.padding(top = 6.dp),
         title = {
             Box(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center)
             {
                 when (currentDestination?.route) {
-                    Screen.Notifications.route -> Text(text = "Notifiche")
-                    Screen.Settings.route -> Text(text = "Impostazioni")
-                    Screen.Product.route -> Text(text = "")
+                    Screen.Notifications.route -> Text(text = "Notifiche", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
+                    Screen.Settings.route -> Text(text = "Impostazioni", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
+                    Screen.Product.route -> Text(text = "", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                     Screen.ProductList.route-> Text(text = viewModel.sottocat)
-                    Screen.FavoritesScreen.route-> Text(text = "I miei preferiti")
-                    Screen.AccountScreen.route-> Text(text = "")
+                    Screen.FavoritesScreen.route-> Text(text = "I miei preferiti", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
+                    Screen.AccountScreen.route-> Text(text = "", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                 }
                 //tante condizioni quante sono le schermate che hanno questa top Bar
                 //( con freccia per tornare indietro, impostazioni a destra
@@ -263,6 +270,7 @@ fun AddItem3(
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = "Back" ,
+                    modifier = Modifier.size(40.dp)
                     )
                 }
         },
@@ -279,7 +287,8 @@ fun AddItem3(
             ) {
                 Icon(
                     imageVector = Screen.Settings.icon,
-                    contentDescription = "Impostazioni"
+                    contentDescription = "Impostazioni",
+                    modifier = Modifier.size(40.dp)
                 )
             }
             }
