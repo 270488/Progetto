@@ -10,8 +10,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -26,7 +30,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -80,6 +86,28 @@ fun Cart(viewModel: AppViewModel, navController: NavController, modifier: Modifi
     Box(modifier = modifier.height(200.dp)){
         Text(text = "Totale: " + totale.toString() + "€")
     }
+
+        Button(
+            onClick = {
+            },
+            shape = RoundedCornerShape(8.dp),
+            modifier = Modifier
+                .layoutId("btnCheckOut")
+                .padding(top = 16.dp, start = 90.dp, bottom = 16.dp)
+                .width(250.dp),
+            colors = ButtonDefaults.buttonColors(Color.Yellow),
+            elevation = ButtonDefaults.buttonElevation(
+                defaultElevation = 0.dp,
+                pressedElevation = 0.dp,
+                disabledElevation = 0.dp
+            )
+        ){
+            Text(
+                text = "Procedi all'acquisto",
+                fontSize = 23.sp,
+                color = Color.Black
+            )
+        }
 
     }
 
@@ -174,7 +202,7 @@ fun ItemCard(
                     modifier = Modifier
                         .fillMaxHeight()
                         .padding(5.dp)
-                        .weight(5f),
+                        .weight(4f),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Card(modifier = Modifier.fillMaxSize()){
@@ -188,6 +216,8 @@ fun ItemCard(
                 ) {
                     Text(text = nome)
                     Text(text = prezzo + "€")
+                    Text(text = "quantità")
+                    Text(text = "opzione")
                     Column(  modifier = Modifier
                         .weight(2f)
                         .fillMaxHeight(),

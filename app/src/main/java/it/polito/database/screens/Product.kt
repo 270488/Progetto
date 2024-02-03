@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -83,7 +84,6 @@ fun ProductDetail(viewModel: AppViewModel) {
     var categoria=""
     var sottocategoria=""
 
-
     product.forEach { p ->
         nome=p.child("nome").value.toString()
         prezzo= p.child("prezzo").getValue() as Double
@@ -127,7 +127,9 @@ fun ProductDetail(viewModel: AppViewModel) {
             .layoutId("productImage")
             .fillMaxWidth()
             .padding(bottom = 300.dp)
-    )
+            .verticalScroll(rememberScrollState())
+
+        )
         /*Image(
         painter = painterResource(id = R.drawable.shaker700ml),
         contentDescription = "Product Image",
@@ -147,7 +149,7 @@ fun ProductDetail(viewModel: AppViewModel) {
             elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
             modifier = Modifier
                 .layoutId("bgCard")
-                .height(400.dp)
+                .height(500.dp)
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
         ) {
@@ -298,27 +300,27 @@ fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: Str
             .padding(end = 16.dp, top = 25.dp)
     )
 
-    Row(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 24.dp)
             .layoutId("ratings"),
-        horizontalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.SpaceBetween
     ){
+
         Text(text = "★★★★★", fontSize = 32.sp) //temporaneo
       // RatingBar()
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ){
+            OptionSelection()
+            QtySelection()
+        }
     }
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 120.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ){
-        OptionSelection()
-        QtySelection()
-    }
-/*
     Text(
         text = "Descrizione",
         fontWeight = FontWeight.SemiBold,
@@ -331,6 +333,7 @@ fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: Str
     Card(
         modifier = Modifier
             .height(120.dp)
+            .fillMaxWidth()
             .layoutId("txtDescription")
             .padding(top = 8.dp),
         colors = CardDefaults.cardColors(Color.Gray),
@@ -344,7 +347,7 @@ fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: Str
                 .verticalScroll(rememberScrollState())
         )
     }
-*/
+
     Button(
         onClick = {
                   aggiungiAlCarrello(item = nome, id = id)
@@ -447,7 +450,6 @@ fun QtySelection() {
         mutableStateOf(false) //default: menù chiuso
     }
     val qty = listOf(1,2,3,4)
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -485,8 +487,7 @@ fun QtySelection() {
                         },
                         onClick = {
                             selectedQty = q.toString()
-                            isExpanded =
-                                false
+                            isExpanded = false
                         })
                 }
             }
