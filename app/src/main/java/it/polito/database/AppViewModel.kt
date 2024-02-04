@@ -233,8 +233,7 @@ fun LoadImageFromUrl(imageUrl: String) {
         model = imageUrl,
         contentDescription = null,
         modifier = Modifier
-            .clip(RoundedCornerShape(160.dp))
-            .fillMaxSize(),
+            .clip(RoundedCornerShape(15.dp)),
         contentScale = ContentScale.FillWidth
     )
 }

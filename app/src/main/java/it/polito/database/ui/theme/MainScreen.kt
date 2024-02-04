@@ -16,6 +16,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -89,7 +91,17 @@ fun BottomBar(navController: NavHostController) {
     val currentDestination = navBackStackEntry?.destination
 
         NavigationBar(
-            containerColor = MaterialTheme.colorScheme.onBackground) {
+            modifier = Modifier
+                .drawBehind {
+                    drawLine(
+                        color = Color(0xFFFFED37),
+                        start = Offset(0f, 0f),
+                        end = Offset(size.width, 0f),
+                        strokeWidth = 4.dp.toPx()
+                    )
+                },
+            containerColor = MaterialTheme.colorScheme.onBackground) 
+        {
             screens.forEach { screen ->
                 AddItem(
                     screen = screen,
