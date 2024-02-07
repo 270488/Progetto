@@ -2,14 +2,20 @@ package it.polito.database
 
 import android.util.DisplayMetrics
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+//import androidx.compose.foundation.layout.RowScopeInstance.weight
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,10 +24,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -34,15 +44,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
@@ -54,7 +69,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import it.polito.database.screens.GestioneArduino
+import it.polito.database.ui.theme.Blue40
 import it.polito.database.ui.theme.Screen
+import it.polito.database.ui.theme.Yellow40
 import it.polito.database.ui.theme.fontFamily
 import kotlin.math.round
 import kotlin.reflect.KClass
@@ -107,7 +124,8 @@ fun HomePage(viewModel: AppViewModel, navController: NavController){
 @Composable
 fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
 
-    val children= database.child("prodotti") //prende dal db il nodo prodotti e aggiunge un listener
+    val children =
+        database.child("prodotti") //prende dal db il nodo prodotti e aggiunge un listener
     children.addValueEventListener(object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) { //fa una foto al db in quel momento e la mette in dataSnapshot
             // Itera sui figli del nodo
@@ -132,95 +150,249 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
         modifier = Modifier
             .fillMaxHeight(0.9f)
             .padding(10.dp, 74.dp, 10.dp, 10.dp)
-            .verticalScroll(rememberScrollState())
-            ,
+            .verticalScroll(rememberScrollState()),
     ) {
-        Spacer(modifier=Modifier.weight(0.25f))
+        //Spacer(modifier = Modifier.weight(0.01f))
         //prima riga "DA NON PERDERE"
-        Column(modifier = Modifier){
+        Column(modifier = Modifier) {
 
-            Row(modifier=Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
-                Text(text = "Da non perdere", color = MaterialTheme.colorScheme.onPrimary,
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp, top = 4.dp), horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "Da non perdere", color = MaterialTheme.colorScheme.onPrimary,
                     fontFamily = fontFamily,
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold)
-                Text(text = "Cerca", color = MaterialTheme.colorScheme.onPrimary,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "Cerca", color = MaterialTheme.colorScheme.onPrimary,
                     fontFamily = fontFamily,
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold)
+                    fontWeight = FontWeight.Bold
+                )
             }
-        //Contiene i bottoni con i prodotti
-        Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
-            val nonperdere= listaFiltrata(categoria = "non perdere", viewModel = viewModel)
+            //Contiene i bottoni con i prodotti
+            Row(
+                modifier = Modifier
+                    .horizontalScroll(rememberScrollState())
+            ) {
+                val nonperdere = listaFiltrata(categoria = "non perdere", viewModel = viewModel)
 
-            nonperdere?.forEach { p ->
-                val fileName=p.child("nome").value.toString()+".jpg"
-                val url= FindUrl(fileName = fileName)
-                IconButton(onClick = { viewModel.prodottoSelezionato=p.child("nome").value.toString();
+                nonperdere?.forEach { p ->
+                    val fileName = p.child("nome").value.toString() + ".jpg"
+                    val url = FindUrl(fileName = fileName)
+                    /*IconButton(onClick = { viewModel.prodottoSelezionato=p.child("nome").value.toString();
                     navController.navigate(Screen.Product.route)}, //CAMBIARE CON DELLE CARDS
                     modifier= Modifier.size(200.dp, 150.dp)){
                         //.background(Color.Gray)) {
                     LoadImageFromUrl(imageUrl = url)
+                }*/
+                    Card(
+                        modifier = Modifier
+                            .background(Blue40)
+                            .height(150.dp)
+                            .defaultMinSize(minWidth = 100.dp)
+                            .fillMaxWidth()
+                            .padding(all = 4.dp)
+                            .fillMaxHeight()
+                            .wrapContentSize(Alignment.Center)
+                            .clickable {
+                                run {
+                                    viewModel.prodottoSelezionato =
+                                        p.child("nome").value.toString();
+                                    navController.navigate(Screen.Product.route)
+                                }
+                            },
+                        border = BorderStroke(2.dp, Yellow40),
+
+                        )
+                    {
+                        Box {
+                            LoadImageFromUrl(imageUrl = url)
+                            Text(
+                                text = p.child("nome").value.toString(),
+                                modifier = Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .padding(bottom = 3.dp),
+                                fontFamily = fontFamily,
+                                color = Color.Black,
+                                fontWeight = FontWeight.Bold,
+                                style = TextStyle(
+                                    shadow = Shadow(
+                                        color = Color.White,
+                                        offset = Offset.Zero,
+                                        blurRadius = 10f
+                                    )
+                                )
+                            )
+                        }
+                    }
+
                 }
 
             }
-
+            //Text(text = "__________________________________________________", color = MaterialTheme.colorScheme.tertiary)
+            /*Box(
+                modifier = Modifier
+                    .padding(top = 5.dp)
+                    .background(Yellow40)
+                    .size(700.dp, 1.dp)
+            )*/
         }
-        Text(text = "__________________________________________________", color = MaterialTheme.colorScheme.tertiary)
-        }
-        Spacer(modifier=Modifier.weight(0.25f))
+        Divider(thickness = 1.dp, color = Yellow40)
+        //Spacer(modifier = Modifier.weight(0.01f))
         //Seconda riga OFFERTE PER TE
-        Column(modifier = Modifier){
+        Column(modifier = Modifier) {
 
-            Row(modifier=Modifier.fillMaxWidth()){
-                Text(text = "Offerte per te", color = MaterialTheme.colorScheme.onPrimary,
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 4.dp, bottom = 8.dp)) {
+
+                Text(
+                    text = "Offerte per te", color = MaterialTheme.colorScheme.onPrimary,
                     fontFamily = fontFamily,
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold)
+                    fontWeight = FontWeight.Bold
+                )
             }
-            Row(modifier = Modifier.horizontalScroll(rememberScrollState())){
+            Spacer(modifier = Modifier.weight(0.01f))
+            Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
 
-                val offerte= listaFiltrata(categoria = "offerte", viewModel = viewModel)
+                val offerte = listaFiltrata(categoria = "offerte", viewModel = viewModel)
 
                 offerte?.forEach { p ->
-                    IconButton(onClick = { viewModel.prodottoSelezionato=p.child("nome").value.toString()
+                    /*IconButton(onClick = { viewModel.prodottoSelezionato=p.child("nome").value.toString()
                         navController.navigate(Screen.Product.route)  }, modifier=Modifier.size(200.dp, 150.dp)) {
-                        val fileName=p.child("nome").value.toString()+".jpg"
-                        val url= FindUrl(fileName = fileName)
-                        LoadImageFromUrl(imageUrl = url)
 
+                        LoadImageFromUrl(imageUrl = url)*/
+                    val fileName = p.child("nome").value.toString() + ".jpg"
+                    val url = FindUrl(fileName = fileName)
+                    Card(
+                        modifier = Modifier
+                            .background(Blue40)
+                            .height(150.dp)
+                            .defaultMinSize(minWidth = 100.dp)
+                            .fillMaxWidth()
+                            .padding(all = 4.dp)
+                            .fillMaxHeight()
+                            .wrapContentSize(Alignment.Center)
+                            .clickable {
+                                run {
+                                    viewModel.prodottoSelezionato =
+                                        p.child("nome").value.toString();
+                                    navController.navigate(Screen.Product.route)
+                                }
+                            },
+                        border = BorderStroke(2.dp, Yellow40),
+
+                        )
+                    {
+                        Box {
+                            LoadImageFromUrl(imageUrl = url)
+                            Text(
+                                text = p.child("nome").value.toString(),
+                                modifier = Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .padding(bottom = 3.dp),
+                                fontFamily = fontFamily,
+                                color = Color.Black,
+                                fontWeight = FontWeight.Bold,
+                                style = TextStyle(
+                                    shadow = Shadow(
+                                        color = Color.White,
+                                        offset = Offset.Zero,
+                                        blurRadius = 10f
+                                    )
+                                )
+                            )
+                        }
                     }
+
                 }
-
             }
-            Text(text = "__________________________________________________", color = Color.Yellow)
+
         }
-        Spacer(modifier=Modifier.weight(0.25f))
-
+        //Text(text = "__________________________________________________", color = Color.Yellow)
+       /*( Box(
+            modifier = Modifier
+                .padding(top = 5.dp)
+                .background(Yellow40)
+                .size(700.dp, 1.dp)
+        )*/
+        Divider(thickness = 1.dp, color = Yellow40)
+        //Spacer(modifier = Modifier.weight(0.01f))
         //Terza riga ACQUISTA DI NUOVO
-        Column(modifier = Modifier){
+        Column(modifier = Modifier) {
 
-            Row(modifier=Modifier.fillMaxWidth()){
-                Text(text = "Acquista di nuovo", color = MaterialTheme.colorScheme.onPrimary,
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 4.dp, bottom = 8.dp)) {
+                Text(
+                    text = "Acquista di nuovo", color = MaterialTheme.colorScheme.onPrimary,
                     fontFamily = fontFamily,
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold)
+                    fontWeight = FontWeight.Bold
+                )
             }
-            Row(modifier = Modifier.horizontalScroll(rememberScrollState())){
-                val acquista= listaFiltrata(categoria = "acquista", viewModel = viewModel)
+            Spacer(modifier = Modifier.weight(0.01f))
+            Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
+                val acquista = listaFiltrata(categoria = "acquista", viewModel = viewModel)
 
                 acquista?.forEach { p ->
-                    IconButton(onClick = { viewModel.prodottoSelezionato=p.child("nome").value.toString();
-                        navController.navigate(Screen.Product.route)}, modifier=Modifier.size(200.dp, 150.dp)) {
-                        val fileName=p.child("nome").value.toString()+".jpg"
-                        val url= FindUrl(fileName = fileName)
-                        LoadImageFromUrl(imageUrl = url)
+                    /*  IconButton(onClick = {
+                        viewModel.prodottoSelezionato = p.child("nome").value.toString();
+                        navController.navigate(Screen.Product.route)
+                    }, modifier = Modifier.size(200.dp, 150.dp)) {*/
+                    val fileName = p.child("nome").value.toString() + ".jpg"
+                    val url = FindUrl(fileName = fileName)
+                    Card(
+                        modifier = Modifier
+                            .background(Blue40)
+                            .height(150.dp)
+                            .fillMaxWidth()
+                            .defaultMinSize(minWidth = 100.dp)
+                            .padding(all = 4.dp)
+                            .fillMaxHeight()
+                            .wrapContentSize(Alignment.Center)
+                            .clickable {
+                                run {
+                                    viewModel.prodottoSelezionato =
+                                        p.child("nome").value.toString();
+                                    navController.navigate(Screen.Product.route)
+                                }
+                            },
+                        border = BorderStroke(2.dp, Yellow40),
+
+                        )
+                    {
+                        Box {
+                            LoadImageFromUrl(imageUrl = url)
+                            Text(
+                                text = p.child("nome").value.toString(),
+                                modifier = Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .padding(bottom = 3.dp),
+                                fontFamily = fontFamily,
+                                color = Color.Black,
+                                fontWeight = FontWeight.Bold,
+                                style = TextStyle(
+                                    shadow = Shadow(
+                                        color = Color.White,
+                                        offset = Offset.Zero,
+                                        blurRadius = 10f
+                                    )
+                                )
+                            )
+                        }
 
                     }
                 }
             }
-        }
 
+        }
     }
 }
 
