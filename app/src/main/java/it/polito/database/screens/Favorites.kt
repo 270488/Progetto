@@ -166,7 +166,7 @@ fun FavoriteCard(preferito: String, viewModel: AppViewModel, id:String, navContr
             containerColor = MaterialTheme.colorScheme.secondary,
             contentColor= MaterialTheme.colorScheme.onSecondary,
         ),
-        border = BorderStroke(4.dp, MaterialTheme.colorScheme.secondaryContainer),
+        border = BorderStroke(2.dp, MaterialTheme.colorScheme.secondaryContainer),
         onClick = {
             viewModel.prodottoSelezionato = nome
             navController.navigate(Screen.Product.route)
@@ -225,8 +225,8 @@ fun FavoriteCard(preferito: String, viewModel: AppViewModel, id:String, navContr
                     containerColor = Color.Transparent,
                     modifier = Modifier
                         .layoutId("btnHeart")
-                        .size(60.dp)
-                        .padding(end = 24.dp),
+                        .size(50.dp)
+                        .padding(end = 16.dp),
                     elevation = FloatingActionButtonDefaults.elevation(
                         defaultElevation = 0.dp,
                         pressedElevation = 0.dp
