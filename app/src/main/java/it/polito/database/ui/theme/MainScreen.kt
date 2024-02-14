@@ -48,7 +48,8 @@ fun MainScreen(viewModel: AppViewModel){
         Screen.Product.route,
         Screen.ProductList.route,
         Screen.FavoritesScreen.route,
-        Screen.AccountScreen.route
+        Screen.AccountScreen.route,
+        Screen.GestisciAccountScreen.route
     )
         Scaffold(
 
@@ -262,6 +263,7 @@ fun AddItem3(
                     Screen.ProductList.route-> Text(text = viewModel.sottocat)
                     Screen.FavoritesScreen.route-> Text(text = "I miei preferiti", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                     Screen.AccountScreen.route-> Text(text = "", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
+                    Screen.GestisciAccountScreen.route-> Text(text = "Gestione Account", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                 }
                 //tante condizioni quante sono le schermate che hanno questa top Bar
                 //( con freccia per tornare indietro, impostazioni a destra
