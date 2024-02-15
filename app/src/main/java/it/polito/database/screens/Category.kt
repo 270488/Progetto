@@ -159,7 +159,7 @@ private fun CardContent(name: String, viewModel: AppViewModel,navController: Nav
         ) {
             Text(
                 text = name,
-                style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Medium, fontSize = 20.sp)
+                style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Medium, fontSize = 20.sp, fontFamily = fontFamily)
             )
 
             val sottoCategorie=listaSottoCategorie.get(name) // prende la lista associata al nome della categoria

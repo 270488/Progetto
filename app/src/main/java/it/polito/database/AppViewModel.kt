@@ -44,9 +44,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -193,12 +198,10 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                     Card(
                         modifier = Modifier
                             .background(Blue40)
-                            .height(150.dp)
-                            .defaultMinSize(minWidth = 100.dp)
+                            .size(200.dp, 120.dp)
                             .fillMaxWidth()
                             .padding(all = 4.dp)
                             .fillMaxHeight()
-                            .wrapContentSize(Alignment.Center)
                             .clickable {
                                 run {
                                     viewModel.prodottoSelezionato =
@@ -206,25 +209,37 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                                     navController.navigate(Screen.Product.route)
                                 }
                             },
-                        border = BorderStroke(2.dp, Yellow40),
+                       // border = BorderStroke(2.dp, Yellow40),
 
                         )
                     {
-                        Box {
-                            LoadImageFromUrl(imageUrl = url)
+                        Box (
+
+                        ){
+                            AsyncImage(model = url,
+                                contentDescription = "Product Description",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.fillMaxWidth())
+                            Box(modifier = Modifier
+                                .fillMaxSize()
+                                .graphicsLayer {
+                                    compositingStrategy = CompositingStrategy.ModulateAlpha
+                                    alpha = 0.7f}
+                                .background(brush = Brush.verticalGradient(listOf(Color.Transparent, Color.Black))))
                             Text(
                                 text = p.child("nome").value.toString(),
                                 modifier = Modifier
                                     .align(Alignment.BottomCenter)
                                     .padding(bottom = 3.dp),
                                 fontFamily = fontFamily,
-                                color = Color.Black,
+                                color = Color.White,
+                                fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
                                 style = TextStyle(
                                     shadow = Shadow(
-                                        color = Color.White,
+                                        color = Color.Black,
                                         offset = Offset.Zero,
-                                        blurRadius = 10f
+                                        blurRadius = 5f
                                     )
                                 )
                             )
@@ -242,7 +257,7 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                     .size(700.dp, 1.dp)
             )*/
         }
-        Divider(thickness = 1.dp, color = Yellow40)
+        Divider(thickness = 1.dp, color = Yellow40, modifier = Modifier.padding(top = 4.dp, bottom = 16.dp))
         //Spacer(modifier = Modifier.weight(0.01f))
         //Seconda riga OFFERTE PER TE
         Column(modifier = Modifier) {
@@ -273,12 +288,10 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                     Card(
                         modifier = Modifier
                             .background(Blue40)
-                            .height(150.dp)
-                            .defaultMinSize(minWidth = 100.dp)
+                            .size(200.dp, 120.dp)
                             .fillMaxWidth()
                             .padding(all = 4.dp)
                             .fillMaxHeight()
-                            .wrapContentSize(Alignment.Center)
                             .clickable {
                                 run {
                                     viewModel.prodottoSelezionato =
@@ -286,25 +299,39 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                                     navController.navigate(Screen.Product.route)
                                 }
                             },
-                        border = BorderStroke(2.dp, Yellow40),
+                        //border = BorderStroke(2.dp, Yellow40),
 
                         )
                     {
-                        Box {
-                            LoadImageFromUrl(imageUrl = url)
+                        Box (modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.White)){
+                            //LoadImageFromUrl(imageUrl = url)
+                            AsyncImage(model = url,
+                                contentDescription = "Product Description",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .fillMaxSize())
+                            Box(modifier = Modifier
+                                .fillMaxSize()
+                                .graphicsLayer {
+                                    compositingStrategy = CompositingStrategy.ModulateAlpha
+                                    alpha = 0.7f}
+                                .background(brush = Brush.verticalGradient(listOf(Color.Transparent, Color.Black))))
                             Text(
                                 text = p.child("nome").value.toString(),
                                 modifier = Modifier
                                     .align(Alignment.BottomCenter)
                                     .padding(bottom = 3.dp),
                                 fontFamily = fontFamily,
-                                color = Color.Black,
+                                color = Color.White,
+                                fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
                                 style = TextStyle(
                                     shadow = Shadow(
-                                        color = Color.White,
+                                        color = Color.Black,
                                         offset = Offset.Zero,
-                                        blurRadius = 10f
+                                        blurRadius = 5f
                                     )
                                 )
                             )
@@ -322,7 +349,7 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                 .background(Yellow40)
                 .size(700.dp, 1.dp)
         )*/
-        Divider(thickness = 1.dp, color = Yellow40)
+        Divider(thickness = 1.dp, color = Yellow40, modifier = Modifier.padding(top = 4.dp, bottom = 16.dp))
         //Spacer(modifier = Modifier.weight(0.01f))
         //Terza riga ACQUISTA DI NUOVO
         Column(modifier = Modifier) {
@@ -351,12 +378,10 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                     Card(
                         modifier = Modifier
                             .background(Blue40)
-                            .height(150.dp)
+                            .size(200.dp, 120.dp)
                             .fillMaxWidth()
-                            .defaultMinSize(minWidth = 100.dp)
                             .padding(all = 4.dp)
                             .fillMaxHeight()
-                            .wrapContentSize(Alignment.Center)
                             .clickable {
                                 run {
                                     viewModel.prodottoSelezionato =
@@ -364,25 +389,36 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                                     navController.navigate(Screen.Product.route)
                                 }
                             },
-                        border = BorderStroke(2.dp, Yellow40),
+                        //border = BorderStroke(2.dp, Yellow40),
 
                         )
                     {
-                        Box {
-                            LoadImageFromUrl(imageUrl = url)
+                        Box{
+                            //LoadImageFromUrl(imageUrl = url)
+                            AsyncImage(model = url,
+                                contentDescription = "Product Description",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.fillMaxWidth())
+                            Box(modifier = Modifier
+                                .fillMaxSize()
+                                .graphicsLayer {
+                                compositingStrategy = CompositingStrategy.ModulateAlpha
+                                alpha = 0.7f}
+                                .background(brush = Brush.verticalGradient(listOf(Color.Transparent, Color.Black))))
                             Text(
                                 text = p.child("nome").value.toString(),
                                 modifier = Modifier
                                     .align(Alignment.BottomCenter)
                                     .padding(bottom = 3.dp),
                                 fontFamily = fontFamily,
-                                color = Color.Black,
+                                color = Color.White,
+                                fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
                                 style = TextStyle(
                                     shadow = Shadow(
-                                        color = Color.White,
+                                        color = Color.Black,
                                         offset = Offset.Zero,
-                                        blurRadius = 10f
+                                        blurRadius = 5f
                                     )
                                 )
                             )
