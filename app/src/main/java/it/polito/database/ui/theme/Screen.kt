@@ -2,6 +2,7 @@ package it.polito.database.ui.theme
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
@@ -81,5 +82,10 @@ sealed class Screen (
         route = "resiScreen",
         title = "ResiScreen",
         icon = Icons.Default.AccountBox
+    )
+    object GestisciAccountScreen: Screen(
+        route = "gestisciAccount",
+        title = "GestisciAccount",
+        icon = Icons.Default.Edit
     )
 }
