@@ -14,23 +14,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -41,10 +36,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
@@ -61,7 +54,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import it.polito.database.AppViewModel
 import it.polito.database.FindUrl
-import it.polito.database.LoadImageFromUrl
 import it.polito.database.database
 import it.polito.database.ui.theme.Screen
 import it.polito.database.ui.theme.fontFamily
@@ -85,7 +77,7 @@ fun Cart(viewModel: AppViewModel, navController: NavController, modifier: Modifi
         override fun onDataChange(dataSnapshot: DataSnapshot) {
             var lista= mutableListOf<String>()
             for (childSnapshot in dataSnapshot.children) {
-                lista.add(childSnapshot.value.toString())
+                lista.add(childSnapshot.child("nome").value.toString())
             }
             listaCarrello=lista
         }
@@ -152,7 +144,7 @@ fun Cart(viewModel: AppViewModel, navController: NavController, modifier: Modifi
                     fontWeight = FontWeight.Normal,
                 )
                 Text(
-                    text = totale.toString() + "€",
+                    text = "%.2f".format(totale) + "€",
                     fontFamily = fontFamily,
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 22.sp,
@@ -232,7 +224,7 @@ fun Cart(viewModel: AppViewModel, navController: NavController, modifier: Modifi
 
 }
 
-fun aggiungiAlCarrello(item: String, id: String) {
+fun aggiungiAlCarrello(item: String, id: String, qty: Int) {
     var items= database.child("utenti").child(id).child("carrello")
     items.orderByKey().limitToLast(1).addListenerForSingleValueEvent(object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -243,12 +235,13 @@ fun aggiungiAlCarrello(item: String, id: String) {
                     lastKey= i+1
                 }
 
-                database.child("utenti").child(id).child("carrello").child(lastKey.toString()).setValue(item)
+                database.child("utenti").child(id).child("carrello").child(lastKey.toString()).child("nome").setValue(item)
             }
             else{
                 val itemsMap = mapOf(lastKey.toString() to item)
                 database.child("utenti").child(id).child("carrello").setValue(itemsMap)
             }
+            database.child("utenti").child(id).child("carrello").child(lastKey.toString()).child("qty").setValue(qty)
         }
         override fun onCancelled(databaseError: DatabaseError) {
             println("Errore nel leggere i dati dal database: ${databaseError.message}")
@@ -260,9 +253,8 @@ fun eliminaDalCarrello(item: String, id: String){
     items.addListenerForSingleValueEvent(object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) { //fa una foto al db in quel momento e la mette in dataSnapshot
             for (childSnapshot in dataSnapshot.children) {
-                if(childSnapshot.value.toString()==item){
+                if(childSnapshot.child("nome").value.toString()==item){
                     childSnapshot.ref.removeValue()
-
                 }
             }
         }
@@ -290,6 +282,7 @@ fun ItemCard(
     var nome=""
     var prezzo=""
     var url=""
+    var qty = 0
     var totale = 0.00
     product.forEach { p ->
         nome=p.child("nome").value.toString()
@@ -297,6 +290,10 @@ fun ItemCard(
         url= FindUrl(fileName = nome+".jpg")
         totale= sum(p.child("prezzo").value as Double, totale)
     }
+        val prodCarrello= database.child("utenti").child(id).child("carrello")
+        if(prodCarrello.child("nome").toString() == item){
+            qty = prodCarrello.child("qty") as Int
+        }
 
     Card(
         modifier = Modifier.height(90.dp),
@@ -360,7 +357,7 @@ fun ItemCard(
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Start
                         )
-                        SelettoreQuantita(viewModel)
+                        SelettoreQuantita(viewModel,qty)
                     }
 
                     Row(
@@ -407,8 +404,9 @@ fun ItemCard(
 }
 
 @Composable
-fun SelettoreQuantita(viewModel: AppViewModel) {
-    var count by remember { mutableIntStateOf(1) } // TODO Cambiare valore iniziale con valore della quantità inserita e aggiornare vm e db di conseguenza (possiamo anche lasciarlo finto)
+fun SelettoreQuantita(viewModel: AppViewModel, quantita: Int) {
+    //var qty = viewModel.quantita
+    var count by remember { mutableIntStateOf(quantita) } // TODO Cambiare valore iniziale con valore della quantità inserita e aggiornare vm e db di conseguenza (possiamo anche lasciarlo finto)
 
     Row(
         modifier = Modifier.offset(y = (-5).dp),

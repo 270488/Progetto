@@ -33,6 +33,11 @@ sealed class Screen (
         title = "Cart",
         icon = Icons.Default.ShoppingCart
     )
+    object Checkout: Screen(
+        route = "checkout",
+        title = "Checkout",
+        icon = Icons.Default.ShoppingCart
+    )
     object Profile: Screen(
         route = "profile",
         title = "Profile",

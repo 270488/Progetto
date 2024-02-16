@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -57,20 +58,21 @@ import com.google.firebase.database.ValueEventListener
 import it.polito.database.AppViewModel
 import it.polito.database.FindUrl
 import it.polito.database.database
+import it.polito.database.ui.theme.Screen
 
 @SuppressLint("RememberReturnType")
 
 @Composable
-fun ProductScreen(viewModel: AppViewModel) {
+fun ProductScreen(viewModel: AppViewModel, navController: NavController) {
 
-    ProductDetail(viewModel)
+    ProductDetail(viewModel, navController)
 }
 
 //@Preview
 @Composable
-fun ProductDetail(viewModel: AppViewModel) {
+fun ProductDetail(viewModel: AppViewModel, navController: NavController) {
     var id = viewModel.uid
-
+    var quantita = viewModel.quantita
     var prod=viewModel.prodottoSelezionato
 
     val product= viewModel.products.observeAsState(emptyList()).value
@@ -204,7 +206,7 @@ fun ProductDetail(viewModel: AppViewModel) {
                         end = 10.dp
                     )
             ) {
-              CardContent(nome=nome, prezzo = prezzo, categoria=categoria, sottocategoria=sottocategoria, descrizione=descrizione, id=id)
+              CardContent(nome=nome, prezzo = prezzo, categoria=categoria, sottocategoria=sottocategoria, descrizione=descrizione, id=id, quantita= quantita, navController = navController)
             }
         }
         var listaPreferiti by remember { mutableStateOf<List<String>>(emptyList()) }
@@ -270,7 +272,7 @@ fun ProductDetail(viewModel: AppViewModel) {
 }
 
 @Composable
-fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: String, sottocategoria: String, id: String){
+fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: String, sottocategoria: String, id: String, quantita: Int, navController: NavController){
     Text(
         text = categoria+", "+sottocategoria,
         modifier = Modifier
@@ -299,6 +301,7 @@ fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: Str
             .layoutId("productPrice")
             .padding(end = 16.dp, top = 25.dp)
     )
+    //val quantita = 0
 
     Column(
         modifier = Modifier
@@ -317,7 +320,7 @@ fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: Str
             horizontalArrangement = Arrangement.SpaceBetween
         ){
             OptionSelection()
-            QtySelection()
+            QtySelection(quantita)
         }
     }
 
@@ -350,7 +353,9 @@ fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: Str
 
     Button(
         onClick = {
-                  aggiungiAlCarrello(item = nome, id = id)
+            Log.d("quantità selezionata: ", quantita.toString())
+            aggiungiAlCarrello(item = nome, id = id, qty = quantita)
+            navController.navigate(Screen.Cart.route)
         },
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
@@ -442,14 +447,15 @@ fun OptionSelection() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun QtySelection() {
+fun QtySelection(quantita: Int) {
     var selectedQty by remember {
-        mutableStateOf<String>("Quantità")
+        mutableStateOf<Int>(0)
     }
     var isExpanded by remember {
         mutableStateOf(false) //default: menù chiuso
     }
     val qty = listOf(1,2,3,4)
+    var quantita = quantita
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -463,7 +469,7 @@ fun QtySelection() {
             modifier = Modifier.border(BorderStroke(2.dp,Color.Black), RoundedCornerShape(4.dp))
         ) {
             TextField(
-                value = selectedQty,
+                value = selectedQty.toString(),
                 onValueChange = {},
                 readOnly = true,
                 colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = Color.Gray, textColor = Color.White),
@@ -486,8 +492,10 @@ fun QtySelection() {
                             Text(text = q.toString(), color = Color.White)
                         },
                         onClick = {
-                            selectedQty = q.toString()
+                            selectedQty = q
+                            quantita = q
                             isExpanded = false
+
                         })
                 }
             }

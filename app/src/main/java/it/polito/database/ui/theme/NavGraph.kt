@@ -12,6 +12,7 @@ import it.polito.database.screens.AuthenticationActivity
 import it.polito.database.screens.AuthenticationScreen
 import it.polito.database.screens.CartScreen
 import it.polito.database.screens.CategoryScreen
+import it.polito.database.screens.CheckoutScreen
 import it.polito.database.screens.FavoritesScreen
 import it.polito.database.screens.GestisciAccountScreen
 import it.polito.database.screens.NotificationsScreen
@@ -37,6 +38,9 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
         composable(route = Screen.Cart.route) {
             CartScreen(viewModel, navController)
         }
+        composable(route = Screen.Checkout.route) {
+            CheckoutScreen(viewModel, navController)
+        }
         composable(route = Screen.Profile.route) {
             ProfileScreen(viewModel,navController)
         }
@@ -47,7 +51,7 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
             SettingsScreen(viewModel)
         }
         composable(route = Screen.Product.route) {
-            ProductScreen(viewModel)
+            ProductScreen(viewModel,navController)
         }
         composable(route = Screen.AuthenticationScreen.route) {
             AuthenticationScreen(navController,AuthenticationActivity(), viewModel)
