@@ -69,6 +69,7 @@ class AppViewModel: ViewModel() {
     var sottocat=""
     var uid=""
     var quantita = 0
+    var tot = 0.00
 
     var variabili=GestioneArduino()
 

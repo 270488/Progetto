@@ -86,7 +86,7 @@ fun Cart(viewModel: AppViewModel, navController: NavController, modifier: Modifi
         }
     })
 
-    var totale = 0.00
+    var totale = viewModel.tot
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -103,13 +103,36 @@ fun Cart(viewModel: AppViewModel, navController: NavController, modifier: Modifi
             modifier= Modifier
                 .padding(horizontal = 20.dp)
         ){
-            listaCarrello.forEach{item ->
-                val product= viewModel.products.observeAsState(emptyList()).value
-                    .filter { it.child("nome").value.toString() == item }
-                product.forEach { p ->
-                    totale= sum(p.child("prezzo").value as Double, totale)
+            var numItem = 0
+            if (listaCarrello.isEmpty()){
+                Text(
+                    text = "Il tuo carrello è vuoto.",
+                    fontFamily = fontFamily,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontSize = 26.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontStyle = FontStyle.Italic,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+            }else {
+                listaCarrello.forEach { item ->
+                    numItem++
                 }
-                ItemCard(viewModel, item, id, navController)
+                Text(
+                text = "Il tuo carrello [$numItem]",
+                fontFamily = fontFamily,
+                color = MaterialTheme.colorScheme.onPrimary,
+                fontSize = 26.sp,
+                fontWeight = FontWeight.SemiBold
+                )
+                listaCarrello.forEach { item ->
+                    val product = viewModel.products.observeAsState(emptyList()).value
+                        .filter { it.child("nome").value.toString() == item }
+                    product.forEach { p ->
+                        totale = sum(p.child("prezzo").value as Double, totale)
+                    }
+                    ItemCard(viewModel, item, id, navController)
+                }
             }
         }
 
@@ -199,6 +222,7 @@ fun Cart(viewModel: AppViewModel, navController: NavController, modifier: Modifi
             {
                 Button(
                     onClick = {
+                              navController.navigate(Screen.Checkout.route)
                     },
                     modifier = Modifier
                         .layoutId("btnCheckOut")
