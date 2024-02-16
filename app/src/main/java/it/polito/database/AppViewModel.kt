@@ -16,12 +16,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -141,7 +144,7 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp, top = 4.dp), horizontalArrangement = Arrangement.SpaceBetween
+                    .padding(bottom = 8.dp, top = 8.dp), horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
                     text = "Da non perdere", color = MaterialTheme.colorScheme.onPrimary,
@@ -162,7 +165,24 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                     .horizontalScroll(rememberScrollState())
             ) {
                 val nonperdere = listaFiltrata(categoria = "non perdere", viewModel = viewModel)
+                var isLoading by remember { mutableStateOf(true) }
 
+
+                if(isLoading){
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .width(380.dp)
+                            .height(120.dp))
+                    {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(40.dp),
+                            color = MaterialTheme.colorScheme.tertiary,
+                            strokeWidth = ProgressIndicatorDefaults.CircularStrokeWidth
+                        )
+                    }
+                }
                 nonperdere?.forEach { p ->
                     val fileName = p.child("nome").value.toString() + ".jpg"
                     val url = FindUrl(fileName = fileName)
@@ -196,6 +216,8 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                             AsyncImage(model = url,
                                 contentDescription = "Product Description",
                                 contentScale = ContentScale.Crop,
+                                onLoading = { isLoading = true },
+                                onSuccess = { isLoading = false },
                                 modifier = Modifier.fillMaxWidth())
                             Box(modifier = Modifier
                                 .fillMaxSize()
@@ -234,6 +256,7 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                     .size(700.dp, 1.dp)
             )*/
         }
+        Spacer(modifier = Modifier.height(12.dp))
         Divider(thickness = 1.dp, color = Yellow40, modifier = Modifier.padding(top = 4.dp, bottom = 16.dp))
         //Spacer(modifier = Modifier.weight(0.01f))
         //Seconda riga OFFERTE PER TE
@@ -241,7 +264,7 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
 
             Row(modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 4.dp, bottom = 8.dp)) {
+                .padding(bottom = 8.dp)) {
 
                 Text(
                     text = "Offerte per te", color = MaterialTheme.colorScheme.onPrimary,
@@ -254,6 +277,23 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
             Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
 
                 val offerte = listaFiltrata(categoria = "offerte", viewModel = viewModel)
+                var isLoading by remember { mutableStateOf(true) }
+
+                if(isLoading){
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .width(380.dp)
+                            .height(120.dp))
+                    {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(40.dp),
+                            color = MaterialTheme.colorScheme.tertiary,
+                            strokeWidth = ProgressIndicatorDefaults.CircularStrokeWidth
+                        )
+                    }
+                }
 
                 offerte?.forEach { p ->
                     /*IconButton(onClick = { viewModel.prodottoSelezionato=p.child("nome").value.toString()
@@ -287,6 +327,8 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                             AsyncImage(model = url,
                                 contentDescription = "Product Description",
                                 contentScale = ContentScale.Crop,
+                                onLoading = { isLoading = true },
+                                onSuccess = { isLoading = false },
                                 modifier = Modifier
                                     .fillMaxSize())
                             Box(modifier = Modifier
@@ -326,6 +368,7 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                 .background(Yellow40)
                 .size(700.dp, 1.dp)
         )*/
+        Spacer(modifier = Modifier.height(12.dp))
         Divider(thickness = 1.dp, color = Yellow40, modifier = Modifier.padding(top = 4.dp, bottom = 16.dp))
         //Spacer(modifier = Modifier.weight(0.01f))
         //Terza riga ACQUISTA DI NUOVO
@@ -333,7 +376,7 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
 
             Row(modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 4.dp, bottom = 8.dp)) {
+                .padding(bottom = 8.dp)) {
                 Text(
                     text = "Acquista di nuovo", color = MaterialTheme.colorScheme.onPrimary,
                     fontFamily = fontFamily,
@@ -344,6 +387,23 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
             Spacer(modifier = Modifier.weight(0.01f))
             Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
                 val acquista = listaFiltrata(categoria = "acquista", viewModel = viewModel)
+                var isLoading by remember { mutableStateOf(true) }
+
+                if(isLoading){
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .width(380.dp)
+                            .height(120.dp))
+                    {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(40.dp),
+                            color = MaterialTheme.colorScheme.tertiary,
+                            strokeWidth = ProgressIndicatorDefaults.CircularStrokeWidth
+                        )
+                    }
+                }
 
                 acquista?.forEach { p ->
                     /*  IconButton(onClick = {
@@ -375,6 +435,8 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                             AsyncImage(model = url,
                                 contentDescription = "Product Description",
                                 contentScale = ContentScale.Crop,
+                                onLoading = { isLoading = true },
+                                onSuccess = { isLoading = false },
                                 modifier = Modifier.fillMaxWidth())
                             Box(modifier = Modifier
                                 .fillMaxSize()
