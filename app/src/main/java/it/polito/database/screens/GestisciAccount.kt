@@ -44,7 +44,7 @@ fun GestisciAccountScreen(viewModel: AppViewModel, navController: NavHostControl
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary)
-            .padding(top = 80.dp)
+            .padding(top = 100.dp)
     ) {
         // Icona e Scritte
         Image(
@@ -57,19 +57,19 @@ fun GestisciAccountScreen(viewModel: AppViewModel, navController: NavHostControl
         Icon(
             imageVector = Icons.Default.Edit,
             contentDescription = "Icona di pedice",
-            tint = Color.Yellow, // Colore dell'icona
-            modifier = Modifier.offset(x = (-43).dp,y = (-25).dp,)
+            tint = MaterialTheme.colorScheme.tertiary, // Colore dell'icona
+            modifier = Modifier.offset(x = (-55).dp,y = (-35).dp,)
                 .size(40.dp)
         )
-        Spacer(modifier = Modifier.height(12.dp))
+        //Spacer(modifier = Modifier.height(12.dp))
         Text(
             text = "Pippo",
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().offset(x = 0.dp, y = (-14).dp),
             textAlign = TextAlign.Center,
             fontFamily = fontFamily,
             color = MaterialTheme.colorScheme.tertiary,
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
+            fontSize = 34.sp,
+            fontWeight = FontWeight.Bold
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -87,16 +87,20 @@ fun Edit(navController: NavHostController) {
         "Cambia account",
         "Logout"
     )
-    Column {
+    Column (modifier = Modifier.padding(horizontal = 24.dp)) {
         elenco.forEach { name ->
             Box(
+                contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .padding(12.dp)
                     .fillMaxWidth()
                     .background(
                         if (name == "Logout") MaterialTheme.colorScheme.secondaryContainer
                         else MaterialTheme.colorScheme.secondary,
-                        shape = RoundedCornerShape(8.dp)
+                        shape = MaterialTheme.shapes.large
+                    )
+                    .border(
+                        width = 1.dp, color = MaterialTheme.colorScheme.tertiary,
+                        shape = MaterialTheme.shapes.large
                     )
                     .clickable {
                         if (name == "Logout" || name == "Cambia Account") {
@@ -110,20 +114,41 @@ fun Edit(navController: NavHostController) {
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.Center,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
                         text = name,
                         fontFamily = fontFamily,
-                        fontSize = 20.sp,
+                        fontSize = 22.sp,
+                        textAlign = TextAlign.Center,
                         fontWeight = FontWeight.Bold,
-                        color = if (name == "Logout") MaterialTheme.colorScheme.tertiary
-                        else MaterialTheme.colorScheme.onPrimary
+                        color = MaterialTheme.colorScheme.tertiary,
+                        modifier = Modifier.offset(x = 0.dp, y = (-2).dp)
                     )
 
                 }
             }
+            Spacer(modifier = Modifier.height(16.dp) )
         }
     }
 }
+/*Button(
+modifier = Modifier
+.fillMaxWidth()
+.border(
+width = 1.dp, color = MaterialTheme.colorScheme.tertiary,
+shape = MaterialTheme.shapes.large
+),
+colors = ButtonDefaults.buttonColors(
+containerColor = MaterialTheme.colorScheme.secondary
+),
+
+Text(
+text = "Registrati",
+fontSize = 22.sp,
+fontFamily = fontFamily,
+fontWeight = FontWeight.Bold,
+color = MaterialTheme.colorScheme.tertiary,
+modifier = Modifier.offset(x = 0.dp, y = (-2).dp)
+)*/
