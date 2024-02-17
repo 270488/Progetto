@@ -104,4 +104,9 @@ sealed class Screen (
         title = "PreferenzaNotifiche",
         icon = Icons.Default.Notifications
     )
+    object DettaglioResiScreen: Screen(
+        route = "dettaglioResi",
+        title = "DettaglioResi",
+        icon = Icons.Default.Edit
+    )
 }

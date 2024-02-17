@@ -13,6 +13,7 @@ import it.polito.database.screens.AuthenticationScreen
 import it.polito.database.screens.CartScreen
 import it.polito.database.screens.CategoryScreen
 import it.polito.database.screens.CheckoutScreen
+import it.polito.database.screens.DettaglioResiScreen
 import it.polito.database.screens.FavoritesScreen
 import it.polito.database.screens.GestisciAccountScreen
 import it.polito.database.screens.NewsletterScreen
@@ -81,6 +82,9 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
         }
         composable(route = Screen.PreferenzaNotifiche.route) {
             PreferenzaNotificheScreen(viewModel, navController)
+        }
+        composable(route = Screen.DettaglioResiScreen.route) {
+            DettaglioResiScreen(viewModel, navController)
         }
     }
 }

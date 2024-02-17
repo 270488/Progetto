@@ -49,7 +49,9 @@ fun MainScreen(viewModel: AppViewModel){
         Screen.ProductList.route,
         Screen.FavoritesScreen.route,
         Screen.AccountScreen.route,
-        Screen.GestisciAccountScreen.route
+        Screen.GestisciAccountScreen.route,
+        Screen.ResiScreen.route,
+        Screen.DettaglioResiScreen.route,
     )
         Scaffold(
 
@@ -84,7 +86,7 @@ fun BottomBar(navController: NavHostController) {
         Screen.Category,
         Screen.Cart,
         Screen.Profile,
-        //Screen.Product
+
 
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -264,6 +266,8 @@ fun AddItem3(
                     Screen.FavoritesScreen.route-> Text(text = "I miei preferiti", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                     Screen.AccountScreen.route-> Text(text = "", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                     Screen.GestisciAccountScreen.route-> Text(text = "Gestisci Account", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
+                    Screen.ResiScreen.route->Text(text = "I miei resi", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
+                    Screen.DettaglioResiScreen.route->Text(text = "Dettaglio reso", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                 }
                 //tante condizioni quante sono le schermate che hanno questa top Bar
                 //( con freccia per tornare indietro, impostazioni a destra
