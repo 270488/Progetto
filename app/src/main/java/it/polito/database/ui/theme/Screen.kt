@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
@@ -92,5 +93,10 @@ sealed class Screen (
         route = "gestisciAccount",
         title = "GestisciAccount",
         icon = Icons.Default.Edit
+    )
+    object Newsletter: Screen(
+        route = "newsletter",
+        title = "Newsletter",
+        icon = Icons.Default.MailOutline
     )
 }

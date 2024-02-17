@@ -15,6 +15,7 @@ import it.polito.database.screens.CategoryScreen
 import it.polito.database.screens.CheckoutScreen
 import it.polito.database.screens.FavoritesScreen
 import it.polito.database.screens.GestisciAccountScreen
+import it.polito.database.screens.NewsletterScreen
 import it.polito.database.screens.NotificationsScreen
 import it.polito.database.screens.ProductListScreen
 import it.polito.database.screens.ProductScreen
@@ -73,6 +74,9 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
         }
         composable(route = Screen.GestisciAccountScreen.route) {
             GestisciAccountScreen(viewModel, navController)
+        }
+        composable(route = Screen.Newsletter.route) {
+            NewsletterScreen(viewModel, navController)
         }
     }
 }

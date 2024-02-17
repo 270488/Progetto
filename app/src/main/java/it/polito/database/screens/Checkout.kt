@@ -179,6 +179,7 @@ fun CheckoutScreen(viewModel: AppViewModel, navController: NavController, modifi
 
             Row(
                 horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.Bottom,
                 modifier = Modifier.fillMaxWidth()
             )
             {
