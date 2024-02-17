@@ -99,4 +99,9 @@ sealed class Screen (
         title = "Newsletter",
         icon = Icons.Default.MailOutline
     )
+    object PreferenzaNotifiche: Screen(
+        route = "preferenzaNotifiche",
+        title = "PreferenzaNotifiche",
+        icon = Icons.Default.Notifications
+    )
 }
