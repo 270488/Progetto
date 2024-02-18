@@ -106,8 +106,8 @@ fun Edit(navController: NavHostController) {
                         if (name == "Logout" || name == "Cambia Account") {
                             //TODO inserire alert
                             navController.navigate(Screen.AuthenticationScreen.route)
-                        }
-
+                        }else if( name == "Modifica dati")
+                            navController.navigate(Screen.ModificaDati.route)
                         //TODO else if () per le altre sezioni
                     }
                     .padding(12.dp)

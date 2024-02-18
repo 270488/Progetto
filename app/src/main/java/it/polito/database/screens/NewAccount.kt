@@ -1,12 +1,9 @@
 
-import android.text.Layout
 import android.util.Log
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Arrangement.SpaceEvenly
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,15 +24,12 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -43,7 +37,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
@@ -52,7 +45,6 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -71,6 +63,7 @@ import it.polito.database.AppViewModel
 import it.polito.database.R
 import it.polito.database.User
 import it.polito.database.screens.AuthenticationActivity
+import it.polito.database.screens.City
 import it.polito.database.ui.theme.Screen
 import it.polito.database.ui.theme.fontFamily
 
@@ -361,9 +354,9 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity,
                         email = email.value.text.trim(),
                         username = username.value.text.trim(),
                         password = password.value.text.trim(),
-                        preferiti = emptyMap(),
-                        resi = emptyMap(),
-                        ordini = emptyMap()
+                        preferiti = emptyList(),
+                        resi = emptyList(),
+                        ordini = emptyList()
                     )
 
                     auth.createUserWithEmailAndPassword(
@@ -378,10 +371,11 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity,
                                 val databaseReference = FirebaseDatabase.getInstance().getReference("utenti")
                                 val userReference = databaseReference.child(userId)
 
+                                userReference.child("id").setValue(userId)
                                 userReference.child("nome").setValue(user.nome)
                                 userReference.child("cognome").setValue(user.cognome)
-                                userReference.child("città").setValue(user.city)
-                                userReference.child("genere").setValue(user.gender)
+                                userReference.child("city").setValue(user.city)
+                                userReference.child("gender").setValue(user.gender)
                                 userReference.child("email").setValue(user.email)
                                 userReference.child("username").setValue(user.username)
                                 userReference.child("password").setValue(user.password)
@@ -459,7 +453,7 @@ fun CitySelection(
     var isExpanded by remember { mutableStateOf(false) }
     var chosenCity = selectedCity.toString();
     if (selectedCity===null){
-        chosenCity="Italia";
+        chosenCity="Bari";
     }
 
     var textFiledSize by remember { mutableStateOf(Size.Zero) }
@@ -608,8 +602,4 @@ enum class Gender {
     MALE, FEMALE, OTHER
 }
 
-enum class City  {
-    Bari, Bergamo, Bologna, Brescia, Como, Cremona, Catania, Ferrara,
-    Milano, Napoli, Piacenza, Padova, Perugia, Parma, Pavia, Roma,
-    Torino, Treviso, Udine, Varese, Venezia, Vicenza, Verona
-}
+

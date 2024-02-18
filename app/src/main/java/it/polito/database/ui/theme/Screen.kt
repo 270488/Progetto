@@ -109,4 +109,9 @@ sealed class Screen (
         title = "DettaglioResi",
         icon = Icons.Default.Edit
     )
+    object ModificaDati: Screen(
+        route = "modificaDati",
+        title = "ModificaDati",
+        icon = Icons.Default.Edit
+    )
 }

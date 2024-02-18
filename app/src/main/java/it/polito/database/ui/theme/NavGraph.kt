@@ -16,6 +16,7 @@ import it.polito.database.screens.CheckoutScreen
 import it.polito.database.screens.DettaglioResiScreen
 import it.polito.database.screens.FavoritesScreen
 import it.polito.database.screens.GestisciAccountScreen
+import it.polito.database.screens.ModificaDati
 import it.polito.database.screens.NewsletterScreen
 import it.polito.database.screens.NotificationsScreen
 import it.polito.database.screens.PreferenzaNotificheScreen
@@ -30,7 +31,7 @@ import it.polito.database.screens.SettingsScreen
 fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
     NavHost(
         navController = navController,
-        startDestination = Screen.PreferenzaNotifiche.route
+        startDestination = Screen.AuthenticationScreen.route
     ) {
         composable(route = Screen.Home.route) {
             HomePage(viewModel, navController)
@@ -85,6 +86,9 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
         }
         composable(route = Screen.DettaglioResiScreen.route) {
             DettaglioResiScreen(viewModel, navController)
+        }
+        composable(route = Screen.ModificaDati.route) {
+            ModificaDati(navController,viewModel)
         }
     }
 }
