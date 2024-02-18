@@ -67,6 +67,7 @@ class AppViewModel: ViewModel() {
     var resi=MutableLiveData<List<DataSnapshot>>(emptyList())
     var prodottoSelezionato="shaker"
     var resoSelezionato=""
+    var lockerSelezionato="McFit Via San Paolo, 25 \nTorino (TO), 10138"
     var cat=""
     var sottocat=""
     var uid=""

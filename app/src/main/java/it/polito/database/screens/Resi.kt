@@ -87,11 +87,11 @@ fun ResiScreen(viewModel: AppViewModel, navController: NavController){
             .padding(top = 90.dp, bottom = 110.dp)
     ){
 
-        Button(onClick = { aggiungiReso("Pink Leggins", "1542", id) }, 
+        /*Button(onClick = { aggiungiReso("Pink Leggins", "1542", id) },
             modifier = Modifier.background(Color.Yellow)) {
             Text(text = "Aggiungi Reso")
 
-        }
+        }*/
         
         listaResi.forEach{
             i-> resiCard(numeroReso = i, viewModel, navController)

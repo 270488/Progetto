@@ -38,6 +38,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import it.polito.database.AppViewModel
 import it.polito.database.FindUrl
+import it.polito.database.ui.theme.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,7 +81,7 @@ fun DettaglioResiScreen (viewModel: AppViewModel, navController: NavController) 
             .verticalScroll(rememberScrollState())
             .padding(top = 90.dp, bottom = 110.dp)
     ){
-        DettaglioResoCard(prezzo= prezzo,prodotto = prodotti, scadenza = scadenza, numeroOrdine = ordine, stato = stato, url = url)
+        DettaglioResoCard(navController,viewModel= viewModel, prezzo= prezzo,prodotto = prodotti, scadenza = scadenza, numeroOrdine = ordine, stato = stato, url = url)
         Row {
             istruzioniConsegna()
             Button(onClick = { }) {
@@ -92,8 +93,9 @@ fun DettaglioResiScreen (viewModel: AppViewModel, navController: NavController) 
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DettaglioResoCard(prezzo: String, prodotto: String, scadenza: String, numeroOrdine: String, stato: String, url:String){
+fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezzo: String, prodotto: String, scadenza: String, numeroOrdine: String, stato: String, url:String){
 
 
 
@@ -117,13 +119,13 @@ fun DettaglioResoCard(prezzo: String, prodotto: String, scadenza: String, numero
             Row(){
                 Text(text = "Stato della spedizione")
                 if(stato=="avviato"){
-                    //Immagine/icona del reso avviato
+                    //TODO Immagine/icona del reso avviato
                 }
                 else if(stato=="scaduto"){
-                    //Immagine/icona del reso scaduto
+                    //TODO Immagine/icona del reso scaduto
                 }
                 else if(stato=="completato"){
-                    //Immagine/icona del reso completato
+                    //TODO Immagine/icona del reso completato
                 }
             }
             Row() {
@@ -131,14 +133,17 @@ fun DettaglioResoCard(prezzo: String, prodotto: String, scadenza: String, numero
             }
             Row(){
                 Card(){
-                    Text(text = "McFit Via San Paolo, 25 \nTorino (TO), 10138")
+                    Text(text = viewModel.lockerSelezionato)
                 }
-                Card(){
-                    Text(text = "Scegli un'altra palestra")
+                if(stato!="scaduto"){
+                    Card(onClick = {navController.navigate(Screen.ScegliPalestraScreen.route)}){
+                        Text(text = "Scegli un'altra palestra")
+                    }
                 }
+
             }
             Row(){
-                //icona dello stato del reso
+                //TODO icona dello stato del reso
 
             }
             Column(){

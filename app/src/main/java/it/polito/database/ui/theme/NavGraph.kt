@@ -24,6 +24,7 @@ import it.polito.database.screens.ProductListScreen
 import it.polito.database.screens.ProductScreen
 import it.polito.database.screens.ProfileScreen
 import it.polito.database.screens.ResiScreen
+import it.polito.database.screens.ScegliPalestraScreen
 import it.polito.database.screens.SettingsScreen
 
 
@@ -89,6 +90,9 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
         }
         composable(route = Screen.ModificaDati.route) {
             ModificaDati(navController,viewModel)
+        }
+        composable(route = Screen.ScegliPalestraScreen.route) {
+            ScegliPalestraScreen(viewModel,navController)
         }
     }
 }

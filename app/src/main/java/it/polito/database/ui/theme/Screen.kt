@@ -114,4 +114,10 @@ sealed class Screen (
         title = "ModificaDati",
         icon = Icons.Default.Edit
     )
+    object ScegliPalestraScreen: Screen(
+        route = "scegliPalestra",
+        title = "ScegliPalestra",
+        icon = Icons.Default.Edit
+    )
+
 }

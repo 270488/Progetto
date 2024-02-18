@@ -52,6 +52,7 @@ fun MainScreen(viewModel: AppViewModel){
         Screen.GestisciAccountScreen.route,
         Screen.ResiScreen.route,
         Screen.DettaglioResiScreen.route,
+        Screen.ScegliPalestraScreen.route
     )
         Scaffold(
 
@@ -268,6 +269,7 @@ fun AddItem3(
                     Screen.GestisciAccountScreen.route-> Text(text = "Gestisci Account", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                     Screen.ResiScreen.route->Text(text = "I miei resi", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                     Screen.DettaglioResiScreen.route->Text(text = "Dettaglio reso", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
+                    Screen.ScegliPalestraScreen.route->Text(text = "Seleziona palestra", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                 }
                 //tante condizioni quante sono le schermate che hanno questa top Bar
                 //( con freccia per tornare indietro, impostazioni a destra
