@@ -89,7 +89,7 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
             DettaglioResiScreen(viewModel, navController)
         }
         composable(route = Screen.ModificaDati.route) {
-            ModificaDati(navController,viewModel)
+            ModificaDati(navController,viewModel, AuthenticationActivity())
         }
         composable(route = Screen.ScegliPalestraScreen.route) {
             ScegliPalestraScreen(viewModel,navController)
