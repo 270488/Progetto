@@ -1,5 +1,6 @@
 package it.polito.database.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,7 +32,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import it.polito.database.AppViewModel
+import it.polito.database.database
 import it.polito.database.ui.theme.fontFamily
 
 @Composable
@@ -116,7 +121,7 @@ fun PreferenzaNotificheScreen(viewModel: AppViewModel, navController: NavControl
                     }
                     NotificheSwitch(modifier = Modifier
                         .padding(end = 30.dp)
-                        .weight(0.4f), "opzione1", viewModel)
+                        .weight(0.4f), "account", viewModel)
                 }
                 Spacer(modifier = Modifier.height(16.dp) )
                 Divider(thickness = 1.dp, color = MaterialTheme.colorScheme.primaryContainer, modifier = Modifier.padding(start = 16.dp, end = 16.dp))
@@ -154,7 +159,7 @@ fun PreferenzaNotificheScreen(viewModel: AppViewModel, navController: NavControl
                     }
                     NotificheSwitch(modifier = Modifier
                         .padding(end = 30.dp)
-                        .weight(0.4f),"opzione2",viewModel)
+                        .weight(0.4f),"spedizioni",viewModel)
                 }
             }
         }
@@ -165,18 +170,87 @@ fun PreferenzaNotificheScreen(viewModel: AppViewModel, navController: NavControl
 
 @Composable
 fun NotificheSwitch(modifier: Modifier, opt: String, viewModel: AppViewModel) {
-    var checked by remember { mutableStateOf(false) }
 
-    Switch(
-        checked = checked,
-        onCheckedChange = {
-            checked = !checked
-        },
-        colors = SwitchDefaults.colors(
-            checkedThumbColor = Color.White,
-            checkedTrackColor = Color.Black,
-            uncheckedThumbColor = Color.Black,
-            uncheckedTrackColor = Color.White,
+    var checked1 by remember { mutableStateOf(false) }
+    var checked2 by remember { mutableStateOf(false) }
+
+    var id = viewModel.uid
+
+    var opzione1 by remember { mutableStateOf(false) }
+    var opzione2 by remember { mutableStateOf(false) }
+    var opz1 = database.child("utenti").child(id).child("preferenzeNotifiche")
+    opz1.addValueEventListener(object : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            var o1 = dataSnapshot.child("account").value as Boolean
+            var o2 = dataSnapshot.child("spedizioni").value as Boolean
+            opzione1 = o1
+            opzione2 = o2
+            if(opzione1==true){
+                checked1=true
+            }else{
+                checked1=false
+            }
+            if(opzione2==true){
+                checked2=true
+            }else{
+                checked2=false
+            }
+        }
+        override fun onCancelled(databaseError: DatabaseError) {
+            println("Errore nel leggere i dati dal database: ${databaseError.message}")
+        }
+    })
+
+    Log.d("opzioni iniziali: ", opzione1.toString())
+    Log.d("opzioni iniziali: ", opzione2.toString())
+
+    if(opt == "account") {
+        Switch(
+            checked = checked1,
+            onCheckedChange = {
+                checked1 = !checked1
+                if (opzione1 == false) {
+                    database.child("utenti").child(id).child("preferenzeNotifiche").child("account")
+                        .setValue(true)
+                } else if (opzione1 == true) {
+                    database.child("utenti").child(id).child("preferenzeNotifiche").child("account")
+                        .setValue(false)
+                }
+                Log.d("opzioni finali: ", opzione1.toString())
+                Log.d("opzioni finali: ", opzione2.toString())
+
+            },
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = Color.White,
+                checkedTrackColor = Color.Black,
+                uncheckedThumbColor = Color.Black,
+                uncheckedTrackColor = Color.White,
+            )
         )
-    )
+    } else if (opt == "spedizioni") {
+
+        Switch(
+            checked = checked2,
+            onCheckedChange = {
+                checked2 = !checked2
+                if (opzione2 == false) {
+                    database.child("utenti").child(id).child("preferenzeNotifiche").child("spedizioni")
+                        .setValue(true)
+                } else if (opzione2 == true) {
+                    database.child("utenti").child(id).child("preferenzeNotifiche").child("spedizioni")
+                        .setValue(false)
+                }
+                Log.d("opzioni finali: ", opzione1.toString())
+                Log.d("opzioni finali: ", opzione2.toString())
+
+            },
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = Color.White,
+                checkedTrackColor = Color.Black,
+                uncheckedThumbColor = Color.Black,
+                uncheckedTrackColor = Color.White,
+            )
+        )
+    }
+
 }
