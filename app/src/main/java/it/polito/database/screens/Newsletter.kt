@@ -139,6 +139,16 @@ fun ColoredSwitch(modifier: Modifier, opt: String, viewModel: AppViewModel) {
             var o2 = dataSnapshot.child("opzione2").value as Boolean
             opzione1 = o1
             opzione2 = o2
+            if(opzione1==true){
+                checked1=true
+            }else{
+                checked1=false
+            }
+            if(opzione2==true){
+                checked2=true
+            }else{
+                checked2=false
+            }
         }
         override fun onCancelled(databaseError: DatabaseError) {
             println("Errore nel leggere i dati dal database: ${databaseError.message}")
@@ -149,21 +159,16 @@ fun ColoredSwitch(modifier: Modifier, opt: String, viewModel: AppViewModel) {
     Log.d("opzioni iniziali: ", opzione2.toString())
 
     if(opt == "opzione1") {
-        if(opzione1==true){
-            checked1
-        }else{
-            !checked1
-        }
         Switch(
             checked = checked1,
             onCheckedChange = {
                 checked1 = !checked1
-                    if (opzione1 == false) {
-                        database.child("utenti").child(id).child("newsletter").child("opzione1")
-                            .setValue(true)
-                    } else if (opzione1 == true) {
-                        database.child("utenti").child(id).child("newsletter").child("opzione1")
-                            .setValue(false)
+                if (opzione1 == false) {
+                    database.child("utenti").child(id).child("newsletter").child("opzione1")
+                        .setValue(true)
+                } else if (opzione1 == true) {
+                    database.child("utenti").child(id).child("newsletter").child("opzione1")
+                        .setValue(false)
                 }
                 Log.d("opzioni finali: ", opzione1.toString())
                 Log.d("opzioni finali: ", opzione2.toString())
@@ -177,11 +182,7 @@ fun ColoredSwitch(modifier: Modifier, opt: String, viewModel: AppViewModel) {
             )
         )
     } else if (opt == "opzione2") {
-        if(opzione2==true){
-            checked2
-        }else{
-            !checked2
-        }
+
         Switch(
             checked = checked2,
             onCheckedChange = {
