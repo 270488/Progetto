@@ -206,7 +206,7 @@ fun ProductDetail(viewModel: AppViewModel, navController: NavController) {
                         end = 10.dp
                     )
             ) {
-              CardContent(nome=nome, prezzo = prezzo, categoria=categoria, sottocategoria=sottocategoria, descrizione=descrizione, id=id, quantita= quantita, navController = navController)
+              CardContent(nome=nome, prezzo = prezzo, categoria=categoria, sottocategoria=sottocategoria, descrizione=descrizione, id=id, viewModel = viewModel, navController = navController)
             }
         }
         var listaPreferiti by remember { mutableStateOf<List<String>>(emptyList()) }
@@ -272,7 +272,7 @@ fun ProductDetail(viewModel: AppViewModel, navController: NavController) {
 }
 
 @Composable
-fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: String, sottocategoria: String, id: String, quantita: Int, navController: NavController){
+fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: String, sottocategoria: String, id: String, viewModel: AppViewModel, navController: NavController){
     Text(
         text = categoria+", "+sottocategoria,
         modifier = Modifier
@@ -320,7 +320,7 @@ fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: Str
             horizontalArrangement = Arrangement.SpaceBetween
         ){
             OptionSelection()
-            QtySelection(quantita)
+            QtySelection(viewModel)
         }
     }
 
@@ -353,8 +353,8 @@ fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: Str
 
     Button(
         onClick = {
-            Log.d("quantità selezionata: ", quantita.toString())
-            aggiungiAlCarrello(item = nome, id = id, qty = quantita)
+            Log.d("quantità selezionata: ", viewModel.quantita.toString())
+            aggiungiAlCarrello(item = nome, id = id, qty = viewModel.quantita)
             navController.navigate(Screen.Cart.route)
         },
         shape = RoundedCornerShape(8.dp),
@@ -447,7 +447,7 @@ fun OptionSelection() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun QtySelection(quantita: Int) {
+fun QtySelection(viewModel: AppViewModel) {
     var selectedQty by remember {
         mutableStateOf<Int>(0)
     }
@@ -455,7 +455,6 @@ fun QtySelection(quantita: Int) {
         mutableStateOf(false) //default: menù chiuso
     }
     val qty = listOf(1,2,3,4)
-    var quantita = quantita
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -493,7 +492,7 @@ fun QtySelection(quantita: Int) {
                         },
                         onClick = {
                             selectedQty = q
-                            quantita = q
+                            viewModel.quantita = q
                             isExpanded = false
 
                         })

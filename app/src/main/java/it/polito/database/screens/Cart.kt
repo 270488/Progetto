@@ -1,5 +1,6 @@
 package it.polito.database.screens
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,7 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -306,7 +307,7 @@ fun ItemCard(
     var nome=""
     var prezzo=""
     var url=""
-    var qty = 0
+    var qty = 0L
     var totale = 0.00
     product.forEach { p ->
         nome=p.child("nome").value.toString()
@@ -315,9 +316,23 @@ fun ItemCard(
         totale= sum(p.child("prezzo").value as Double, totale)
     }
         val prodCarrello= database.child("utenti").child(id).child("carrello")
-        if(prodCarrello.child("nome").toString() == item){
-            qty = prodCarrello.child("qty") as Int
+    prodCarrello.addListenerForSingleValueEvent(object : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) { //fa una foto al db in quel momento e la mette in dataSnapshot
+            for (childSnapshot in dataSnapshot.children) {
+                var q = 0L
+                if(childSnapshot.child("nome").value.toString()==item){
+                    Log.d("sono nell'if", childSnapshot.value.toString())
+                    q = childSnapshot.child("qty").value as Long
+                }
+                qty = q
+            }
         }
+        override fun onCancelled(databaseError: DatabaseError) {
+            println("Errore nel leggere i dati dal database: ${databaseError.message}")
+        }
+    })
+
+    Log.d("quantità:", qty.toString())
 
     Card(
         modifier = Modifier.height(90.dp),
@@ -428,10 +443,10 @@ fun ItemCard(
 }
 
 @Composable
-fun SelettoreQuantita(viewModel: AppViewModel, quantita: Int) {
+fun SelettoreQuantita(viewModel: AppViewModel, quantita: Long) {
     //var qty = viewModel.quantita
-    var count by remember { mutableIntStateOf(quantita) } // TODO Cambiare valore iniziale con valore della quantità inserita e aggiornare vm e db di conseguenza (possiamo anche lasciarlo finto)
-
+    var count by remember { mutableLongStateOf(quantita) } // TODO Cambiare valore iniziale con valore della quantità inserita e aggiornare vm e db di conseguenza (possiamo anche lasciarlo finto)
+    Log.d("quantita nel carrello", count.toString())
     Row(
         modifier = Modifier.offset(y = (-5).dp),
         verticalAlignment = Alignment.CenterVertically)
