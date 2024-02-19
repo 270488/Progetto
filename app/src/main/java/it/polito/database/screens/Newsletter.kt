@@ -1,5 +1,6 @@
 package it.polito.database.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,7 +32,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import it.polito.database.AppViewModel
+import it.polito.database.database
 import it.polito.database.ui.theme.fontFamily
 
 @Composable
@@ -120,22 +125,20 @@ fun NewsletterScreen(viewModel: AppViewModel, navController: NavController, modi
 
 @Composable
 fun ColoredSwitch(modifier: Modifier, opt: String, viewModel: AppViewModel) {
-    var checked by remember { mutableStateOf(false) }
-    /*var id = viewModel.uid
+    var checked1 by remember { mutableStateOf(false) }
+    var checked2 by remember { mutableStateOf(false) }
 
-    var opzione1 = false
-    var opzione2 = false
+    var id = viewModel.uid
+
+    var opzione1 by remember { mutableStateOf(false) }
+    var opzione2 by remember { mutableStateOf(false) }
     var opz1 = database.child("utenti").child(id).child("newsletter")
     opz1.addValueEventListener(object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
-            var o1 = false
-            var o2 = false
-            for (childSnapshot in dataSnapshot.children) {
-                o1 = childSnapshot.child("opzione1") as Boolean
-                o2 = childSnapshot.child("opzione2") as Boolean
-            }
-           o1 = opzione1
-           o2 = opzione2
+            var o1 = dataSnapshot.child("opzione1").value as Boolean
+            var o2 = dataSnapshot.child("opzione2").value as Boolean
+            opzione1 = o1
+            opzione2 = o2
         }
         override fun onCancelled(databaseError: DatabaseError) {
             println("Errore nel leggere i dati dal database: ${databaseError.message}")
@@ -143,33 +146,63 @@ fun ColoredSwitch(modifier: Modifier, opt: String, viewModel: AppViewModel) {
     })
 
     Log.d("opzioni iniziali: ", opzione1.toString())
-    Log.d("opzioni iniziali: ", opzione2.toString())*/
-    Switch(
-        checked = checked,
-        onCheckedChange = {
-            checked = !checked
-           /* if(opt == "opzione1"){
-                if(opzione1 == false){
-                    database.child("utenti").child(id).child("newsletter").child("opzione1").setValue(true)
-                }else if(opzione1 == true){
-                    database.child("utenti").child(id).child("newsletter").child("opzione1").setValue(false)
+    Log.d("opzioni iniziali: ", opzione2.toString())
+
+    if(opt == "opzione1") {
+        if(opzione1==true){
+            checked1
+        }else{
+            !checked1
+        }
+        Switch(
+            checked = checked1,
+            onCheckedChange = {
+                checked1 = !checked1
+                    if (opzione1 == false) {
+                        database.child("utenti").child(id).child("newsletter").child("opzione1")
+                            .setValue(true)
+                    } else if (opzione1 == true) {
+                        database.child("utenti").child(id).child("newsletter").child("opzione1")
+                            .setValue(false)
                 }
-            } else if(opt == "opzione2") {
-                if(opzione2 == false){
-                    database.child("utenti").child(id).child("newsletter").child("opzione2").setValue(true)
-                }else if(opzione2 == true){
-                    database.child("utenti").child(id).child("newsletter").child("opzione2").setValue(false)
-            }
-            }
-            Log.d("opzioni finali: ", opzione1.toString())
-            Log.d("opzioni finali: ", opzione2.toString())
-            */
-        },
-        colors = SwitchDefaults.colors(
-            checkedThumbColor = MaterialTheme.colorScheme.secondary,
-            checkedTrackColor = MaterialTheme.colorScheme.outlineVariant,
-            uncheckedThumbColor = MaterialTheme.colorScheme.outlineVariant,
-            uncheckedTrackColor = MaterialTheme.colorScheme.secondary,
+                Log.d("opzioni finali: ", opzione1.toString())
+                Log.d("opzioni finali: ", opzione2.toString())
+
+            },
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = MaterialTheme.colorScheme.secondary,
+                checkedTrackColor = MaterialTheme.colorScheme.outlineVariant,
+                uncheckedThumbColor = MaterialTheme.colorScheme.outlineVariant,
+                uncheckedTrackColor = MaterialTheme.colorScheme.secondary,
+            )
         )
-    )
+    } else if (opt == "opzione2") {
+        if(opzione2==true){
+            checked2
+        }else{
+            !checked2
+        }
+        Switch(
+            checked = checked2,
+            onCheckedChange = {
+                checked2 = !checked2
+                    if (opzione2 == false) {
+                        database.child("utenti").child(id).child("newsletter").child("opzione2")
+                            .setValue(true)
+                    } else if (opzione2 == true) {
+                        database.child("utenti").child(id).child("newsletter").child("opzione2")
+                            .setValue(false)
+                    }
+                Log.d("opzioni finali: ", opzione1.toString())
+                Log.d("opzioni finali: ", opzione2.toString())
+
+            },
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = MaterialTheme.colorScheme.secondary,
+                checkedTrackColor = MaterialTheme.colorScheme.outlineVariant,
+                uncheckedThumbColor = MaterialTheme.colorScheme.outlineVariant,
+                uncheckedTrackColor = MaterialTheme.colorScheme.secondary,
+            )
+        )
+    }
 }
