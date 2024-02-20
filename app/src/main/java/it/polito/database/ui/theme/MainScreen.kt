@@ -265,7 +265,7 @@ fun AddItem3(
                     Screen.Product.route -> Text(text = "", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                     Screen.ProductList.route-> Text(text = viewModel.sottocat)
                     Screen.FavoritesScreen.route-> Text(text = "I miei preferiti", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
-                    Screen.AccountScreen.route-> Text(text = "", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
+                    Screen.AccountScreen.route-> Text(text = "Il mio account", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                     Screen.GestisciAccountScreen.route-> Text(text = "Gestisci Account", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                     Screen.ResiScreen.route->Text(text = "I miei resi", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                     Screen.DettaglioResiScreen.route->Text(text = "Dettaglio reso", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)

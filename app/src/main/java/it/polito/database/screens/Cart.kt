@@ -110,8 +110,8 @@ fun Cart(viewModel: AppViewModel, navController: NavController, modifier: Modifi
                     text = "Il tuo carrello è vuoto.",
                     fontFamily = fontFamily,
                     color = MaterialTheme.colorScheme.onPrimary,
-                    fontSize = 26.sp,
-                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Normal,
                     fontStyle = FontStyle.Italic,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
@@ -123,9 +123,10 @@ fun Cart(viewModel: AppViewModel, navController: NavController, modifier: Modifi
                 text = "Il tuo carrello [$numItem]",
                 fontFamily = fontFamily,
                 color = MaterialTheme.colorScheme.onPrimary,
-                fontSize = 26.sp,
-                fontWeight = FontWeight.SemiBold
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
                 )
+                Spacer(modifier = Modifier.height(16.dp))
                 listaCarrello.forEach { item ->
                     val product = viewModel.products.observeAsState(emptyList()).value
                         .filter { it.child("nome").value.toString() == item }

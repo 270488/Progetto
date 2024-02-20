@@ -164,7 +164,7 @@ fun ModificaDati(navController: NavHostController, viewModel: AppViewModel, cont
             Spacer(modifier = Modifier.height(16.dp))
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "Password",
+                    text = "Username",
                     color = MaterialTheme.colorScheme.onSecondary,
                     fontFamily = fontFamily,
                     fontWeight = FontWeight.Bold,
