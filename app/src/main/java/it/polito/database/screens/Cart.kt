@@ -127,13 +127,13 @@ fun Cart(viewModel: AppViewModel, navController: NavController, modifier: Modifi
                 fontWeight = FontWeight.SemiBold
                 )
                 listaCarrello.forEach { item ->
-                    var prezzo= 0.00
-                    var qty=item
                     val product = viewModel.products.observeAsState(emptyList()).value
                         .filter { it.child("nome").value.toString() == item }
                     product.forEach { p ->
-                        totale = sum(p.child("prezzo").value as Double, totale)
+                        var prezzo=p.child("prezzo").value as Double
+                        totale = sum(prezzo, totale)
                     }
+
                     ItemCard(viewModel, item, id, navController)
                 }
             }
@@ -253,10 +253,7 @@ fun Cart(viewModel: AppViewModel, navController: NavController, modifier: Modifi
 
 fun aggiungiAlCarrello(item: String, id: String, qty: Int) {
     var items= database.child("utenti").child(id).child("carrello")
-    var prodotti= database.child("prodotti")
 
-    var quantita=0
-    var prezzo=0.00
     items.orderByKey().limitToLast(1).addListenerForSingleValueEvent(object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
             var lastKey = 0
@@ -269,7 +266,8 @@ fun aggiungiAlCarrello(item: String, id: String, qty: Int) {
                 database.child("utenti").child(id).child("carrello").child(lastKey.toString()).child("nome").setValue(item)
             }
             else{
-                database.child("utenti").child(id).child("carrello").child(lastKey.toString()).child("nome").setValue(item)
+                val itemsMap = mapOf(lastKey.toString() to item)
+                database.child("utenti").child(id).child("carrello").setValue(itemsMap)
             }
             database.child("utenti").child(id).child("carrello").child(lastKey.toString()).child("qty").setValue(qty)
         }
@@ -311,8 +309,6 @@ fun ItemCard(
 
     var nome=""
     var prezzo=""
-    var totCard=0.00
-    var prezzoDouble=0.00
     var url=""
     var originalQty by remember {
         mutableStateOf(0L)
@@ -323,7 +319,6 @@ fun ItemCard(
     product.forEach { p ->
         nome=p.child("nome").value.toString()
         prezzo=p.child("prezzo").value.toString()
-        prezzoDouble=p.child("prezzo").value as Double
         url= FindUrl(fileName = nome+".jpg")
 
     }
@@ -356,10 +351,6 @@ fun ItemCard(
             println("Errore nel leggere i dati dal database: ${databaseError.message}")
         }
     })
-
-
-    totCard+=qty*prezzoDouble
-
 
     Card(
         modifier = Modifier.height(90.dp),
