@@ -30,7 +30,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -128,18 +127,53 @@ fun Cart(viewModel: AppViewModel, navController: NavController, modifier: Modifi
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 listaCarrello.forEach { item ->
+                    var originalQty by remember {
+                        mutableStateOf(0L)
+                    }
+                    var qty by remember { mutableStateOf(0L)}
+                    var items= database.child("utenti").child(id).child("carrello")
+                    items.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) { //fa una foto al db in quel momento e la mette in dataSnapshot
+                            for (childSnapshot in dataSnapshot.children) {
+
+                                if (childSnapshot.child("nome").value.toString() == item) {
+
+                                    try {
+                                        val newQty =
+                                            (childSnapshot.child("qty").value as Long).toLong()
+
+                                        // Controlla se la quantità è cambiata rispetto all'originale
+                                        if (newQty != originalQty) {
+                                            // Aggiorna l'originale solo se la quantità è cambiata
+                                            originalQty = newQty
+                                        }
+                                        // Aggiorna qty sempre con il valore originale
+                                        qty = originalQty
+
+                                    } catch (e: ClassCastException) {
+                                        Log.e("CastingError", "Errore durante il casting di qty", e)
+                                    }
+                                }
+                             }
+                            }
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            println("Errore nel leggere i dati dal database: ${databaseError.message}")
+                        }
+                    })
+                    Log.d("quantità prodotto: ", qty.toString())
                     val product = viewModel.products.observeAsState(emptyList()).value
                         .filter { it.child("nome").value.toString() == item }
                     product.forEach { p ->
                         var prezzo=p.child("prezzo").value as Double
-                        totale = sum(prezzo, totale)
+                        Log.d("quantità prodotto: ", qty.toString())
+                        totale = sum(qty.toDouble()*prezzo, totale)
                     }
 
                     ItemCard(viewModel, item, id, navController)
                 }
             }
         }
-
+        Log.d("totale: ", totale.toString())
         Column(modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp)) {
@@ -463,8 +497,8 @@ fun ItemCard(
 
 @Composable
 fun SelettoreQuantita(viewModel: AppViewModel, quantita: Long) {
-    //var qty = viewModel.quantita
-    var count = quantita // TODO Cambiare valore iniziale con valore della quantità inserita e aggiornare vm e db di conseguenza (possiamo anche lasciarlo finto)
+    var count = quantita
+    // var count by remember { mutableIntStateOf(quantita.toInt()) } // TODO Cambiare valore iniziale con valore della quantità inserita e aggiornare vm e db di conseguenza (possiamo anche lasciarlo finto)
 
     Row(
         modifier = Modifier.offset(y = (-5).dp),
