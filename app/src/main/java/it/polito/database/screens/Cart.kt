@@ -127,6 +127,8 @@ fun Cart(viewModel: AppViewModel, navController: NavController, modifier: Modifi
                 fontWeight = FontWeight.SemiBold
                 )
                 listaCarrello.forEach { item ->
+                    var prezzo= 0.00
+                    var qty=item
                     val product = viewModel.products.observeAsState(emptyList()).value
                         .filter { it.child("nome").value.toString() == item }
                     product.forEach { p ->
@@ -251,6 +253,10 @@ fun Cart(viewModel: AppViewModel, navController: NavController, modifier: Modifi
 
 fun aggiungiAlCarrello(item: String, id: String, qty: Int) {
     var items= database.child("utenti").child(id).child("carrello")
+    var prodotti= database.child("prodotti")
+
+    var quantita=0
+    var prezzo=0.00
     items.orderByKey().limitToLast(1).addListenerForSingleValueEvent(object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
             var lastKey = 0
@@ -263,8 +269,7 @@ fun aggiungiAlCarrello(item: String, id: String, qty: Int) {
                 database.child("utenti").child(id).child("carrello").child(lastKey.toString()).child("nome").setValue(item)
             }
             else{
-                val itemsMap = mapOf(lastKey.toString() to item)
-                database.child("utenti").child(id).child("carrello").setValue(itemsMap)
+                database.child("utenti").child(id).child("carrello").child(lastKey.toString()).child("nome").setValue(item)
             }
             database.child("utenti").child(id).child("carrello").child(lastKey.toString()).child("qty").setValue(qty)
         }
@@ -306,25 +311,45 @@ fun ItemCard(
 
     var nome=""
     var prezzo=""
+    var totCard=0.00
+    var prezzoDouble=0.00
     var url=""
-    var qty = 0L
-    var totale = 0.00
+    var originalQty by remember {
+        mutableStateOf(0L)
+    }
+    var qty by remember {
+        mutableStateOf(0L)
+    }
     product.forEach { p ->
         nome=p.child("nome").value.toString()
         prezzo=p.child("prezzo").value.toString()
+        prezzoDouble=p.child("prezzo").value as Double
         url= FindUrl(fileName = nome+".jpg")
-        totale= sum(p.child("prezzo").value as Double, totale)
+
     }
-        val prodCarrello= database.child("utenti").child(id).child("carrello")
+    val prodCarrello= database.child("utenti").child(id).child("carrello")
     prodCarrello.addListenerForSingleValueEvent(object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) { //fa una foto al db in quel momento e la mette in dataSnapshot
             for (childSnapshot in dataSnapshot.children) {
-                var q = 0L
+
                 if(childSnapshot.child("nome").value.toString()==item){
-                    Log.d("sono nell'if", childSnapshot.value.toString())
-                    q = childSnapshot.child("qty").value as Long
+
+                    try {
+                        val newQty = (childSnapshot.child("qty").value as Long).toLong()
+
+                        // Controlla se la quantità è cambiata rispetto all'originale
+                        if (newQty != originalQty) {
+                            // Aggiorna l'originale solo se la quantità è cambiata
+                            originalQty = newQty
+                        }
+                        // Aggiorna qty sempre con il valore originale
+                        qty = originalQty
+
+                    } catch (e: ClassCastException) {
+                        Log.e("CastingError", "Errore durante il casting di qty", e)
+                    }
                 }
-                qty = q
+
             }
         }
         override fun onCancelled(databaseError: DatabaseError) {
@@ -332,7 +357,9 @@ fun ItemCard(
         }
     })
 
-    Log.d("quantità:", qty.toString())
+
+    totCard+=qty*prezzoDouble
+
 
     Card(
         modifier = Modifier.height(90.dp),
@@ -445,8 +472,8 @@ fun ItemCard(
 @Composable
 fun SelettoreQuantita(viewModel: AppViewModel, quantita: Long) {
     //var qty = viewModel.quantita
-    var count by remember { mutableLongStateOf(quantita) } // TODO Cambiare valore iniziale con valore della quantità inserita e aggiornare vm e db di conseguenza (possiamo anche lasciarlo finto)
-    Log.d("quantita nel carrello", count.toString())
+    var count = quantita // TODO Cambiare valore iniziale con valore della quantità inserita e aggiornare vm e db di conseguenza (possiamo anche lasciarlo finto)
+
     Row(
         modifier = Modifier.offset(y = (-5).dp),
         verticalAlignment = Alignment.CenterVertically)
@@ -486,13 +513,3 @@ fun SelettoreQuantita(viewModel: AppViewModel, quantita: Long) {
         )
     }
 }
-
-
-
-
-
-
-
-
-
-
