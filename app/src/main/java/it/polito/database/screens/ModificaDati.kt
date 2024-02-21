@@ -1,6 +1,5 @@
 package it.polito.database.screens
 
-import CitySelection
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -45,6 +44,8 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import it.polito.database.AppViewModel
+import it.polito.database.City
+import it.polito.database.CitySelection
 import it.polito.database.User
 import it.polito.database.ui.theme.Screen
 import it.polito.database.ui.theme.fontFamily
