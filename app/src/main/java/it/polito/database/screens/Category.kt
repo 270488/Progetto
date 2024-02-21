@@ -74,10 +74,10 @@ fun CategoryScreen(viewModel: AppViewModel, navController: NavController) {
 // list of items
 private fun Greetings(viewModel: AppViewModel,navController: NavController,
     modifier: Modifier = Modifier
+        .fillMaxHeight()
+        .background(Blue40)
         .padding(top = 76.dp)
         .padding(bottom = 74.dp) //per non far coprire l'inizio da top e bottom baR
-        .background(Blue40)
-        .fillMaxHeight()
 ) {
     var listaCategorie by remember { mutableStateOf<List<String>>(emptyList()) }
 
@@ -159,7 +159,7 @@ private fun CardContent(name: String, viewModel: AppViewModel,navController: Nav
         ) {
             Text(
                 text = name,
-                style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Medium, fontSize = 20.sp, fontFamily = fontFamily)
+                style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold, fontSize = 20.sp, fontFamily = fontFamily)
             )
 
             val sottoCategorie=listaSottoCategorie.get(name) // prende la lista associata al nome della categoria
@@ -197,22 +197,27 @@ private fun CardContent(name: String, viewModel: AppViewModel,navController: Nav
 fun sottoCategoriaCard(sottocategoria: String, viewModel: AppViewModel, categoria: String,navController: NavController){
     var expanded by remember { mutableStateOf(false) }
     Column (modifier= Modifier
-        .padding(2.dp)
-        .fillMaxWidth(),
+        .fillMaxWidth()
+        .padding(2.dp),
         //.border(width = 1.dp, color = Color.Black, shape = RectangleShape),
         verticalArrangement = Arrangement.Center) {
         Row(modifier= Modifier
-            .padding(2.dp)
-            .fillMaxWidth()
-            .padding(end = 2.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically){
-            Text(text = sottocategoria, style = MaterialTheme.typography.headlineSmall.copy(fontFamily = fontFamily, fontWeight = FontWeight.Medium, fontSize = 15.sp, fontStyle = FontStyle.Italic) )
+            .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically)
+        {
+            Text(
+                text = sottocategoria,
+                fontFamily = fontFamily,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+                fontStyle = FontStyle.Italic
+            )
             IconButton(onClick = { expanded = !expanded;
                 if (expanded) {
                     viewModel.sottocat=sottocategoria
-
-
                     navController.navigate(Screen.ProductList.route)
-            } }) {
+                } }) {
 
                 Icon(
                     imageVector = if (expanded) Icons.Filled.KeyboardArrowDown else Icons.Filled.KeyboardArrowRight,

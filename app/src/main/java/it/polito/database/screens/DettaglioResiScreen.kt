@@ -3,6 +3,7 @@ package it.polito.database.screens
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,9 +21,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -44,6 +48,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.google.firebase.database.DataSnapshot
@@ -53,6 +58,7 @@ import it.polito.database.AppViewModel
 import it.polito.database.FindUrl
 import it.polito.database.R
 import it.polito.database.database
+import it.polito.database.ui.theme.Blue20
 import it.polito.database.ui.theme.Screen
 import it.polito.database.ui.theme.fontFamily
 
@@ -93,18 +99,34 @@ fun DettaglioResiScreen (viewModel: AppViewModel, navController: NavController) 
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween,
         modifier= Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary)
+            .padding(top = 90.dp, bottom = 90.dp)
             .verticalScroll(rememberScrollState())
-            .padding(top = 90.dp, bottom = 110.dp)
     ){
         DettaglioResoCard(navController,viewModel= viewModel, prezzo= prezzo,prodotto = prodotti, scadenza = scadenza, numeroOrdine = ordine, stato = stato, url = url)
-        Row {
+        Spacer(modifier = Modifier.height(12.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             istruzioniConsegna()
-            Button(onClick = { }) {
-                Text(text = "Annulla reso")
+            Button(
+                shape = RoundedCornerShape(3.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    contentColor = MaterialTheme.colorScheme.onErrorContainer
+                ),
+                onClick = { } //TODO Aggiungere eliminazione reso
+            ){
+                Text(
+                    text = "Annulla reso",
+                    fontFamily = fontFamily,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }
@@ -116,8 +138,6 @@ fun DettaglioResiScreen (viewModel: AppViewModel, navController: NavController) 
 @Composable
 fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezzo: String, prodotto: String, scadenza: String, numeroOrdine: String, stato: String, url:String){
 
-
-
     Card(
         shape = RoundedCornerShape(15.dp),
         border = BorderStroke(2.dp, Color.Black),
@@ -126,7 +146,7 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
             contentColor = Color.White
         ),
         modifier = Modifier
-            .padding(horizontal = 10.dp))
+            .padding(horizontal = 20.dp))
     {
         Column(){
             Row(){
@@ -139,7 +159,7 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
                         .height(90.dp),
                     contentScale = ContentScale.Crop
                 )
-                Spacer(modifier = Modifier.width(10.dp))
+                Spacer(modifier = Modifier.width(8.dp))
                 Column(
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
@@ -180,14 +200,14 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
                 if(stato=="avviato"){
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(vertical = 12.dp)
+                        modifier = Modifier.padding(vertical = 8.dp)
                     ) {
                         Image(
-                            modifier = Modifier.size(50.dp),
+                            modifier = Modifier.size(48.dp),
                             painter = painterResource(id = R.drawable.reso_avviato),
                             contentDescription = ""
                         )
-                        Spacer(modifier = Modifier.height(4.dp))
+                        Spacer(modifier = Modifier.height(2.dp))
                         Text(
                             text = "Reso avviato",
                             fontSize = 16.sp,
@@ -200,14 +220,14 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
                 else if(stato=="consegnato"){
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(vertical = 12.dp)
+                        modifier = Modifier.padding(vertical = 8.dp)
                     ) {
                         Image(
-                            modifier = Modifier.size(50.dp),
+                            modifier = Modifier.size(48.dp),
                             painter = painterResource(id = R.drawable.pacco_consegnato),
                             contentDescription = ""
                         )
-                        Spacer(modifier = Modifier.height(4.dp))
+                        Spacer(modifier = Modifier.height(2.dp))
                         Text(
                             text = "Pacco consegnato",
                             fontSize = 16.sp,
@@ -220,14 +240,14 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
                 else if(stato=="scaduto"){
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(vertical = 12.dp)
+                        modifier = Modifier.padding(vertical = 8.dp)
                     ) {
                         Image(
-                            modifier = Modifier.size(50.dp),
+                            modifier = Modifier.size(48.dp),
                             painter = painterResource(id = R.drawable.reso_scaduto),
                             contentDescription = ""
                         )
-                        Spacer(modifier = Modifier.height(4.dp))
+                        Spacer(modifier = Modifier.height(2.dp))
                         Text(
                             text = "Reso scaduto",
                             fontSize = 16.sp,
@@ -243,7 +263,7 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
                         modifier = Modifier.padding(vertical = 8.dp)
                     ) {
                         Image(
-                            modifier = Modifier.size(50.dp),
+                            modifier = Modifier.size(48.dp),
                             painter = painterResource(id = R.drawable.reso_completato),
                             contentDescription = ""
                         )
@@ -293,7 +313,7 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
                             .align(Alignment.CenterVertically)
                             .clickable { navController.navigate(Screen.ScegliPalestraScreen.route) },
                         text = "Scegli un' altra\npalestra",
-                        fontSize = 14.sp,
+                        fontSize = 16.sp,
                         lineHeight = 18.sp,
                         color = MaterialTheme.colorScheme.tertiary,
                         textDecoration = TextDecoration.Underline,
@@ -306,7 +326,7 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 16.dp),
+                    .padding(8.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
                 if(stato=="avviato") {
@@ -372,60 +392,136 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
 private fun istruzioniConsegna() {
     var isDialogOpen by remember { mutableStateOf(false) }
 
-    Button(
-        onClick = { isDialogOpen = true },
-        modifier = Modifier.padding(16.dp)
-    ) {
-        Text("Istruzioni per la consegna")
-    }
 
+    Text(
+        modifier = Modifier
+            .clickable { isDialogOpen = true },
+        text = "Istruzioni per\nla consegna",
+        fontSize = 16.sp,
+        lineHeight = 20.sp,
+        color = MaterialTheme.colorScheme.tertiary,
+        textDecoration = TextDecoration.Underline,
+        //textAlign = TextAlign.Center,
+        fontFamily = fontFamily,
+    )
 
     if (isDialogOpen) {
 
         Popup(
             onDismissRequest = { isDialogOpen = false },
-            modifier = Modifier.fillMaxSize()
+            //modifier = Modifier.fillMaxSize()
         ) {
-            // Contenuto del tuo popup personalizzato
             Box(
+                contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.White)
-                    .padding(16.dp)
-            ) {
-                Column(){
-                    Text("Istruzioni per la consegna")
-                    Text("Consegna")
-                    Text("Consegna il prodotto presso la reception della palestra in cui l’hai ritirato, se vuoi cambiare palestra ti basterà cliccare sulla scritta “Scegli un’altra palestra”")
-                    Text("Imballaggio")
-                    Text("Tutto quello che devi fare per preparare il pacco è inserire il prodotto nella scatola originale. Non dovrai stampare alcuna etichetta!")
-                    Text("Rimborso")
-                    Text("Non appena il tuo pacco verrà ricevuto dal magazzino riceverai un rimborso completo in seguito ad una verifica.")
-
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-                    onClick = { isDialogOpen = false },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Chiudi")
+                    .background(Color(0xCC1D232C))
+                    .padding(horizontal = 10.dp)
+            ){
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(15.dp))
+                        .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(15.dp))
+                        .border(2.dp, MaterialTheme.colorScheme.tertiary, RoundedCornerShape(15.dp))
+                ){
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            //.fillMaxSize()
+                            .background(MaterialTheme.colorScheme.primary)
+                            .padding(16.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Icon(
+                                modifier = Modifier
+                                    .size(30.dp)
+                                    .clickable { isDialogOpen = false },
+                                painter = painterResource(id = R.drawable.back_arrow),
+                                contentDescription = "",
+                                tint = MaterialTheme.colorScheme.tertiary
+                            )
+                            Text(
+                                text = "Istruzioni per la\nconsegna",
+                                fontSize = 24.sp,
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Center,
+                                fontFamily = fontFamily,
+                            )
+                            Box(modifier = Modifier.size(30.dp))
+                        }
+                        Column(
+                            modifier = Modifier
+                                .height(360.dp)
+                                .padding(vertical = 8.dp),
+                            verticalArrangement = Arrangement.SpaceBetween
+                        ){
+                            Column {
+                                Text(
+                                    text = "Consegna",
+                                    fontSize = 18.sp,
+                                    color = MaterialTheme.colorScheme.tertiary,
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = fontFamily,
+                                )
+                                Text(
+                                    text = "Consegna il prodotto presso la reception della palestra in cui l’hai ritirato, se vuoi cambiare palestra ti basterà cliccare sulla scritta “Scegli un’altra palestra”",
+                                    fontSize = 16.sp,
+                                    color = Color.White,
+                                    fontFamily = fontFamily,
+                                )
+                            }
+                            Column {
+                                Text(
+                                    text = "Imballaggio",
+                                    fontSize = 18.sp,
+                                    color = MaterialTheme.colorScheme.tertiary,
+                                    fontFamily = fontFamily,
+                                )
+                                Text(
+                                    text = "Tutto quello che devi fare per preparare il pacco è inserire il prodotto nella scatola originale. Non dovrai stampare alcuna etichetta!",
+                                    fontSize = 16.sp,
+                                    color = Color.White,
+                                    fontFamily = fontFamily,
+                                )
+                            }
+                            Column {
+                                Text(
+                                    text = "Rimborso",
+                                    fontSize = 18.sp,
+                                    color = MaterialTheme.colorScheme.tertiary,
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = fontFamily,
+                                )
+                                Text(
+                                    text = "Non appena il tuo pacco verrà ricevuto dal magazzino riceverai un rimborso completo in seguito ad una verifica.",
+                                    fontSize = 16.sp,
+                                    color = Color.White,
+                                    fontFamily = fontFamily,
+                                )
+                            }
+                        }
+                    }
                 }
             }
+
+
         }
 
     }
 }
-@Composable
+/*@Composable
 fun Popup(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
-    shape: RoundedCornerShape = CircleShape,
+    shape: RoundedCornerShape = RoundedCornerShape(15.dp),
     content: @Composable (Modifier) -> Unit
 ) {
-
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -449,4 +545,4 @@ fun Popup(
             content(Modifier)
         }
     }
-}
+}*/
