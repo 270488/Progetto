@@ -15,6 +15,8 @@ import it.polito.database.screens.CartScreen
 import it.polito.database.screens.CategoryScreen
 import it.polito.database.screens.CheckoutScreen
 import it.polito.database.screens.CollectOrder
+import it.polito.database.screens.CorriereHome
+import it.polito.database.screens.CorriereProfile
 import it.polito.database.screens.DettaglioResiScreen
 import it.polito.database.screens.FavoritesScreen
 import it.polito.database.screens.GestisciAccountScreen
@@ -113,6 +115,12 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
         }
         composable(route = Screen.GestisciFitlockerScreen.route) {
             GestisciFitlockerScreen(viewModel, navController)
+        }
+        composable(route = Screen.CorriereHome.route) {
+           CorriereHome(viewModel, navController)
+        }
+        composable(route = Screen.CorriereHome.route) {
+            CorriereProfile(viewModel, navController)
         }
     }
 }

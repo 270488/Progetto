@@ -145,5 +145,16 @@ sealed class Screen (
         title = "CollectOrder",
         icon = Icons.Default.Call
     )
+    object CorriereHome: Screen(
+        route = "corriereHome",
+        title = "CorriereHome",
+        icon = Icons.Default.AccountBox
+    )
+    object CorriereProfile: Screen(
+        route = "corriereProfile",
+        title = "CorriereProfile",
+        icon = Icons.Default.AccountBox
+    )
+
 
 }
