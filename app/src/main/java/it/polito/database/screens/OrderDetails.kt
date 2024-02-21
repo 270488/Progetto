@@ -2,7 +2,6 @@ package it.polito.database.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,11 +13,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -276,7 +277,27 @@ fun dettaglioProdotto(viewModel: AppViewModel, qty: Long, item: String, navContr
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                Card()//TODO pupup per fare il reso
+                var openAlertDialog = remember { mutableStateOf(false) }
+
+                // ...
+                when {
+                    // ...
+                    openAlertDialog.value -> {
+                        AlertDialog(
+                            onDismissRequest = { openAlertDialog.value = false },
+                            onConfirmation = {
+                                openAlertDialog.value = false
+                                println("Confirmation registered") // Add logic here to handle confirmation.
+                            },
+                            dialogTitle = "Vuoi restituire un articolo? \n" +
+                                    "Nessun problema!",
+                            dialogText ="Se intendi restituire il tuo articolo non devi far altro che riconsegnarlo presso la reception della palestra in cui l’hai ritirato.\n" +
+                                    "\n" +
+                                    "Un corriere si occuperà in seguito di ritirare il tuo pacco e riceverai un rimborso completo non appena l’ordine sarà ricevuto dal magazzino."
+                        )
+                    }
+                }
+                Button(onClick = {openAlertDialog.value=true})
                  {
                     Text(
                         text = "Restituisci ordine ",
@@ -305,9 +326,51 @@ fun dettaglioProdotto(viewModel: AppViewModel, qty: Long, item: String, navContr
 
                 }
 
+
+
             }
         }
 
     }
 
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AlertDialog(
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit,
+    dialogTitle: String,
+    dialogText: String,
+) {
+    AlertDialog(
+        title = {
+            Text(text = dialogTitle)
+        },
+        text = {
+            Text(text = dialogText)
+               },
+        onDismissRequest = {
+            onDismissRequest()
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirmation()
+                }
+            ) {
+                Text("Avvia reso")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onDismissRequest()
+                }
+            ) {
+                Text("Annulla")
+            }
+        }
+    )
+}
+
