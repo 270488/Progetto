@@ -58,6 +58,7 @@ fun MainScreen(viewModel: AppViewModel){
         Screen.AiutoEContatti.route,
         Screen.CollectOrder.route,
         Screen.OrderDetails.route,
+        Screen.GestisciFitlockerScreen.route
     )
         Scaffold(
 
@@ -278,6 +279,7 @@ fun AddItem3(
                     Screen.AiutoEContatti.route->Text(text = "Aiuto e contatti", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                     Screen.OrderDetails.route->Text(text = "Dettagli ordine", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                     Screen.CollectOrder.route->Text(text = "Ritiro ordine", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
+                    Screen.GestisciFitlockerScreen.route->Text(text = "Gestisci Fitlocker", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                 }
                 //tante condizioni quante sono le schermate che hanno questa top Bar
                 //( con freccia per tornare indietro, impostazioni a destra

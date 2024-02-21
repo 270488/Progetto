@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
@@ -25,7 +24,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -106,8 +104,10 @@ fun Edit(navController: NavHostController) {
                         if (name == "Logout" || name == "Cambia Account") {
                             //TODO inserire alert
                             navController.navigate(Screen.AuthenticationScreen.route)
-                        }else if( name == "Modifica dati")
+                        }else if( name == "Modifica dati"){
                             navController.navigate(Screen.ModificaDati.route)
+                        }else if( name == "Gestisci FitLocker")
+                        navController.navigate(Screen.GestisciFitlockerScreen.route)
                         //TODO else if () per le altre sezioni
                     }
                     .padding(12.dp)

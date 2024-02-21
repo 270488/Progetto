@@ -287,6 +287,7 @@ fun dettaglioProdotto(viewModel: AppViewModel, qty: Long, item: String, navContr
                     openAlertDialog.value -> {
                         AlertDialog(
                             item = item,
+                            navController = navController,
                             viewModel = viewModel,
                             onDismissRequest = { openAlertDialog.value = false },
                             onConfirmation = {
@@ -347,8 +348,8 @@ fun AlertDialog(
     dialogTitle: String,
     dialogText: String,
     viewModel: AppViewModel,
-    item: String
-
+    item: String,
+    navController: NavController
 ) {
     var ctx = LocalContext.current
     AlertDialog(
@@ -366,6 +367,7 @@ fun AlertDialog(
                 onClick = {
                     aggiungiReso(item, viewModel.ordineSelezionato,viewModel.uid)
                     Toast.makeText(ctx, "Richiesta di reso confermata", Toast.LENGTH_SHORT).show()
+                    navController.navigate(Screen.ResiScreen.route)
                     onDismissRequest()
                 }
             ) {

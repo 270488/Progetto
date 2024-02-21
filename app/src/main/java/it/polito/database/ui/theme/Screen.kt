@@ -95,6 +95,11 @@ sealed class Screen (
         title = "GestisciAccount",
         icon = Icons.Default.Edit
     )
+    object GestisciFitlockerScreen: Screen(
+        route = "gestisciFitlocker",
+        title = "GestisciFitlocker",
+        icon = Icons.Default.Edit
+    )
     object Newsletter: Screen(
         route = "newsletter",
         title = "Newsletter",
