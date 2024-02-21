@@ -449,7 +449,7 @@ fun OptionSelection() {
 @Composable
 fun QtySelection(viewModel: AppViewModel) {
     var selectedQty by remember {
-        mutableStateOf<Int>(0)
+        mutableStateOf<Int>(1)
     }
     var isExpanded by remember {
         mutableStateOf(false) //default: menù chiuso

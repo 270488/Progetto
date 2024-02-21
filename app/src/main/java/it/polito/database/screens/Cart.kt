@@ -86,7 +86,8 @@ fun Cart(viewModel: AppViewModel, navController: NavController, modifier: Modifi
         }
     })
 
-    var totale = viewModel.tot
+    //var totale = viewModel.tot
+    var totale =0.00
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -105,6 +106,8 @@ fun Cart(viewModel: AppViewModel, navController: NavController, modifier: Modifi
         ){
             var numItem = 0
             if (listaCarrello.isEmpty()){
+                totale=0.00
+                viewModel.tot=0.00
                 Text(
                     text = "Il tuo carrello è vuoto.",
                     fontFamily = fontFamily,
@@ -261,6 +264,7 @@ fun Cart(viewModel: AppViewModel, navController: NavController, modifier: Modifi
                 Button(
                     onClick = {
                               navController.navigate(Screen.Checkout.route)
+                                viewModel.tot=totale
                     },
                     modifier = Modifier
                         .layoutId("btnCheckOut")
@@ -301,8 +305,8 @@ fun aggiungiAlCarrello(item: String, id: String, qty: Int) {
                 database.child("utenti").child(id).child("carrello").child(lastKey.toString()).child("nome").setValue(item)
             }
             else{
-                val itemsMap = mapOf(lastKey.toString() to item)
-                database.child("utenti").child(id).child("carrello").setValue(itemsMap)
+                //val itemsMap = mapOf(lastKey.toString() to item)
+                database.child("utenti").child(id).child("carrello").child(0.toString()).child("nome").setValue(item)
             }
             database.child("utenti").child(id).child("carrello").child(lastKey.toString()).child("qty").setValue(qty)
         }
