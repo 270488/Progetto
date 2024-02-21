@@ -36,8 +36,12 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import it.polito.database.AppViewModel
 import it.polito.database.FindUrl
+import it.polito.database.database
 import it.polito.database.ui.theme.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,24 +49,26 @@ import it.polito.database.ui.theme.Screen
 fun DettaglioResiScreen (viewModel: AppViewModel, navController: NavController) {
     val codiceReso=viewModel.resoSelezionato
 
+    var reso= database.child("resi").child(codiceReso)
 
-    var reso=viewModel.resi.observeAsState(emptyList()).value
-        .filter { it.key.toString() == codiceReso }
+    var ordine by remember { mutableStateOf("") }
+    var stato by remember { mutableStateOf("") }
+    var prodotti by remember { mutableStateOf("") }
+    var url by remember { mutableStateOf("") }
+    var scadenza by remember { mutableStateOf("") }
 
-    var ordine=""
-    var stato=""
-    var prodotti=""
-    var url=""
-    var scadenza=""
+    reso.addValueEventListener(object: ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            ordine=dataSnapshot.child("ordine").value.toString()
+            stato=dataSnapshot.child("stato").value.toString()
+            prodotti=dataSnapshot.child("prodotti").value.toString()
+            scadenza=dataSnapshot.child("scadenza").value.toString()
 
-    reso.forEach{
-            r->
-        ordine=r.child("ordine").value.toString()
-        stato=r.child("stato").value.toString()
-        prodotti=r.child("prodotti").value.toString()
-        url= FindUrl(fileName = prodotti+".jpg")
-        scadenza= r.child("scadenza").value.toString()
-    }
+        }
+        override fun onCancelled(databaseError: DatabaseError) {
+            println("Errore nel leggere i dati dal database: ${databaseError.message}")
+        }
+    })
 
 
     val prod=viewModel.products.observeAsState(emptyList()).value

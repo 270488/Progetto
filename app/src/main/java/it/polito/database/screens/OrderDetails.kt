@@ -327,11 +327,7 @@ fun dettaglioProdotto(viewModel: AppViewModel, qty: Long, item: String, navContr
                         textAlign = TextAlign.Start,
 
                         )
-
                 }
-
-
-
             }
         }
 
@@ -364,7 +360,7 @@ fun AlertDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    aggiungiReso(item, viewModel.ordineSelezionato,viewModel.uid)
+                    aggiungiReso(item, viewModel.ordineSelezionato,viewModel.uid, viewModel)
                     Toast.makeText(ctx, "Richiesta di reso confermata", Toast.LENGTH_SHORT).show()
                     onDismissRequest()
                 }

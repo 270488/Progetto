@@ -31,8 +31,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.google.firebase.database.DataSnapshot
@@ -43,6 +45,7 @@ import it.polito.database.AppViewModel
 import it.polito.database.FindUrl
 import it.polito.database.database
 import it.polito.database.ui.theme.Screen
+import it.polito.database.ui.theme.fontFamily
 import okhttp3.internal.notify
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -55,18 +58,18 @@ fun ResiScreen(viewModel: AppViewModel, navController: NavController){
     var id=viewModel.uid
 
     var listaResi by remember { mutableStateOf<List<String>>(emptyList()) }
-
     var resi= database.child("utenti").child(id).child("resi")
+
+
     resi.addValueEventListener(object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) { //fa una foto al db in quel momento e la mette in dataSnapshot
             // Itera sui figli del nodo
             var list= mutableListOf<String>()
-
-
             for (childSnapshot in dataSnapshot.children) { //prende i figli di prodotti, quindi 0, 1...
                 // Aggiungi il prodotto alla lista
-                list.add(childSnapshot.key.toString())
-
+                if(!list.contains(childSnapshot.key.toString())){
+                    list.add(childSnapshot.key.toString())
+                }
 
             }
             listaResi=list
@@ -76,7 +79,8 @@ fun ResiScreen(viewModel: AppViewModel, navController: NavController){
             println("Errore nel leggere i dati dal database: ${databaseError.message}")
         }
     })
-    println(listaResi)
+
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween,
@@ -92,10 +96,25 @@ fun ResiScreen(viewModel: AppViewModel, navController: NavController){
             Text(text = "Aggiungi Reso")
 
         }*/
-        
-        listaResi.forEach{
-            i-> resiCard(numeroReso = i, viewModel, navController)
+
+        if(listaResi.isEmpty()){
+            Text(
+                text = "Non sono presenti resi",
+                fontFamily = fontFamily,
+                color = MaterialTheme.colorScheme.onPrimary,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Normal,
+                fontStyle = FontStyle.Italic,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
         }
+        else{
+            listaResi.forEach{
+                    i-> resiCard(numeroReso = i, viewModel, navController)
+            }
+        }
+        
+
     }
 
 }
@@ -104,29 +123,33 @@ fun ResiScreen(viewModel: AppViewModel, navController: NavController){
 @Composable
 fun resiCard(numeroReso: String, viewModel: AppViewModel, navController: NavController){
 
-    var reso=viewModel.resi.observeAsState(emptyList()).value
-        .filter { it.key.toString() == numeroReso }
+    var reso= database.child("resi").child(numeroReso)
 
-    var ordine=""
-    var stato=""
-    var prodotti=""
-    var url=""
-    var scadenza=""
+    var ordine by remember { mutableStateOf("") }
+    var stato by remember { mutableStateOf("") }
+    var prodotti by remember { mutableStateOf("") }
+    var url by remember { mutableStateOf("") }
+    var scadenza by remember { mutableStateOf("") }
 
-    reso.forEach{
-        r->
-       ordine=r.child("ordine").value.toString()
-       stato=r.child("stato").value.toString()
-       prodotti=r.child("prodotti").value.toString()
-        url= FindUrl(fileName = prodotti+".jpg")
+    reso.addValueEventListener(object: ValueEventListener{
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            ordine=dataSnapshot.child("ordine").value.toString()
+            stato=dataSnapshot.child("stato").value.toString()
+            prodotti=dataSnapshot.child("prodotti").value.toString()
+            scadenza=dataSnapshot.child("scadenza").value.toString()
 
-        scadenza= r.child("scadenza").value.toString()
-    }
+        }
+        override fun onCancelled(databaseError: DatabaseError) {
+            println("Errore nel leggere i dati dal database: ${databaseError.message}")
+        }
+    })
+
+    url= FindUrl(fileName = prodotti+".jpg")
 
     Card(modifier = Modifier.padding(5.dp),
         onClick = {navController.navigate(Screen.DettaglioResiScreen.route)
-            viewModel.resoSelezionato=numeroReso
-    } ){
+            viewModel.resoSelezionato=numeroReso } )
+    {
         Column(){
             Row(){
                 AsyncImage(
@@ -154,7 +177,7 @@ fun resiCard(numeroReso: String, viewModel: AppViewModel, navController: NavCont
 }
 
 @SuppressLint("NewApi")
-fun aggiungiReso(prodotto: String, ordine: String, uid: String){
+fun aggiungiReso(prodotto: String, ordine: String, uid: String, viewModel: AppViewModel){
     var resi= database.child("resi")
     val numeroReso= Random.nextInt(10000, 100000)
     val dataAttuale = LocalDate.now()
@@ -168,4 +191,8 @@ fun aggiungiReso(prodotto: String, ordine: String, uid: String){
     resi.child(numeroReso.toString()).child("scadenza").setValue(scadenza)
 
     database.child("utenti").child(uid).child("resi").child(numeroReso.toString()).setValue(prodotto)
+
+
+
+
 }

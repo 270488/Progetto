@@ -93,10 +93,8 @@ class AppViewModel: ViewModel() {
     }
     fun addResi(reso: DataSnapshot){
         val numeroReso = reso.key.toString()
-
         // Verifica se esiste già un reso con lo stesso codice
         val resoExists = resi.value?.any { it.key.toString() == numeroReso } ?: false
-
         if (!resoExists) {
             // Aggiungi il prodotto solo se non esiste già
             val currentList = resi.value.orEmpty()
@@ -162,11 +160,9 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
     resi.addValueEventListener(object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) { //fa una foto al db in quel momento e la mette in dataSnapshot
             // Itera sui figli del nodo
-
             for (childSnapshot in dataSnapshot.children) { //prende i figli di prodotti, quindi 0, 1...
                 // Aggiungi il prodotto alla lista
                 viewModel.addResi(childSnapshot)
-
             }
         }
 
