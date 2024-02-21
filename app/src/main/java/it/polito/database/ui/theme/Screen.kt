@@ -124,5 +124,15 @@ sealed class Screen (
         title = "OrdersScreen",
         icon = Icons.Default.Edit
     )
+    object OrderDetails: Screen(
+        route = "orderDetailsScreen",
+        title = "OrderDetailsScreen",
+        icon = Icons.Default.Edit
+    )
+    object CollectOrder: Screen(
+        route = "collectOrder",
+        title = "CollectOrder",
+        icon = Icons.Default.Edit
+    )
 
 }

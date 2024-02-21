@@ -7,23 +7,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import it.polito.database.AppViewModel
 import it.polito.database.database
-@Preview
-@Composable
-fun gestioneArduino(){
-    var variabili= GestioneArduino()
-    onDataChange(variabili)
-    Button(onClick = {
-
-        variabili.CodeG="1893"
-        variabili.CodeP="AB34"
-
-        writeVariables(variabili)
-
-    }) {
-        Text(text = "Cambia variabili")
-    }
-}
 
 fun writeVariables(variabili: GestioneArduino) {
     variabili.variabiliPath.child("CodeP").setValue(variabili.CodeP)
@@ -77,14 +62,19 @@ fun onDataChange(variabili: GestioneArduino){
 
 fun confrontoCodici(variabili: GestioneArduino){
     if(variabili.CodiceTastierino==variabili.CodeP){
+        variabili.Sblocco=0L
+        writeVariables(variabili)
         variabili.PPAperta=1L
         variabili.CodiceTastierino="0000"
         writeVariables(variabili)
 
     }
     else if(variabili.CodiceTastierino==variabili.CodeG){
+        variabili.Sblocco=0L
+        writeVariables(variabili)
         variabili.PGAperta=1L
         variabili.CodiceTastierino="0000"
+
         writeVariables(variabili)
     }
 }
