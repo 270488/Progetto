@@ -177,7 +177,7 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
                         fontFamily = fontFamily,
                     )
                     Text(
-                        text = "Scadenza reso: " + scadenza,
+                        text = "Scadenza: " + scadenza,
                         fontFamily = fontFamily,
                         fontSize = 16.sp
                     )

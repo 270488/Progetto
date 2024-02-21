@@ -1,6 +1,7 @@
 package it.polito.database.screens
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.rememberScrollableState
 import androidx.compose.foundation.gestures.scrollable
@@ -8,7 +9,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -16,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -146,9 +151,19 @@ fun resiCard(numeroReso: String, viewModel: AppViewModel, navController: NavCont
 
     url= FindUrl(fileName = prodotti+".jpg")
 
-    Card(modifier = Modifier.padding(5.dp),
-        onClick = {navController.navigate(Screen.DettaglioResiScreen.route)
-            viewModel.resoSelezionato=numeroReso } )
+    Card(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+        shape = RoundedCornerShape(15.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor= MaterialTheme.colorScheme.onSecondary,
+        ),
+        border = BorderStroke(2.dp, Color.Black),
+        onClick = {
+            navController.navigate(Screen.DettaglioResiScreen.route)
+            viewModel.resoSelezionato=numeroReso
+        }
+    )
     {
         Column(){
             Row(){
@@ -157,17 +172,49 @@ fun resiCard(numeroReso: String, viewModel: AppViewModel, navController: NavCont
                     contentDescription = null,
                     modifier = Modifier
                         .clip(RoundedCornerShape(15.dp))
+                        .height(90.dp)
                         .width(150.dp),
                     contentScale = ContentScale.Crop
                 )
-                Column {
-                    Text(text = prodotti)
-                    Text(text = "Ordine No. " + ordine)
+                Spacer(modifier = Modifier.width(12.dp))
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .padding(end = 8.dp)
+                ) {
+                    Text(
+                        text = prodotti,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = fontFamily,
+                    )
+                    Text(
+                        text = "Ordine No. " + ordine,
+                        fontSize = 16.sp,
+                        fontFamily = fontFamily,
+                    )
                 }
             }
-            Row(){
-                Text(text = "Stato reso: " + stato)
-                Text(text = "Scadenza reso: "+scadenza)
+            Spacer(modifier = Modifier.height(12.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Text(
+                    text = "Stato: " + stato,
+                    color =
+                    if (stato == "scaduto") MaterialTheme.colorScheme.errorContainer
+                    else  MaterialTheme.colorScheme.tertiary,
+                    fontFamily = fontFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
+                Text(
+                    text = "Scadenza: " + scadenza,
+                    fontFamily = fontFamily,
+                    fontSize = 16.sp
+                )
             }
 
 
