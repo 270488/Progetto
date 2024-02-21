@@ -55,6 +55,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import it.polito.database.screens.GestioneArduino
+import it.polito.database.screens.cambioVariabili
 import it.polito.database.ui.theme.Blue40
 import it.polito.database.ui.theme.Screen
 import it.polito.database.ui.theme.Yellow40
@@ -76,7 +77,10 @@ class AppViewModel: ViewModel() {
     var tot = 0.00
     var carrello=MutableLiveData<Map<String, Int>>(emptyMap())
 
-    var variabili=GestioneArduino()
+    var variabili= GestioneArduino("", "","0000",0L,0L,0L,false, false)
+
+
+
 
     fun addProduct(prod: DataSnapshot){
         val productName = prod.child("nome").value.toString()
@@ -129,7 +133,9 @@ fun HomePage(viewModel: AppViewModel, navController: NavController){
         ScrollableColumn(viewModel, navController)
         Spacer(modifier = Modifier.height(5.dp))
 
+
     }
+    cambioVariabili(viewModel.variabili)
 
 }
 

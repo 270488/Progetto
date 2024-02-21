@@ -276,8 +276,12 @@ fun aggiungiOrdine(viewModel: AppViewModel){
     var sportello=0
     var stato="ordinato"
     var totale=viewModel.tot
-
+    var numeroProdotti=0
+    var codiceSbloccoUtente= generazioneCodiceCasuale()
+    var codiceSbloccoFattorino= generazioneCodiceCasuale()
     var ordini=database.child("ordini")
+
+
     ordini.child(nOrdine.toString()).child("stato").setValue(stato)
     ordini.child(nOrdine.toString()).child("uid").setValue(uid)
     ordini.child(nOrdine.toString()).child("Locker").setValue(locker)
@@ -285,6 +289,8 @@ fun aggiungiOrdine(viewModel: AppViewModel){
     ordini.child(nOrdine.toString()).child("Data Ordine").setValue(dataOrdine)
     ordini.child(nOrdine.toString()).child("Data Consegna").setValue(dataConsegna)
     ordini.child(nOrdine.toString()).child("Totale").setValue(totale)
+    ordini.child(nOrdine.toString()).child("CodiceSbloccoUtente").setValue(codiceSbloccoUtente)
+    ordini.child(nOrdine.toString()).child("CodiceSbloccoFattorino").setValue(codiceSbloccoFattorino)
 
 
     //prodotti e quantità
@@ -293,6 +299,7 @@ fun aggiungiOrdine(viewModel: AppViewModel){
     println("carrello: "+carrello.toString())
 
     carrello.forEach{(item, qty)->
+        numeroProdotti+=qty
         println("Prodotto: "+item+" Quantità: "+qty.toString())
         ordini.child(nOrdine.toString()).child("Prodotti").child(item).setValue(qty)
         eliminaDalCarrello(item = item, uid, viewModel)
@@ -301,5 +308,8 @@ fun aggiungiOrdine(viewModel: AppViewModel){
 
     viewModel.carrello.value= emptyMap()
     database.child("utenti").child(uid).child("ordini").child(nOrdine.toString()).setValue(stato)
+
+    //Generazione codice
+    assegnazioneSportello(numeroProdotti, viewModel, codiceF = codiceSbloccoFattorino, codiceU=codiceSbloccoUtente)
 }
 

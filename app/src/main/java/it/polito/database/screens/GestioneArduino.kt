@@ -9,6 +9,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import it.polito.database.AppViewModel
 import it.polito.database.database
+import kotlin.random.Random
 
 fun writeVariables(variabili: GestioneArduino) {
     variabili.variabiliPath.child("CodeP").setValue(variabili.CodeP)
@@ -17,22 +18,27 @@ fun writeVariables(variabili: GestioneArduino) {
     variabili.variabiliPath.child("PPAperta").setValue(variabili.PPAperta)
     variabili.variabiliPath.child("PGAperta").setValue(variabili.PGAperta)
     variabili.variabiliPath.child("Sblocco").setValue(variabili.Sblocco)
+    variabili.variabiliPath.child("SportelloG").setValue(variabili.SportelloG)
+    variabili.variabiliPath.child("SportelloP").setValue(variabili.SportelloP)
 }
 
-class GestioneArduino {
-    var variabiliPath= database.child("variabili")
+data class GestioneArduino(
+                           var CodeP :String,
+                           var CodeG :String,
+                           var CodiceTastierino:String,
+                           var PGAperta:Long,
+                           var PPAperta:Long,
+                           var Sblocco :Long,
+                           var SportelloP :Boolean,
+                           var SportelloG :Boolean) {
+    var variabiliPath = database.child("variabili")
 
-    var CodeP=""
-    var CodeG=""
-    var CodiceTastierino=""
-    var PPAperta=0L
-    var PGAperta=0L
-    var Sblocco=0L
+
 
 }
 
 
-fun onDataChange(variabili: GestioneArduino){
+fun cambioVariabili(variabili: GestioneArduino){
     
     variabili.variabiliPath.addValueEventListener(object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) { //fa una foto al db in quel momento e la mette in dataSnapshot
@@ -42,6 +48,8 @@ fun onDataChange(variabili: GestioneArduino){
             variabili.PPAperta=dataSnapshot.child("PPAperta").value as Long
             variabili.PGAperta=dataSnapshot.child("PGAperta").value as Long
             variabili.Sblocco=dataSnapshot.child("Sblocco").value as Long
+            variabili.SportelloP=dataSnapshot.child("SportelloP").value as Boolean
+            variabili.SportelloG=dataSnapshot.child("SportelloG").value as Boolean
 
             println("CodeP: "+variabili.CodeP)
             println("CodeG: "+variabili.CodeG)
@@ -49,6 +57,8 @@ fun onDataChange(variabili: GestioneArduino){
             println("PPAPerta: "+variabili.PPAperta)
             println("PGAperta: "+variabili.PGAperta)
             println("Sblocco: "+variabili.Sblocco)
+            println("SportelloP: "+variabili.SportelloP)
+            println("SportelloG: "+variabili.SportelloG)
 
             confrontoCodici(variabili)
         }
@@ -63,18 +73,49 @@ fun onDataChange(variabili: GestioneArduino){
 fun confrontoCodici(variabili: GestioneArduino){
     if(variabili.CodiceTastierino==variabili.CodeP){
         variabili.Sblocco=0L
-        writeVariables(variabili)
         variabili.PPAperta=1L
+        variabili.CodeP=""
         variabili.CodiceTastierino="0000"
         writeVariables(variabili)
 
     }
     else if(variabili.CodiceTastierino==variabili.CodeG){
         variabili.Sblocco=0L
-        writeVariables(variabili)
+        variabili.CodeG=""
         variabili.PGAperta=1L
         variabili.CodiceTastierino="0000"
-
         writeVariables(variabili)
     }
+}
+
+fun assegnazioneSportello(numeroProdotti: Int, viewModel: AppViewModel, codiceF: String, codiceU: String){
+
+    var codiceCasualeF= codiceF
+    var codiceCasualeU= codiceU
+
+    if(!viewModel.variabili.SportelloG && numeroProdotti>2){
+        viewModel.variabili.SportelloG=true
+        viewModel.variabili.CodeG=codiceCasualeF
+        writeVariables(variabili = viewModel.variabili)
+    }
+    if(numeroProdotti<=2 && !viewModel.variabili.SportelloP){
+        viewModel.variabili.SportelloP=true
+        viewModel.variabili.CodeP=codiceCasualeF
+        writeVariables(variabili = viewModel.variabili)
+    }
+    else if(numeroProdotti<=2 && !viewModel.variabili.SportelloG){
+        viewModel.variabili.SportelloG=true
+        viewModel.variabili.CodeP=codiceCasualeF
+        writeVariables(variabili = viewModel.variabili)
+    }
+}
+
+fun generazioneCodiceCasuale(): String{
+    val caratteriPossibili = "ABCD0123456789"
+    val lunghezzaStringa = 4
+
+    val stringaCasuale = (1..lunghezzaStringa)
+        .map { caratteriPossibili[Random.nextInt(caratteriPossibili.length)] }
+        .joinToString("")
+    return stringaCasuale
 }

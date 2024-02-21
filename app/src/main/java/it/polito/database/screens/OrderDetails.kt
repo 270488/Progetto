@@ -102,7 +102,8 @@ fun OrderDetails(viewModel: AppViewModel, navController: NavController){
 
         DettaglioOrdineCard(viewModel, navController, prodotti, stato=stato, totale=totale, dataOrdine = dataOrdine, dataConsegna = dataConsegna, locker=locker)
         if(stato=="consegnato"){
-            Button(onClick = { navController.navigate(Screen.CollectOrder.route) }) {
+            Button(onClick = { navController.navigate(Screen.CollectOrder.route)
+            viewModel.ordineSelezionato=ordine}) {
                 Text(text = "Ritira ordine")
             }
         }
