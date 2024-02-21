@@ -52,7 +52,8 @@ fun MainScreen(viewModel: AppViewModel){
         Screen.GestisciAccountScreen.route,
         Screen.ResiScreen.route,
         Screen.DettaglioResiScreen.route,
-        Screen.ScegliPalestraScreen.route
+        Screen.ScegliPalestraScreen.route,
+        Screen.Orders.route,
     )
         Scaffold(
 
@@ -87,8 +88,6 @@ fun BottomBar(navController: NavHostController) {
         Screen.Category,
         Screen.Cart,
         Screen.Profile,
-
-
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 //serve ad osservare lo stato ed essere notificati quando questo cambia
@@ -270,6 +269,7 @@ fun AddItem3(
                     Screen.ResiScreen.route->Text(text = "I miei resi", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                     Screen.DettaglioResiScreen.route->Text(text = "Dettaglio reso", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                     Screen.ScegliPalestraScreen.route->Text(text = "Seleziona palestra", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
+                    Screen.Orders.route->Text(text = "I miei ordini", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                 }
                 //tante condizioni quante sono le schermate che hanno questa top Bar
                 //( con freccia per tornare indietro, impostazioni a destra

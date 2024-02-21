@@ -354,7 +354,7 @@ fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: Str
     Button(
         onClick = {
             Log.d("quantità selezionata: ", viewModel.quantita.toString())
-            aggiungiAlCarrello(item = nome, id = id, qty = viewModel.quantita)
+            aggiungiAlCarrello(item = nome, id = id, qty = viewModel.quantita, viewModel)
             navController.navigate(Screen.Cart.route)
         },
         shape = RoundedCornerShape(8.dp),

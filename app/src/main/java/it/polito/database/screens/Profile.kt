@@ -157,7 +157,9 @@ fun Opzioni(navController: NavHostController) {
                         navController.navigate(Screen.ResiScreen.route)
                     else if (name == "Il mio account")
                         navController.navigate(Screen.AccountScreen.route)
-                    //TODO else if () per le altre sezioni
+                    else if(name=="I miei ordini")
+                        navController.navigate(Screen.Orders.route)
+
                 }) {
                     Icon(
                         painter =  painterResource(id = R.drawable.frecciadx),

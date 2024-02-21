@@ -73,6 +73,7 @@ class AppViewModel: ViewModel() {
     var uid=""
     var quantita = 1
     var tot = 0.00
+    var carrello=MutableLiveData<Map<String, Int>>(emptyMap())
 
     var variabili=GestioneArduino()
 
@@ -101,6 +102,13 @@ class AppViewModel: ViewModel() {
             val updatedList = currentList + reso
             resi.value = updatedList
         }
+
+    }
+
+    fun addCarrello(item:String, qty: Int){
+        val currentMap = carrello.value.orEmpty()
+        val updatedMap = currentMap + (item to qty)
+        carrello.value = updatedMap
 
     }
 
@@ -159,6 +167,37 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                 viewModel.addResi(childSnapshot)
 
             }
+        }
+
+        override fun onCancelled(databaseError: DatabaseError) {
+            // Gestisci gli errori qui
+            println("Errore nel leggere i dati dal database: ${databaseError.message}")
+        }
+    })
+
+    val carrello =
+        database.child("utenti").child(viewModel.uid).child("carrello") //prende dal db il nodo prodotti e aggiunge un listener
+    carrello.addValueEventListener(object : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) { //fa una foto al db in quel momento e la mette in dataSnapshot
+
+            for (childSnapshot in dataSnapshot.children) {
+                if(childSnapshot.child("qty").value != null){
+                    println("longvalue: "+childSnapshot.child("qty").value.toString())
+                    println("child: "+childSnapshot.toString())
+                    val longValue = childSnapshot.child("qty").value as Long
+                    var intValue=0
+                    try {
+                        intValue = Math.toIntExact(longValue) // Converte Long in Int
+                        // Usa intValue come un intero
+                    } catch (e: ArithmeticException) {
+                        // Gestisci l'overflow o fai qualcos'altro in caso di eccezione
+                        e.printStackTrace()
+                    }
+                    viewModel.addCarrello(childSnapshot.child("nome").value.toString(),  intValue)
+
+
+                }
+                }
         }
 
         override fun onCancelled(databaseError: DatabaseError) {
@@ -262,8 +301,16 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                                 .fillMaxSize()
                                 .graphicsLayer {
                                     compositingStrategy = CompositingStrategy.ModulateAlpha
-                                    alpha = 0.7f}
-                                .background(brush = Brush.verticalGradient(listOf(Color.Transparent, Color.Black))))
+                                    alpha = 0.7f
+                                }
+                                .background(
+                                    brush = Brush.verticalGradient(
+                                        listOf(
+                                            Color.Transparent,
+                                            Color.Black
+                                        )
+                                    )
+                                ))
                             Text(
                                 text = p.child("nome").value.toString(),
                                 modifier = Modifier
@@ -374,8 +421,16 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                                 .fillMaxSize()
                                 .graphicsLayer {
                                     compositingStrategy = CompositingStrategy.ModulateAlpha
-                                    alpha = 0.7f}
-                                .background(brush = Brush.verticalGradient(listOf(Color.Transparent, Color.Black))))
+                                    alpha = 0.7f
+                                }
+                                .background(
+                                    brush = Brush.verticalGradient(
+                                        listOf(
+                                            Color.Transparent,
+                                            Color.Black
+                                        )
+                                    )
+                                ))
                             Text(
                                 text = p.child("nome").value.toString(),
                                 modifier = Modifier
@@ -480,9 +535,17 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                             Box(modifier = Modifier
                                 .fillMaxSize()
                                 .graphicsLayer {
-                                compositingStrategy = CompositingStrategy.ModulateAlpha
-                                alpha = 0.7f}
-                                .background(brush = Brush.verticalGradient(listOf(Color.Transparent, Color.Black))))
+                                    compositingStrategy = CompositingStrategy.ModulateAlpha
+                                    alpha = 0.7f
+                                }
+                                .background(
+                                    brush = Brush.verticalGradient(
+                                        listOf(
+                                            Color.Transparent,
+                                            Color.Black
+                                        )
+                                    )
+                                ))
                             Text(
                                 text = p.child("nome").value.toString(),
                                 modifier = Modifier

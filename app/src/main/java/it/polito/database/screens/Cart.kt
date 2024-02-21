@@ -47,6 +47,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.google.firebase.database.DataSnapshot
@@ -263,8 +264,11 @@ fun Cart(viewModel: AppViewModel, navController: NavController, modifier: Modifi
             {
                 Button(
                     onClick = {
-                              navController.navigate(Screen.Checkout.route)
-                                viewModel.tot=totale
+                        if(!listaCarrello.isEmpty()){
+                            navController.navigate(Screen.Checkout.route)
+                            viewModel.tot=totale
+                        }
+
                     },
                     modifier = Modifier
                         .layoutId("btnCheckOut")
@@ -290,8 +294,11 @@ fun Cart(viewModel: AppViewModel, navController: NavController, modifier: Modifi
 
 }
 
-fun aggiungiAlCarrello(item: String, id: String, qty: Int) {
+fun aggiungiAlCarrello(item: String, id: String, qty: Int, viewModel: AppViewModel) {
     var items= database.child("utenti").child(id).child("carrello")
+    val currentMap = viewModel.carrello.value.orEmpty()
+    val updatedMap = currentMap + (item to qty )
+    viewModel.carrello.value = updatedMap
 
     items.orderByKey().limitToLast(1).addListenerForSingleValueEvent(object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -315,8 +322,12 @@ fun aggiungiAlCarrello(item: String, id: String, qty: Int) {
         }
     })}
 
-fun eliminaDalCarrello(item: String, id: String){
+fun eliminaDalCarrello(item: String, id: String, viewModel: AppViewModel){
     var items= database.child("utenti").child(id).child("carrello")
+    val currentMap = viewModel.carrello.value.orEmpty()
+    val updatedMap = currentMap - item
+    viewModel.carrello.value = updatedMap
+
     items.addListenerForSingleValueEvent(object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) { //fa una foto al db in quel momento e la mette in dataSnapshot
             for (childSnapshot in dataSnapshot.children) {
@@ -477,7 +488,7 @@ fun ItemCard(
                             textDecoration = TextDecoration.Underline,
                             color = MaterialTheme.colorScheme.onPrimary,
                             textAlign = TextAlign.Start,
-                            modifier = Modifier.clickable { eliminaDalCarrello(item = nome, id = id) }
+                            modifier = Modifier.clickable { eliminaDalCarrello(item = nome, id = id, viewModel) }
                         )
 
                     }

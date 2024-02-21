@@ -119,5 +119,10 @@ sealed class Screen (
         title = "ScegliPalestra",
         icon = Icons.Default.Edit
     )
+    object Orders: Screen(
+        route = "ordersScreen",
+        title = "OrdersScreen",
+        icon = Icons.Default.Edit
+    )
 
 }

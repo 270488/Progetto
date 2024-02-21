@@ -19,6 +19,7 @@ import it.polito.database.screens.GestisciAccountScreen
 import it.polito.database.screens.ModificaDati
 import it.polito.database.screens.NewsletterScreen
 import it.polito.database.screens.NotificationsScreen
+import it.polito.database.screens.Orders
 import it.polito.database.screens.PreferenzaNotificheScreen
 import it.polito.database.screens.ProductListScreen
 import it.polito.database.screens.ProductScreen
@@ -93,6 +94,9 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
         }
         composable(route = Screen.ScegliPalestraScreen.route) {
             ScegliPalestraScreen(viewModel,navController)
+        }
+        composable(route = Screen.Orders.route) {
+            Orders(viewModel,navController)
         }
     }
 }

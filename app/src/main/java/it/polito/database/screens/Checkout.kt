@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import it.polito.database.AppViewModel
 import it.polito.database.R
+import it.polito.database.ui.theme.Screen
 import it.polito.database.ui.theme.fontFamily
 
 @Composable
@@ -185,6 +186,8 @@ fun CheckoutScreen(viewModel: AppViewModel, navController: NavController, modifi
             {
                 Button(
                     onClick = {
+                              aggiungiOrdine(viewModel)
+                            navController.navigate(Screen.Orders.route)
                     },
                     modifier = Modifier
                         .layoutId("payment")
