@@ -1,6 +1,5 @@
 package it.polito.database.screens
 
-import android.text.Layout
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -36,17 +34,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import com.google.firebase.database.FirebaseDatabase
 import it.polito.database.AppViewModel
 import it.polito.database.R
-import it.polito.database.User
 import it.polito.database.ui.theme.Screen
 import it.polito.database.ui.theme.fontFamily
 
@@ -86,6 +80,7 @@ fun AuthenticationScreen(navController: NavHostController,context: Authenticatio
         }
         val emailValue = remember { mutableStateOf(TextFieldValue()) }
         val passwordValue = remember { mutableStateOf(TextFieldValue()) }
+        val emailDomain = emailValue.value.text.trim().substringAfterLast('@')
         Spacer(modifier = Modifier.height(32.dp))
         Column (
             modifier = Modifier
@@ -163,15 +158,21 @@ fun AuthenticationScreen(navController: NavHostController,context: Authenticatio
                     containerColor = MaterialTheme.colorScheme.secondary
                 ),
                 onClick = {
-
+                    Log.d("Auth", "email: ${emailValue.value.text.trim()} ")
+                    Log.d("Auth", "password: ${passwordValue.value.text.trim()} ")
                     auth.signInWithEmailAndPassword(
                         emailValue.value.text.trim(),
                         passwordValue.value.text.trim()
                     )
                         .addOnCompleteListener(context) { task ->
                             if (task.isSuccessful) {
-                                Log.d("AUTH", "Success")
-                                navController.navigate(Screen.Home.route)
+                                if (emailDomain == "mcfit.corriere.it") {
+                                    Log.d("AUTH-C", "Success")
+                                    navController.navigate(Screen.CorriereHome.route)
+                                } else {
+                                    Log.d("AUTH-U", "Success")
+                                    navController.navigate(Screen.Home.route)
+                                }
 
                                 val userId = task.result?.user?.uid
                                 if (userId != null) {

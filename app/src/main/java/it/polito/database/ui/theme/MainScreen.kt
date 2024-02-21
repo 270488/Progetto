@@ -58,7 +58,8 @@ fun MainScreen(viewModel: AppViewModel){
         Screen.AiutoEContatti.route,
         Screen.CollectOrder.route,
         Screen.OrderDetails.route,
-        Screen.GestisciFitlockerScreen.route
+        Screen.GestisciFitlockerScreen.route,
+        Screen.CorriereProfile.route
     )
         Scaffold(
 
