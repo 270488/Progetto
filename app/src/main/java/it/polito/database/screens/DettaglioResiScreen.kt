@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -98,18 +99,34 @@ fun DettaglioResiScreen (viewModel: AppViewModel, navController: NavController) 
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween,
         modifier= Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary)
+            .padding(top = 90.dp, bottom = 90.dp)
             .verticalScroll(rememberScrollState())
-            .padding(top = 90.dp, bottom = 110.dp)
     ){
         DettaglioResoCard(navController,viewModel= viewModel, prezzo= prezzo,prodotto = prodotti, scadenza = scadenza, numeroOrdine = ordine, stato = stato, url = url)
-        Row {
+        Spacer(modifier = Modifier.height(12.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             istruzioniConsegna()
-            Button(onClick = { }) {
-                Text(text = "Annulla reso")
+            Button(
+                shape = RoundedCornerShape(3.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    contentColor = MaterialTheme.colorScheme.onErrorContainer
+                ),
+                onClick = { } //TODO Aggiungere eliminazione reso
+            ){
+                Text(
+                    text = "Annulla reso",
+                    fontFamily = fontFamily,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }
@@ -121,8 +138,6 @@ fun DettaglioResiScreen (viewModel: AppViewModel, navController: NavController) 
 @Composable
 fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezzo: String, prodotto: String, scadenza: String, numeroOrdine: String, stato: String, url:String){
 
-
-
     Card(
         shape = RoundedCornerShape(15.dp),
         border = BorderStroke(2.dp, Color.Black),
@@ -131,7 +146,7 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
             contentColor = Color.White
         ),
         modifier = Modifier
-            .padding(horizontal = 10.dp))
+            .padding(horizontal = 20.dp))
     {
         Column(){
             Row(){
@@ -144,7 +159,7 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
                         .height(90.dp),
                     contentScale = ContentScale.Crop
                 )
-                Spacer(modifier = Modifier.width(10.dp))
+                Spacer(modifier = Modifier.width(8.dp))
                 Column(
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
@@ -185,14 +200,14 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
                 if(stato=="avviato"){
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(vertical = 12.dp)
+                        modifier = Modifier.padding(vertical = 8.dp)
                     ) {
                         Image(
-                            modifier = Modifier.size(50.dp),
+                            modifier = Modifier.size(48.dp),
                             painter = painterResource(id = R.drawable.reso_avviato),
                             contentDescription = ""
                         )
-                        Spacer(modifier = Modifier.height(4.dp))
+                        Spacer(modifier = Modifier.height(2.dp))
                         Text(
                             text = "Reso avviato",
                             fontSize = 16.sp,
@@ -205,14 +220,14 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
                 else if(stato=="consegnato"){
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(vertical = 12.dp)
+                        modifier = Modifier.padding(vertical = 8.dp)
                     ) {
                         Image(
-                            modifier = Modifier.size(50.dp),
+                            modifier = Modifier.size(48.dp),
                             painter = painterResource(id = R.drawable.pacco_consegnato),
                             contentDescription = ""
                         )
-                        Spacer(modifier = Modifier.height(4.dp))
+                        Spacer(modifier = Modifier.height(2.dp))
                         Text(
                             text = "Pacco consegnato",
                             fontSize = 16.sp,
@@ -225,14 +240,14 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
                 else if(stato=="scaduto"){
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(vertical = 12.dp)
+                        modifier = Modifier.padding(vertical = 8.dp)
                     ) {
                         Image(
-                            modifier = Modifier.size(50.dp),
+                            modifier = Modifier.size(48.dp),
                             painter = painterResource(id = R.drawable.reso_scaduto),
                             contentDescription = ""
                         )
-                        Spacer(modifier = Modifier.height(4.dp))
+                        Spacer(modifier = Modifier.height(2.dp))
                         Text(
                             text = "Reso scaduto",
                             fontSize = 16.sp,
@@ -248,7 +263,7 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
                         modifier = Modifier.padding(vertical = 8.dp)
                     ) {
                         Image(
-                            modifier = Modifier.size(50.dp),
+                            modifier = Modifier.size(48.dp),
                             painter = painterResource(id = R.drawable.reso_completato),
                             contentDescription = ""
                         )
@@ -298,7 +313,7 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
                             .align(Alignment.CenterVertically)
                             .clickable { navController.navigate(Screen.ScegliPalestraScreen.route) },
                         text = "Scegli un' altra\npalestra",
-                        fontSize = 14.sp,
+                        fontSize = 16.sp,
                         lineHeight = 18.sp,
                         color = MaterialTheme.colorScheme.tertiary,
                         textDecoration = TextDecoration.Underline,
@@ -311,7 +326,7 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 16.dp),
+                    .padding(8.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
                 if(stato=="avviato") {
@@ -380,14 +395,13 @@ private fun istruzioniConsegna() {
 
     Text(
         modifier = Modifier
-            .padding(8.dp)
             .clickable { isDialogOpen = true },
         text = "Istruzioni per\nla consegna",
         fontSize = 16.sp,
-        lineHeight = 18.sp,
+        lineHeight = 20.sp,
         color = MaterialTheme.colorScheme.tertiary,
         textDecoration = TextDecoration.Underline,
-        textAlign = TextAlign.Center,
+        //textAlign = TextAlign.Center,
         fontFamily = fontFamily,
     )
 
