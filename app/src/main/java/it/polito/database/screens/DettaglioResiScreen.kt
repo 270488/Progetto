@@ -1,5 +1,7 @@
 package it.polito.database.screens
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -18,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -33,7 +37,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.google.firebase.database.DataSnapshot
@@ -41,8 +51,10 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import it.polito.database.AppViewModel
 import it.polito.database.FindUrl
+import it.polito.database.R
 import it.polito.database.database
 import it.polito.database.ui.theme.Screen
+import it.polito.database.ui.theme.fontFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,6 +82,7 @@ fun DettaglioResiScreen (viewModel: AppViewModel, navController: NavController) 
         }
     })
 
+    url= FindUrl(fileName = prodotti+".jpg")
 
     val prod=viewModel.products.observeAsState(emptyList()).value
         .filter{it.child("nome").value.toString()==prodotti}
@@ -105,7 +118,16 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
 
 
 
-    Card(modifier = Modifier.padding(5.dp)){
+    Card(
+        shape = RoundedCornerShape(15.dp),
+        border = BorderStroke(2.dp, Color.Black),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF1D232C),
+            contentColor = Color.White
+        ),
+        modifier = Modifier
+            .padding(horizontal = 10.dp))
+    {
         Column(){
             Row(){
                 AsyncImage(
@@ -113,49 +135,230 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
                     contentDescription = null,
                     modifier = Modifier
                         .clip(RoundedCornerShape(15.dp))
-                        .width(150.dp),
+                        .width(150.dp)
+                        .height(90.dp),
                     contentScale = ContentScale.Crop
                 )
-                Column {
-                    Text(text = prodotto)
-                    Text(text = "Ordine No. " + numeroOrdine)
-                    Text(text = "Scadenza reso: " + scadenza)
+                Spacer(modifier = Modifier.width(10.dp))
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .padding(end = 8.dp)
+                ) {
+                    Text(
+                        text = prodotto,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = fontFamily,
+                    )
+                    Text(
+                        text = "Ordine No. " + numeroOrdine,
+                        fontSize = 16.sp,
+                        fontFamily = fontFamily,
+                    )
+                    Text(
+                        text = "Scadenza reso: " + scadenza,
+                        fontFamily = fontFamily,
+                        fontSize = 16.sp
+                    )
                 }
             }
-            Row(){
-                Text(text = "Stato della spedizione")
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                modifier = Modifier.padding(8.dp),
+                text = "Stato della spedizione",
+                fontSize = 16.sp,
+                fontFamily = fontFamily,
+                fontStyle = FontStyle.Italic
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
                 if(stato=="avviato"){
-                    //TODO Immagine/icona del reso avviato
-                }
-                else if(stato=="scaduto"){
-                    //TODO Immagine/icona del reso scaduto
-                }
-                else if(stato=="completato"){
-                    //TODO Immagine/icona del reso completato
-                }
-            }
-            Row() {
-                Text(text = "Pacco da riconsegnare presso: ")
-            }
-            Row(){
-                Card(){
-                    Text(text = viewModel.lockerSelezionato)
-                }
-                if(stato!="scaduto"){
-                    Card(onClick = {navController.navigate(Screen.ScegliPalestraScreen.route)}){
-                        Text(text = "Scegli un'altra palestra")
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(vertical = 12.dp)
+                    ) {
+                        Image(
+                            modifier = Modifier.size(50.dp),
+                            painter = painterResource(id = R.drawable.reso_avviato),
+                            contentDescription = ""
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "Reso avviato",
+                            fontSize = 16.sp,
+                            color = MaterialTheme.colorScheme.tertiary,
+                            fontFamily = fontFamily,
+                            fontStyle = FontStyle.Italic
+                        )
                     }
                 }
+                else if(stato=="consegnato"){
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(vertical = 12.dp)
+                    ) {
+                        Image(
+                            modifier = Modifier.size(50.dp),
+                            painter = painterResource(id = R.drawable.pacco_consegnato),
+                            contentDescription = ""
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "Pacco consegnato",
+                            fontSize = 16.sp,
+                            color = MaterialTheme.colorScheme.tertiary,
+                            fontFamily = fontFamily,
+                            fontStyle = FontStyle.Italic
+                        )
+                    }
+                }
+                else if(stato=="scaduto"){
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(vertical = 12.dp)
+                    ) {
+                        Image(
+                            modifier = Modifier.size(50.dp),
+                            painter = painterResource(id = R.drawable.reso_scaduto),
+                            contentDescription = ""
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "Reso scaduto",
+                            fontSize = 16.sp,
+                            color = MaterialTheme.colorScheme.tertiary,
+                            fontFamily = fontFamily,
+                            fontStyle = FontStyle.Italic
+                        )
+                    }
+                }
+                else if(stato=="completato"){
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    ) {
+                        Image(
+                            modifier = Modifier.size(50.dp),
+                            painter = painterResource(id = R.drawable.reso_completato),
+                            contentDescription = ""
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = "Reso completato",
+                            fontSize = 16.sp,
+                            color = MaterialTheme.colorScheme.tertiary,
+                            fontFamily = fontFamily,
+                            fontStyle = FontStyle.Italic
+                        )
+                    }
+                }
+            }
+            Text(
+                modifier = Modifier.padding(8.dp),
+                text = "Pacco da riconsegnare presso:",
+                fontSize = 16.sp,
+                fontFamily = fontFamily,
+                fontStyle = FontStyle.Italic
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceAround
+            ){
+                Card(
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.tertiary),
+                    shape = RoundedCornerShape(15.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.Black,
+                        contentColor = Color.White
+                    )
+                )
+                {
+                    Text(
+                        modifier = Modifier.padding(8.dp),
+                        text = viewModel.lockerSelezionato,
+                        fontSize = 16.sp,
+                        fontFamily = fontFamily,
+                    )
+                }
+                if(stato!="scaduto"){
+                    Text(
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                            .clickable { navController.navigate(Screen.ScegliPalestraScreen.route) },
+                        text = "Scegli un' altra\npalestra",
+                        fontSize = 14.sp,
+                        lineHeight = 18.sp,
+                        color = MaterialTheme.colorScheme.tertiary,
+                        textDecoration = TextDecoration.Underline,
+                        textAlign = TextAlign.Center,
+                        fontFamily = fontFamily,
+                    )
+                }
 
             }
-            Row(){
-                //TODO icona dello stato del reso
-
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp, vertical = 16.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                if(stato=="avviato") {
+                    Image(
+                        //modifier = Modifier.size(50.dp),
+                        painter = painterResource(id = R.drawable.barra_stato1),
+                        contentDescription = ""
+                    )
+                }
+                else if(stato=="consegnato") {
+                    Image(
+                        //modifier = Modifier.size(50.dp),
+                        painter = painterResource(id = R.drawable.barra_stato2),
+                        contentDescription = ""
+                    )
+                }
+                else if(stato=="scaduto") {
+                    Image(
+                        //modifier = Modifier.size(50.dp),
+                        painter = painterResource(id = R.drawable.barra_stato4),
+                        contentDescription = "",
+                    )
+                }
+                else if(stato=="completato") {
+                    Image(
+                        //modifier = Modifier.size(50.dp),
+                        painter = painterResource(id = R.drawable.barra_stato3),
+                        contentDescription = "",
+                    )
+                }
             }
-            Column(){
-                Text(text = "Riepilogo")
-                Text(text = "Il reso stimato è di euro "+prezzo)
-                Text(text = "Il reso sarà accreditato sul tuo metodo di pagamento predefinito")
+            Text(
+                modifier = Modifier.padding(start = 8.dp, end = 8.dp, bottom = 4.dp),
+                text = "Riepilogo",
+                fontSize = 18.sp,
+                fontFamily = fontFamily,
+                fontWeight = FontWeight.Bold
+            )
+            Column(
+                modifier = Modifier.padding(start = 8.dp, end = 8.dp, bottom = 16.dp)
+            ){
+                Text(
+                    text = "Il reso stimato è di euro "+prezzo,
+                    fontSize = 16.sp,
+                    fontFamily = fontFamily,
+                )
+                Text(
+                    text = "Il reso sarà accreditato sul tuo metodo di pagamento predefinito",
+                    fontSize = 16.sp,
+                    lineHeight = 20.sp,
+                    fontFamily = fontFamily,
+                )
 
             }
 
