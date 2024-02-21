@@ -2,6 +2,7 @@ package it.polito.database.ui.theme
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
@@ -123,6 +124,11 @@ sealed class Screen (
         route = "ordersScreen",
         title = "OrdersScreen",
         icon = Icons.Default.Edit
+    )
+    object AiutoEContatti: Screen(
+        route = "aiutoEContatti",
+        title = "AiutoEContatti",
+        icon = Icons.Default.Call
     )
 
 }
