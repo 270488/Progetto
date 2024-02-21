@@ -130,5 +130,15 @@ sealed class Screen (
         title = "AiutoEContatti",
         icon = Icons.Default.Call
     )
+    object OrderDetails: Screen(
+        route = "orderDetails",
+        title = "OrderDetails",
+        icon = Icons.Default.Call
+    )
+    object CollectOrder: Screen(
+        route = "collectOrder",
+        title = "CollectOrder",
+        icon = Icons.Default.Call
+    )
 
 }

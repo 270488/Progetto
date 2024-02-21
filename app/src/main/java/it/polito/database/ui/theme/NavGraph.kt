@@ -14,12 +14,14 @@ import it.polito.database.screens.AuthenticationScreen
 import it.polito.database.screens.CartScreen
 import it.polito.database.screens.CategoryScreen
 import it.polito.database.screens.CheckoutScreen
+import it.polito.database.screens.CollectOrder
 import it.polito.database.screens.DettaglioResiScreen
 import it.polito.database.screens.FavoritesScreen
 import it.polito.database.screens.GestisciAccountScreen
 import it.polito.database.screens.ModificaDati
 import it.polito.database.screens.NewsletterScreen
 import it.polito.database.screens.NotificationsScreen
+import it.polito.database.screens.OrderDetails
 import it.polito.database.screens.Orders
 import it.polito.database.screens.PreferenzaNotificheScreen
 import it.polito.database.screens.ProductListScreen
@@ -101,6 +103,12 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
         }
         composable(route = Screen.AiutoEContatti.route) {
             AiutoEContatti(viewModel,navController)
+        }
+        composable(route = Screen.CollectOrder.route) {
+            CollectOrder(viewModel,navController)
+        }
+        composable(route = Screen.OrderDetails.route) {
+            OrderDetails(viewModel,navController)
         }
     }
 }

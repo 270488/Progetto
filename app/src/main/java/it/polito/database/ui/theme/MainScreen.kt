@@ -55,7 +55,9 @@ fun MainScreen(viewModel: AppViewModel){
         Screen.ScegliPalestraScreen.route,
         Screen.Orders.route,
         Screen.ModificaDati.route,
-        Screen.AiutoEContatti.route
+        Screen.AiutoEContatti.route,
+        Screen.CollectOrder.route,
+        Screen.OrderDetails.route,
     )
         Scaffold(
 
@@ -274,6 +276,8 @@ fun AddItem3(
                     Screen.Orders.route->Text(text = "I miei ordini", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                     Screen.ModificaDati.route->Text(text = "Modifica dati", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                     Screen.AiutoEContatti.route->Text(text = "Aiuto e contatti", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
+                    Screen.OrderDetails.route->Text(text = "Dettagli ordine", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
+                    Screen.CollectOrder.route->Text(text = "Ritiro ordine", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                 }
                 //tante condizioni quante sono le schermate che hanno questa top Bar
                 //( con freccia per tornare indietro, impostazioni a destra
