@@ -1,5 +1,6 @@
 package it.polito.database.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -284,6 +286,8 @@ fun dettaglioProdotto(viewModel: AppViewModel, qty: Long, item: String, navContr
                     // ...
                     openAlertDialog.value -> {
                         AlertDialog(
+                            item = item,
+                            viewModel = viewModel,
                             onDismissRequest = { openAlertDialog.value = false },
                             onConfirmation = {
                                 openAlertDialog.value = false
@@ -342,7 +346,11 @@ fun AlertDialog(
     onConfirmation: () -> Unit,
     dialogTitle: String,
     dialogText: String,
+    viewModel: AppViewModel,
+    item: String
+
 ) {
+    var ctx = LocalContext.current
     AlertDialog(
         title = {
             Text(text = dialogTitle)
@@ -356,7 +364,9 @@ fun AlertDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    onConfirmation()
+                    aggiungiReso(item, viewModel.ordineSelezionato,viewModel.uid)
+                    Toast.makeText(ctx, "Richiesta di reso confermata", Toast.LENGTH_SHORT).show()
+                    onDismissRequest()
                 }
             ) {
                 Text("Avvia reso")
