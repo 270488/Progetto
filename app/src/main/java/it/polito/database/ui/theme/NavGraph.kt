@@ -15,8 +15,10 @@ import it.polito.database.screens.CartScreen
 import it.polito.database.screens.CategoryScreen
 import it.polito.database.screens.CheckoutScreen
 import it.polito.database.screens.CollectOrder
+import it.polito.database.screens.CorriereDetails
 import it.polito.database.screens.CorriereHome
 import it.polito.database.screens.CorriereProfile
+import it.polito.database.screens.DeliverOrder
 import it.polito.database.screens.DettaglioResiScreen
 import it.polito.database.screens.FavoritesScreen
 import it.polito.database.screens.GestisciAccountScreen
@@ -39,7 +41,7 @@ import it.polito.database.screens.SettingsScreen
 fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
     NavHost(
         navController = navController,
-        startDestination = Screen.AuthenticationScreen.route
+        startDestination = Screen.CorriereHome.route
     ) {
         composable(route = Screen.Home.route) {
             HomePage(viewModel, navController)
@@ -119,8 +121,14 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
         composable(route = Screen.CorriereHome.route) {
            CorriereHome(viewModel, navController)
         }
-        composable(route = Screen.CorriereHome.route) {
+        composable(route = Screen.CorriereProfile.route) {
             CorriereProfile(viewModel, navController)
+        }
+        composable(route = Screen.CorriereDetails.route) {
+            CorriereDetails(viewModel, navController)
+        }
+        composable(route = Screen.DeliverOrder.route) {
+            DeliverOrder(viewModel, navController)
         }
     }
 }

@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
@@ -154,6 +155,17 @@ sealed class Screen (
         route = "corriereProfile",
         title = "CorriereProfile",
         icon = Icons.Default.AccountBox
+    )
+
+    object CorriereDetails: Screen(
+        route = "corriereDetails",
+        title = "CorriereDetails",
+        icon = Icons.Default.Lock
+    )
+    object DeliverOrder: Screen(
+        route = "deliverOrder",
+        title = "DeliverOrder",
+        icon = Icons.Default.Lock
     )
 
 

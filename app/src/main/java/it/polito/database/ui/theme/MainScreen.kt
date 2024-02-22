@@ -61,7 +61,10 @@ fun MainScreen(viewModel: AppViewModel){
         Screen.Newsletter.route,
         Screen.PreferenzaNotifiche.route,
         Screen.GestisciFitlockerScreen.route,
-        Screen.CorriereProfile.route
+        Screen.CorriereProfile.route,
+        Screen.DeliverOrder.route,
+        Screen.CorriereProfile.route,
+        Screen.CorriereDetails.route
     )
         Scaffold(
 

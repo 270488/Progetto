@@ -73,6 +73,7 @@ class AppViewModel: ViewModel() {
     var cat=""
     var sottocat=""
     var uid=""
+    var cId=""
     var quantita = 1
     var tot = 0.00
     var carrello=MutableLiveData<Map<String, Int>>(emptyMap())
