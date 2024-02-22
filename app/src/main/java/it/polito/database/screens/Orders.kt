@@ -171,7 +171,7 @@ fun OrdineCard(ordine: String, viewModel: AppViewModel, navController: NavContro
             if(stato=="ordinato"){
                 //TODO icona ordinato
             }
-            else if(stato=="in consegna"){
+            else if(stato=="spedito"){
                 //TODO icona in consegna
             }
             else if(stato=="consegnato"){
