@@ -228,7 +228,7 @@ fun OrdineCard(ordine: String, viewModel: AppViewModel, navController: NavContro
                             .fillMaxWidth()
                     ) {
                         Text(
-                            text = totale.toString() + "€",
+                            text = "%.2f".format(totale)+"€",
                             fontFamily = fontFamily,
                             color = MaterialTheme.colorScheme.onPrimary,
                             fontSize = 24.sp,

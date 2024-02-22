@@ -7,8 +7,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,6 +26,7 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -45,6 +48,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -58,7 +63,11 @@ import com.google.firebase.database.ValueEventListener
 import it.polito.database.AppViewModel
 import it.polito.database.FindUrl
 import it.polito.database.database
+import it.polito.database.ui.theme.Blue20
+import it.polito.database.ui.theme.Blue40
 import it.polito.database.ui.theme.Screen
+import it.polito.database.ui.theme.Yellow40
+import it.polito.database.ui.theme.fontFamily
 
 @SuppressLint("RememberReturnType")
 
@@ -147,12 +156,13 @@ fun ProductDetail(viewModel: AppViewModel, navController: NavController) {
                 topStart = 8.dp,
                 topEnd = 8.dp
             ),
-            colors = CardDefaults.cardColors(Color.DarkGray),
+            colors = CardDefaults.cardColors(Blue40),
             elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
             modifier = Modifier
                 .layoutId("bgCard")
                 .height(500.dp)
                 .fillMaxWidth()
+                .background(Blue40)
                 .verticalScroll(rememberScrollState())
         ) {
             ConstraintLayout(
@@ -274,39 +284,44 @@ fun ProductDetail(viewModel: AppViewModel, navController: NavController) {
 @Composable
 fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: String, sottocategoria: String, id: String, viewModel: AppViewModel, navController: NavController){
     Text(
-        text = categoria+", "+sottocategoria,
+        text = categoria+"/ "+sottocategoria,
         modifier = Modifier
             .layoutId("productCategory")
             .padding(top = 10.dp, bottom = 16.dp),
         fontSize = 14.sp,
+        fontStyle = FontStyle.Italic,
+        fontFamily= fontFamily,
         color = Color.White
     )
 
     Text(
         text = nome,
-        fontSize = 32.sp,
+        fontSize = 30.sp,
         fontWeight = FontWeight.Bold,
+        fontFamily = fontFamily,
         color = Color.White,
         modifier = Modifier
             .layoutId("productName")
             .padding(top = 30.dp)
+            .width(210.dp)
     )
 
     Text(
-        text = prezzo.toString()+"€",
-        fontSize = 36.sp,
+        text = "%.2f".format(prezzo)+"€",
+        fontSize = 42.sp,
         fontWeight = FontWeight.Bold,
+        fontFamily = fontFamily,
         color = Color.White,
         modifier = Modifier
             .layoutId("productPrice")
-            .padding(end = 16.dp, top = 25.dp)
+            .padding(end = 8.dp, top = 35.dp)
     )
     //val quantita = 0
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 24.dp)
+            .padding(top = 35.dp)
             .layoutId("ratings"),
         verticalArrangement = Arrangement.SpaceBetween
     ){
@@ -323,10 +338,11 @@ fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: Str
             QtySelection(viewModel)
         }
     }
-
+    //Spacer(modifier = Modifier.height(15.dp))
     Text(
         text = "Descrizione",
         fontWeight = FontWeight.SemiBold,
+        fontFamily = fontFamily,
         modifier = Modifier
             .layoutId("txtDescriptionTitle")
             .padding(top = 140.dp),
@@ -339,12 +355,15 @@ fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: Str
             .fillMaxWidth()
             .layoutId("txtDescription")
             .padding(top = 8.dp),
-        colors = CardDefaults.cardColors(Color.Gray),
-        border = BorderStroke(2.dp,Color.Black)
+        colors = CardDefaults.cardColors(Blue20),
+        border = BorderStroke(2.dp, Yellow40)
         ) {
         Text(
             text = descrizione,
             color = Color.White,
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Medium,
+            fontSize = 14.sp,
             modifier = Modifier
                 .padding(8.dp)
                 .verticalScroll(rememberScrollState())
@@ -371,8 +390,10 @@ fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: Str
     ){
         Text(
             text = "Aggiungi al carrello",
+            fontFamily = fontFamily,
             fontSize = 23.sp,
-            color = Color.Black
+            color = Color.Black,
+            fontWeight = FontWeight.Bold
         )
     }
 }
@@ -410,13 +431,16 @@ fun OptionSelection() {
         ExposedDropdownMenuBox(
             expanded = isExpanded,
             onExpandedChange = { isExpanded = it },
-            modifier = Modifier.border(BorderStroke(2.dp,Color.Black), RoundedCornerShape(4.dp))
+            modifier = Modifier
+                .border(BorderStroke(2.dp, Yellow40), RoundedCornerShape(4.dp))
+                .background(Blue20)
         ) {
             TextField(
                 value = selectedOption,
                 onValueChange = {},
                 readOnly = true,
-                colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = Color.Gray, textColor = Color.White),
+                textStyle = TextStyle(fontFamily= fontFamily, fontWeight = FontWeight.SemiBold),
+                colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = Blue20, textColor = Color.White),
                 trailingIcon = {
                     ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
                 }, modifier = Modifier.menuAnchor()
@@ -426,13 +450,13 @@ fun OptionSelection() {
                 onDismissRequest = { isExpanded = false },
                 modifier = Modifier
                     .height(100.dp)
-                    .background(Color.Gray)
+                    .background(Blue20)
                     .border(BorderStroke(2.dp, Color.Black), RoundedCornerShape(4.dp))
             ) {
                 options.forEach { o ->
                     DropdownMenuItem(
                         text = {
-                            Text(text = o, color = Color.White)
+                            Text(text = o, color = Color.White, fontFamily= fontFamily, fontWeight = FontWeight.SemiBold)
                         },
                         onClick = {
                             selectedOption = o
@@ -465,13 +489,16 @@ fun QtySelection(viewModel: AppViewModel) {
         ExposedDropdownMenuBox(
             expanded = isExpanded,
             onExpandedChange = { isExpanded = it },
-            modifier = Modifier.border(BorderStroke(2.dp,Color.Black), RoundedCornerShape(4.dp))
+            modifier = Modifier
+                .border(BorderStroke(2.dp, Yellow40), RoundedCornerShape(4.dp))
+                .background(Blue20)
         ) {
             TextField(
                 value = selectedQty.toString(),
                 onValueChange = {},
                 readOnly = true,
-                colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = Color.Gray, textColor = Color.White),
+                textStyle = TextStyle(fontFamily= fontFamily, fontWeight = FontWeight.SemiBold),
+                colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = Blue20, textColor = Color.White),
                 trailingIcon = {
                     ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
                 }, modifier = Modifier.menuAnchor()
@@ -481,14 +508,14 @@ fun QtySelection(viewModel: AppViewModel) {
                 onDismissRequest = { isExpanded = false },
                 modifier = Modifier
                     .height(100.dp)
-                    .background(Color.Gray)
+                    .background(Blue20)
                     .border(BorderStroke(2.dp, Color.Black), RoundedCornerShape(4.dp))
 
             ) {
                 qty.forEach { q ->
                     DropdownMenuItem(
                         text = {
-                            Text(text = q.toString(), color = Color.White)
+                            Text(text = q.toString(), color = Color.White, fontFamily= fontFamily, fontWeight = FontWeight.SemiBold)
                         },
                         onClick = {
                             selectedQty = q

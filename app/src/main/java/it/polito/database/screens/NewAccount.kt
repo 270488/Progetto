@@ -436,20 +436,24 @@ fun GenderSelection(
     selectedGender : Gender?,
     onGenderSelected: (Gender?) ->Unit) {
 
-    Row(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 2.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+            .padding(start = 2.dp, end =2.dp, top = 4.dp, bottom = 2.dp),
+       // horizontalArrangement = Arrangement.SpaceBetween,
+        //verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = "Sesso*",
-            color = MaterialTheme.colorScheme.onSecondary,
-            fontFamily = fontFamily,
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp
-        )
+        Row(horizontalArrangement = Arrangement.Start) {
+            Text(
+                text = "Sesso*",
+                color = MaterialTheme.colorScheme.onSecondary,
+                fontFamily = fontFamily,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp
+            )
+        }
+        Row(horizontalArrangement = Arrangement.SpaceBetween) {
+
         GenderRadioButton(
             text = "Uomo",
             isSelected = selectedGender == Gender.MALE
@@ -469,8 +473,9 @@ fun GenderSelection(
         ) {
             onGenderSelected(Gender.OTHER)
         }
+    }}
     }
-}
+
 
 @Composable
 fun GenderRadioButton(
@@ -499,7 +504,6 @@ fun GenderRadioButton(
         )
     }
 }
-
 enum class Gender {
     MALE, FEMALE, OTHER
 }

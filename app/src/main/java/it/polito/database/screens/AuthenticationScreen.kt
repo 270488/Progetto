@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -86,7 +87,8 @@ fun AuthenticationScreen(navController: NavHostController,context: Authenticatio
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.primary)
-                .padding(start = 50.dp, end = 50.dp)
+                .padding(start = 50.dp, end = 50.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             OutlinedTextField(
                 value = emailValue.value,
@@ -196,8 +198,9 @@ fun AuthenticationScreen(navController: NavHostController,context: Authenticatio
                 )
             }
             Row(
+                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.Bottom,
-                modifier = Modifier.align(Alignment.End)
+                //modifier = Modifier.align(Alignment.End)
             ) {
                 Spacer(modifier = Modifier.height(42.dp))
                 Text(
