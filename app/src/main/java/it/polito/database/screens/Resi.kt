@@ -88,7 +88,6 @@ fun ResiScreen(viewModel: AppViewModel, navController: NavController){
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween,
         modifier= Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary)
@@ -221,6 +220,7 @@ fun resiCard(numeroReso: String, viewModel: AppViewModel, navController: NavCont
         }
 
     }
+    Spacer(modifier = Modifier.height(16.dp))
 }
 
 @SuppressLint("NewApi")
