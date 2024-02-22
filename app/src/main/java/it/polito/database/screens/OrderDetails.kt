@@ -1,8 +1,10 @@
 package it.polito.database.screens
 
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -112,7 +114,7 @@ fun OrderDetails(viewModel: AppViewModel, navController: NavController){
         modifier= Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary)
-            .verticalScroll(rememberScrollState())
+            //.verticalScroll(rememberScrollState())
             .padding(top = 90.dp, bottom = 110.dp)) {
 
         DettaglioOrdineCard(viewModel, navController, prodotti, stato=stato, totale=totale, dataOrdine = dataOrdine, dataConsegna = dataConsegna, locker=locker)
@@ -183,105 +185,163 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
                         dataConsegna: String,
                         locker: String) {
 
-    var currItem by remember {
-        mutableStateOf("")
-    }
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier= Modifier
+            .fillMaxWidth()
             .padding(horizontal = 20.dp)
     )
     {
-        Card(modifier = Modifier
-            .fillMaxSize()
-            .border(2.dp, Color.Black, RoundedCornerShape(4)),
-            colors = CardDefaults.cardColors(Blue20),
-            )
-        {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                //horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                prodotti.forEach { (item, qty) ->
-                    currItem = item
-                    dettaglioProdotto(
-                        viewModel = viewModel,
-                        qty = qty,
-                        item = item,
-                        navController
-                    )
-                }
-
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                //horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxSize()
-                    .padding(start = 5.dp)
-            ) {
-                Text(text = "Stato della spedizione:", color = Color.White, fontFamily = fontFamily)
-            }
-            if (stato == "ordinato") {
-                //TODO icona ordinato
-            } else if (stato == "spedito") {
-                //TODO icona in consegna
-            } else if (stato == "consegnato") {
-                //TODO icona in consegna
-            } else if (stato == "ritirato") {
-                //TODO icona in consegna
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                //horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxSize()
-                    .padding(start=5.dp, end=5.dp, top=5.dp)
-            ) {
-                Text(text = "Data ordine: " + dataOrdine, color = Color.White, fontFamily = fontFamily)
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                //horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxSize()
-                    .padding(start=5.dp,end=5.dp, bottom = 5.dp)
-            ) {
-                Text(text = "Data consegna prevista: " + dataConsegna,color = Color.White, fontFamily = fontFamily)
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                //horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxSize()
-                    .padding( 5.dp, )
-            ) {
-                Text(text = "Locker di destinazione: " + locker,color = Color.White, fontFamily = fontFamily)
-            }
-
-            if (stato == "ordinato") {
-                //TODO icona ordinato
-            } else if (stato == "spedito") {
-                //TODO icona in consegna
-            } else if (stato == "consegnato") {
-                //TODO icona in consegna
-            } else if (stato == "ritirato") {
-                //TODO icona in consegna
-            }
-
-
-        }
-        //RIGA CON RESTITUISCI ORDINE E ORDINA DI NUOVO
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top,
-            modifier = Modifier
-                .fillMaxWidth()
+        //Numero dell'ordine
+        Text(
+            text = "Ordine No: " + viewModel.ordineSelezionato,
+            fontFamily = fontFamily,
+            color = MaterialTheme.colorScheme.onPrimary,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Start
         )
-        {
-            Column(
-                verticalArrangement = Arrangement.SpaceAround,
+        Spacer(modifier = Modifier.height(12.dp))
+        //Colonna con le card dei prodotti dell'ordine scrollabile
+        Column(
+            modifier = Modifier
+                .height(210.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            prodotti.forEach { (item, qty) ->
+                //currItem = item
+                dettaglioProdotto(
+                    viewModel = viewModel,
+                    qty = qty,
+                    item = item,
+                    navController
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(12.dp))
+        //Column con info generali
+        Column {
+            Text(
+                text = "Stato della spedizione:",
+                color = Color.White,
+                fontSize = 16.sp,
+                fontFamily = fontFamily,
+                fontStyle = FontStyle.Italic
+            )
+
+            if (stato == "ordinato") {
+                //TODO icona ordinato
+            } else if (stato == "spedito") {
+                //TODO icona in consegna
+            } else if (stato == "consegnato") {
+                //TODO icona in consegna
+            } else if (stato == "ritirato") {
+                //TODO icona in consegna
+            }
+            Text(
+                text = "Data ordine: " + dataOrdine,
+                color = Color.White,
+                fontSize = 16.sp,
+                fontFamily = fontFamily
+            )
+            Text(
+                text = "Data consegna prevista: " + dataConsegna,
+                color = Color.White,
+                fontSize = 16.sp,
+                fontFamily = fontFamily
+            )
+
+            Text(
+                text = "Locker di destinazione: " + locker,
+                color = Color.White,
+                fontSize = 16.sp,
+                lineHeight = 18.sp,
+                fontFamily = fontFamily
+            )
+
+
+            if (stato == "ordinato") {
+                //TODO icona ordinato
+            } else if (stato == "spedito") {
+                //TODO icona in consegna
+            } else if (stato == "consegnato") {
+                //TODO icona in consegna
+            } else if (stato == "ritirato") {
+                //TODO icona in consegna
+            }
+        }
+
+    }
+
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun dettaglioProdotto(viewModel: AppViewModel, qty: Long, item: String, navController: NavController){
+    var url= FindUrl(fileName = item+".jpg")
+
+    Card(
+        //modifier= Modifier.fillMaxSize(),
+        shape = RoundedCornerShape(15.dp),
+        border = BorderStroke(2.dp, Color.Black),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF1D232C),
+            contentColor = Color.White
+        ),
+        onClick = {viewModel.prodottoSelezionato=item;
+        navController.navigate(Screen.Product.route)}
+    )
+    {
+        Column {
+            Row {
+                AsyncImage(
+                    model = url,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(15.dp))
+                        .size(130.dp, 78.dp)
+                        .border(2.dp, Color.White, RoundedCornerShape(5)),
+                    contentScale = ContentScale.Crop
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .padding(end = 8.dp)
+                )
+                {
+                    Text(
+                        text = item,
+                        fontFamily = fontFamily,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Start
+                    )
+
+                    Text(
+                        text = "Quantità: " + qty.toString(),
+                        fontSize = 16.sp,
+                        fontFamily = fontFamily,
+                    )
+
+                    /*Text(
+                        text = "Ordine No: " + viewModel.ordineSelezionato,
+                        fontSize = 16.sp,
+                        fontFamily = fontFamily,
+                    )*/
+                }
+            }
+            //RIGA CON RESTITUISCI ORDINE E ORDINA DI NUOVO
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(horizontal = 12.dp, vertical = 12.dp)
-            ) {
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp)
+            )
+            {
                 var openAlertDialog = remember { mutableStateOf(false) }
 
                 // ...
@@ -289,7 +349,7 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
                     // ...
                     openAlertDialog.value -> {
                         AlertDialog(
-                            item = currItem,
+                            item = item,
                             navController = navController,
                             viewModel = viewModel,
                             onDismissRequest = { openAlertDialog.value = false },
@@ -305,158 +365,39 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
                         )
                     }
                 }
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Top,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
-                {
-                    Card(onClick = {openAlertDialog.value = true },
-                        enabled = if (stato == "ritirato") true else false,
-                        colors = CardDefaults.cardColors(
-                            disabledContainerColor =  Color.Transparent,
-                            containerColor = Color.Transparent
-                        ),
-                        modifier = Modifier.height(30.dp))
-                    {
-                        Text(
-                            modifier = Modifier.alpha(if (stato != "ritirato") 0.3f else 1f),
-                            text = "Restituisci ordine",
-                            fontFamily = fontFamily,
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            fontSize = 14.sp,
-                            fontStyle = FontStyle.Italic,
-                            textAlign = TextAlign.Start
-                        )
 
-                    }
-                }
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Top,
-                    modifier = Modifier
-                        .fillMaxWidth()
+                Text(
+                    modifier = Modifier.clickable {
+                        viewModel.prodottoSelezionato = item
+                        navController.navigate(Screen.Product.route) },
+                    text = "Ordina di nuovo",
+                    fontFamily = fontFamily,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontSize = 16.sp,
+                    fontStyle = FontStyle.Italic,
+                    textAlign = TextAlign.Start,
                 )
-                {
-                    Card(onClick = {
-                        viewModel.prodottoSelezionato = currItem
-                        navController.navigate(Screen.Product.route)
-                    },
-                        colors = CardDefaults.cardColors(Color.Transparent),
-                        modifier = Modifier.height(30.dp)) {
-                        Text(
-                            text = "Ordina di nuovo",
-                            fontFamily = fontFamily,
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            fontSize = 14.sp,
-                            fontStyle = FontStyle.Italic,
-                            textAlign = TextAlign.Start,
-
-                            )
-                    }
-                }
+                
+                Text(
+                    //modifier = Modifier.alpha(if (stato != "ritirato") 0.3f else 1f),
+                    modifier = Modifier.clickable { openAlertDialog.value = true },
+                    text = "Restituisci ordine",
+                    fontFamily = fontFamily,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontSize = 16.sp,
+                    fontStyle = FontStyle.Italic,
+                    textAlign = TextAlign.Start
+                )
+                
+                
+                
+                
             }
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
+    Spacer(modifier = Modifier.height(8.dp))
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun dettaglioProdotto(viewModel: AppViewModel, qty: Long, item: String, navController: NavController){
-    var url= FindUrl(fileName = item+".jpg")
-    Card(modifier= Modifier
-        .fillMaxSize(),
-        colors = CardDefaults.cardColors(Blue20),
-        onClick = {viewModel.prodottoSelezionato=item;
-        navController.navigate(Screen.Product.route)}) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top,
-            modifier = Modifier
-                .fillMaxWidth()
-        )
-
-        {
-            Column(
-                verticalArrangement = Arrangement.SpaceAround,
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(horizontal = 12.dp, vertical = 12.dp)
-            )
-            {
-                AsyncImage(
-                    model = url,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(15.dp))
-                        .size(150.dp, 90.dp)
-                        .border(2.dp,Color.White, RoundedCornerShape(5)),
-                    contentScale = ContentScale.Crop
-                )
-            }
-            Column(
-                verticalArrangement = Arrangement.SpaceAround,
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(horizontal = 12.dp, vertical = 12.dp)
-            )
-            {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Top,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    Text(
-                        text = item,
-                        fontFamily = fontFamily,
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Start
-                    )
-                }
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Bottom,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 5.dp)
-                ) {
-                    Text(
-                        text = "Quantità: " + qty.toString(),
-                        fontFamily = fontFamily,
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        fontSize = 14.sp,
-                        //fontWeight = FontWeight.SemiBold,
-                        textAlign = TextAlign.Start
-                    )
-
-                }
-
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Top,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 5.dp)
-                ) {
-
-                    Text(
-                        text = "Ordine No: " + viewModel.ordineSelezionato,
-                        fontFamily = fontFamily,
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        fontSize = 14.sp,
-                        //fontWeight = FontWeight.SemiBold,
-                        textAlign = TextAlign.Start
-                    )
-                }
-            }
-        }
-
-    }
-    }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
