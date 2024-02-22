@@ -34,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -311,11 +312,16 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
                         .fillMaxWidth()
                 )
                 {
-                    Card(onClick = { openAlertDialog.value = true },
-                        colors = CardDefaults.cardColors(Color.Transparent),
+                    Card(onClick = {openAlertDialog.value = true },
+                        enabled = if (stato == "ritirato") true else false,
+                        colors = CardDefaults.cardColors(
+                            disabledContainerColor =  Color.Transparent,
+                            containerColor = Color.Transparent
+                        ),
                         modifier = Modifier.height(30.dp))
                     {
                         Text(
+                            modifier = Modifier.alpha(if (stato != "ritirato") 0.3f else 1f),
                             text = "Restituisci ordine",
                             fontFamily = fontFamily,
                             color = MaterialTheme.colorScheme.onPrimary,
