@@ -113,36 +113,60 @@ fun OrderDetails(viewModel: AppViewModel, navController: NavController){
             .background(MaterialTheme.colorScheme.primary)
             .verticalScroll(rememberScrollState())
             .padding(top = 90.dp, bottom = 110.dp)) {
-        DettaglioOrdineCard(viewModel, navController, prodotti, stato=stato, totale=totale, dataOrdine = dataOrdine, dataConsegna = dataConsegna, locker=locker)
-        Divider(thickness = 1.dp, color = Yellow40, modifier = Modifier.padding(top = 4.dp, bottom = 16.dp, start = 10.dp, end= 10.dp))
-        if(stato=="consegnato"){
-            Button(onClick = { navController.navigate(Screen.CollectOrder.route)
-            viewModel.ordineSelezionato=ordine},
-                    shape = RoundedCornerShape(8.dp),
-                modifier = Modifier
-                    .padding(top = 16.dp, bottom = 16.dp)
-                    .width(250.dp),
-                colors = ButtonDefaults.buttonColors(Yellow40),
-                elevation = ButtonDefaults.buttonElevation(
-                    defaultElevation = 0.dp,
-                    pressedElevation = 0.dp,
-                    disabledElevation = 0.dp)){
-                Text(text = "Ritira ordine", fontFamily = fontFamily, fontWeight = FontWeight.Bold, color = Blue40, fontSize = 23.sp)
-            }
-        }
-        else{
-            Button(
-                onClick = { navController.navigate(Screen.Orders.route) },
-                shape = RoundedCornerShape(8.dp),
-                modifier = Modifier
-                    .padding(top = 16.dp, bottom = 16.dp)
-                    .width(250.dp),
-                colors = ButtonDefaults.buttonColors(Yellow40),
-            ) {
-                Text(text = "I miei ordini", fontFamily = fontFamily, fontWeight = FontWeight.Bold, color = Blue40, fontSize = 23.sp)
 
+        DettaglioOrdineCard(viewModel, navController, prodotti, stato=stato, totale=totale, dataOrdine = dataOrdine, dataConsegna = dataConsegna, locker=locker)
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(horizontal = 8.dp)
+        ){
+            Divider(thickness = 2.dp, color = MaterialTheme.colorScheme.tertiary)
+            Spacer(modifier = Modifier.height(30.dp))
+
+            if(stato=="consegnato"){
+                Button(onClick = { navController.navigate(Screen.CollectOrder.route)
+                    viewModel.ordineSelezionato=ordine},
+                    shape = RoundedCornerShape(3.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.tertiary,
+                        contentColor = MaterialTheme.colorScheme.onTertiary
+                    ),
+                    elevation = ButtonDefaults.buttonElevation(
+                        defaultElevation = 0.dp,
+                        pressedElevation = 0.dp,
+                        disabledElevation = 0.dp))
+                {
+                    Text(
+                        text = "Ritira ordine",
+                        fontFamily = fontFamily,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+            else{
+                Button(
+                    onClick = { navController.navigate(Screen.Orders.route) },
+                    shape = RoundedCornerShape(3.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.tertiary,
+                        contentColor = MaterialTheme.colorScheme.onTertiary
+                    ),
+                    elevation = ButtonDefaults.buttonElevation(
+                        defaultElevation = 0.dp,
+                        pressedElevation = 0.dp,
+                        disabledElevation = 0.dp)
+                ) {
+                    Text(
+                        text = "I miei ordini",
+                        fontFamily = fontFamily,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
+
 
     }
 }
@@ -271,7 +295,7 @@ fun dettaglioProdotto(viewModel: AppViewModel, qty: Long, item: String, navContr
                     contentDescription = null,
                     modifier = Modifier
                         .clip(RoundedCornerShape(15.dp))
-                        .size(150.dp, 100.dp)
+                        .size(150.dp, 90.dp)
                         .border(2.dp,Color.White, RoundedCornerShape(5)),
                     contentScale = ContentScale.Crop
                 )
