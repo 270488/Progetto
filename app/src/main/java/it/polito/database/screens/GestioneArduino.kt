@@ -1,9 +1,5 @@
 package it.polito.database.screens
 
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -111,7 +107,7 @@ fun assegnazioneSportello(numeroProdotti: Int, viewModel: AppViewModel, codiceF:
 }
 
 fun generazioneCodiceCasuale(): String{
-    val caratteriPossibili = "ABCD0123456789"
+    val caratteriPossibili = "ABCD123456789"
     val lunghezzaStringa = 4
 
     val stringaCasuale = (1..lunghezzaStringa)
