@@ -63,6 +63,7 @@ fun DeliverOrder(viewModel: AppViewModel, navController: NavController) {
             viewModel.variabili.Sblocco = dataSnapshot.child("Sblocco").value as Long
             viewModel.variabili.SportelloP = dataSnapshot.child("SportelloP").value as Boolean
             viewModel.variabili.SportelloG = dataSnapshot.child("SportelloG").value as Boolean
+            viewModel.variabili.CodiceErrato = dataSnapshot.child("CodiceErrato").value as Long
 
             println("CodeP: " + viewModel.variabili.CodeP)
             println("CodeG: " + viewModel.variabili.CodeG)
@@ -94,7 +95,7 @@ fun DeliverOrder(viewModel: AppViewModel, navController: NavController) {
                 sbloccoPP = 1L
             }
 
-            confrontoCodici(viewModel.variabili)
+
         }
 
         override fun onCancelled(databaseError: DatabaseError) {

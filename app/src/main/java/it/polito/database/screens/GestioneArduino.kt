@@ -16,6 +16,7 @@ fun writeVariables(variabili: GestioneArduino) {
     variabili.variabiliPath.child("Sblocco").setValue(variabili.Sblocco)
     variabili.variabiliPath.child("SportelloG").setValue(variabili.SportelloG)
     variabili.variabiliPath.child("SportelloP").setValue(variabili.SportelloP)
+    variabili.variabiliPath.child("CodiceErrato").setValue(variabili.SportelloP)
 }
 
 data class GestioneArduino(
@@ -26,7 +27,8 @@ data class GestioneArduino(
                            var PPAperta:Long,
                            var Sblocco :Long,
                            var SportelloP :Boolean,
-                           var SportelloG :Boolean) {
+                           var SportelloG :Boolean,
+    var CodiceErrato: Long) {
     var variabiliPath = database.child("variabili")
 
 
@@ -46,6 +48,7 @@ fun cambioVariabili(variabili: GestioneArduino){
             variabili.Sblocco=dataSnapshot.child("Sblocco").value as Long
             variabili.SportelloP=dataSnapshot.child("SportelloP").value as Boolean
             variabili.SportelloG=dataSnapshot.child("SportelloG").value as Boolean
+            variabili.CodiceErrato=dataSnapshot.child("CodiceErrato").value as Long
 
             println("CodeP: "+variabili.CodeP)
             println("CodeG: "+variabili.CodeG)
@@ -55,6 +58,7 @@ fun cambioVariabili(variabili: GestioneArduino){
             println("Sblocco: "+variabili.Sblocco)
             println("SportelloP: "+variabili.SportelloP)
             println("SportelloG: "+variabili.SportelloG)
+            println("CodiceErrato: "+variabili.CodiceErrato)
 
             confrontoCodici(variabili)
         }
@@ -82,26 +86,36 @@ fun confrontoCodici(variabili: GestioneArduino){
         variabili.CodiceTastierino="0000"
         writeVariables(variabili)
     }
+    else if(variabili.CodiceTastierino!= variabili.CodeG || variabili.CodiceTastierino!= variabili.CodeP){
+        variabili.CodiceErrato=1L
+        writeVariables(variabili)
+    }
+
 }
 
 fun assegnazioneSportello(numeroProdotti: Int, viewModel: AppViewModel, codiceF: String, codiceU: String){
 
-    var codiceCasualeF= codiceF
+
     var codiceCasualeU= codiceU
 
     if(!viewModel.variabili.SportelloG && numeroProdotti>2){
         viewModel.variabili.SportelloG=true
-        viewModel.variabili.CodeG=codiceCasualeF
+        viewModel.variabili.CodeG=codiceCasualeU
+        database.child("ordini").child(viewModel.ordineSelezionato).child("Sportello").setValue("G")
         writeVariables(variabili = viewModel.variabili)
     }
     if(numeroProdotti<=2 && !viewModel.variabili.SportelloP){
         viewModel.variabili.SportelloP=true
-        viewModel.variabili.CodeP=codiceCasualeF
+        viewModel.variabili.CodeP=codiceCasualeU
+        database.child("ordini").child(viewModel.ordineSelezionato).child("Sportello").setValue("P")
+
         writeVariables(variabili = viewModel.variabili)
     }
     else if(numeroProdotti<=2 && !viewModel.variabili.SportelloG){
         viewModel.variabili.SportelloG=true
-        viewModel.variabili.CodeP=codiceCasualeF
+        viewModel.variabili.CodeP=codiceCasualeU
+        database.child("ordini").child(viewModel.ordineSelezionato).child("Sportello").setValue("G")
+
         writeVariables(variabili = viewModel.variabili)
     }
 }

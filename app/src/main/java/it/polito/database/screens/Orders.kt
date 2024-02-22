@@ -309,8 +309,8 @@ fun aggiungiOrdine(viewModel: AppViewModel){
     viewModel.carrello.value= emptyMap()
     database.child("utenti").child(uid).child("ordini").child(nOrdine.toString()).setValue(stato)
     database.child("corrieri").child("jSJNjHS9PENBjyBSz0NYOT3zz173").child("ordini").child(nOrdine.toString()).setValue("")
-
+    viewModel.ordineSelezionato=nOrdine.toString()
     //Generazione codice
-    assegnazioneSportello(numeroProdotti, viewModel, codiceF = codiceSbloccoFattorino, codiceU=codiceSbloccoUtente)
+    assegnazioneSportello(numeroProdotti, viewModel, codiceF = codiceSbloccoFattorino, codiceU=codiceSbloccoUtente, )
 }
 
