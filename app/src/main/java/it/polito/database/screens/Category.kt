@@ -76,7 +76,7 @@ private fun Greetings(viewModel: AppViewModel,navController: NavController,
     modifier: Modifier = Modifier
         .fillMaxHeight()
         .background(Blue40)
-        .padding(top = 76.dp)
+        .padding(top = 90.dp)
         .padding(bottom = 74.dp) //per non far coprire l'inizio da top e bottom baR
 ) {
     var listaCategorie by remember { mutableStateOf<List<String>>(emptyList()) }
@@ -96,8 +96,13 @@ private fun Greetings(viewModel: AppViewModel,navController: NavController,
         // Gestisci eventuali errori durante il recupero dei dati dal database
         println("Errore durante il recupero delle categorie: ${e.message}")
     }
-    Divider(thickness = 4.dp, color = Color.Red)
-    LazyColumn(modifier = modifier.padding(vertical = 4.dp)) {
+
+    LazyColumn(modifier = modifier.padding(vertical = 8.dp)) {
+        if (listaCategorie.isNotEmpty()){
+            item {
+                Divider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
+            }
+        }
         items(items = listaCategorie) { name ->
             Greeting(name = name, viewModel, navController)
         }
@@ -108,7 +113,7 @@ private fun Greetings(viewModel: AppViewModel,navController: NavController,
 @Composable
 private fun Greeting(name: String, viewModel: AppViewModel, navController: NavController) {
     Card(colors = CardDefaults.cardColors(
-        containerColor = MaterialTheme.colorScheme.primary
+        containerColor = MaterialTheme.colorScheme.secondary
     ), modifier = Modifier,
         //.padding(vertical = 4.dp, horizontal = 4.dp),
         shape = RectangleShape
@@ -149,7 +154,7 @@ private fun CardContent(name: String, viewModel: AppViewModel,navController: Nav
     var expanded by remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
-            .padding(8.dp)
+            .padding(14.dp)
             .animateContentSize()
     ) {
         Column(
