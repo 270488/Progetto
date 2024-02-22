@@ -171,6 +171,7 @@ fun OrderDetails(viewModel: AppViewModel, navController: NavController){
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DettaglioOrdineCard(viewModel: AppViewModel,
                         navController: NavController,
@@ -181,6 +182,9 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
                         dataConsegna: String,
                         locker: String) {
 
+    var currItem by remember {
+        mutableStateOf("")
+    }
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier= Modifier
@@ -199,6 +203,7 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
                 modifier = Modifier.fillMaxSize()
             ) {
                 prodotti.forEach { (item, qty) ->
+                    currItem = item
                     dettaglioProdotto(
                         viewModel = viewModel,
                         qty = qty,
@@ -262,7 +267,91 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
 
 
         }
+        //RIGA CON RESTITUISCI ORDINE E ORDINA DI NUOVO
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Top,
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+        {
+            Column(
+                verticalArrangement = Arrangement.SpaceAround,
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(horizontal = 12.dp, vertical = 12.dp)
+            ) {
+                var openAlertDialog = remember { mutableStateOf(false) }
 
+                // ...
+                when {
+                    // ...
+                    openAlertDialog.value -> {
+                        AlertDialog(
+                            item = currItem,
+                            navController = navController,
+                            viewModel = viewModel,
+                            onDismissRequest = { openAlertDialog.value = false },
+                            onConfirmation = {
+                                openAlertDialog.value = false
+                                println("Confirmation registered") // Add logic here to handle confirmation.
+                            },
+                            dialogTitle = "Vuoi restituire un articolo? \n" +
+                                    "Nessun problema!",
+                            dialogText = "Se intendi restituire il tuo articolo non devi far altro che riconsegnarlo presso la reception della palestra in cui l’hai ritirato.\n" +
+                                    "\n" +
+                                    "Un corriere si occuperà in seguito di ritirare il tuo pacco e riceverai un rimborso completo non appena l’ordine sarà ricevuto dal magazzino."
+                        )
+                    }
+                }
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Top,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+                {
+                    Card(onClick = { openAlertDialog.value = true },
+                        colors = CardDefaults.cardColors(Color.Transparent),
+                        modifier = Modifier.height(30.dp))
+                    {
+                        Text(
+                            text = "Restituisci ordine",
+                            fontFamily = fontFamily,
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            fontSize = 14.sp,
+                            fontStyle = FontStyle.Italic,
+                            textAlign = TextAlign.Start
+                        )
+
+                    }
+                }
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Top,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+                {
+                    Card(onClick = {
+                        viewModel.prodottoSelezionato = currItem
+                        navController.navigate(Screen.Product.route)
+                    },
+                        colors = CardDefaults.cardColors(Color.Transparent),
+                        modifier = Modifier.height(30.dp)) {
+                        Text(
+                            text = "Ordina di nuovo",
+                            fontFamily = fontFamily,
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            fontSize = 14.sp,
+                            fontStyle = FontStyle.Italic,
+                            textAlign = TextAlign.Start,
+
+                            )
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -359,91 +448,7 @@ fun dettaglioProdotto(viewModel: AppViewModel, qty: Long, item: String, navContr
                 }
             }
         }
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top,
-            modifier = Modifier
-                .fillMaxWidth()
-        )
 
-        {
-            Column(
-                verticalArrangement = Arrangement.SpaceAround,
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(horizontal = 12.dp, vertical = 12.dp)
-            ) {
-                var openAlertDialog = remember { mutableStateOf(false) }
-
-                // ...
-                when {
-                    // ...
-                    openAlertDialog.value -> {
-                        AlertDialog(
-                            item = item,
-                            navController = navController,
-                            viewModel = viewModel,
-                            onDismissRequest = { openAlertDialog.value = false },
-                            onConfirmation = {
-                                openAlertDialog.value = false
-                                println("Confirmation registered") // Add logic here to handle confirmation.
-                            },
-                            dialogTitle = "Vuoi restituire un articolo? \n" +
-                                    "Nessun problema!",
-                            dialogText = "Se intendi restituire il tuo articolo non devi far altro che riconsegnarlo presso la reception della palestra in cui l’hai ritirato.\n" +
-                                    "\n" +
-                                    "Un corriere si occuperà in seguito di ritirare il tuo pacco e riceverai un rimborso completo non appena l’ordine sarà ricevuto dal magazzino."
-                        )
-                    }
-                }
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Top,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
-                {
-                    Card(onClick = { openAlertDialog.value = true },
-                        colors = CardDefaults.cardColors(Color.Transparent),
-                        modifier = Modifier.height(30.dp))
-                    {
-                        Text(
-                            text = "Restituisci ordine",
-                            fontFamily = fontFamily,
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            fontSize = 14.sp,
-                            fontStyle = FontStyle.Italic,
-                            textAlign = TextAlign.Start
-                        )
-
-                    }
-                }
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Top,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
-                {
-                    Card(onClick = {
-                        viewModel.prodottoSelezionato = item
-                        navController.navigate(Screen.Product.route)
-                    },
-                        colors = CardDefaults.cardColors(Color.Transparent),
-                        modifier = Modifier.height(30.dp)) {
-                        Text(
-                            text = "Ordina di nuovo",
-                            fontFamily = fontFamily,
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            fontSize = 14.sp,
-                            fontStyle = FontStyle.Italic,
-                            textAlign = TextAlign.Start,
-
-                            )
-                    }
-                }
-            }
-        }
     }
     }
 
