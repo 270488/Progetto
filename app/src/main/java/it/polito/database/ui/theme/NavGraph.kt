@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import it.polito.database.AppViewModel
 import it.polito.database.HomePage
 import it.polito.database.screens.AiutoEContatti
+import it.polito.database.screens.AreaLegaleScreen
 import it.polito.database.screens.AuthenticationActivity
 import it.polito.database.screens.AuthenticationScreen
 import it.polito.database.screens.CartScreen
@@ -129,6 +130,9 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
         }
         composable(route = Screen.DeliverOrder.route) {
             DeliverOrder(viewModel, navController)
+        }
+        composable(route = Screen.AreaLegale.route) {
+            AreaLegaleScreen(viewModel, navController)
         }
     }
 }

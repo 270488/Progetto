@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MailOutline
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
@@ -167,6 +168,10 @@ sealed class Screen (
         title = "DeliverOrder",
         icon = Icons.Default.Lock
     )
-
+    object AreaLegale: Screen(
+        route = "areaLegale",
+        title = "AreaLegale",
+        icon = Icons.Default.Menu
+    )
 
 }

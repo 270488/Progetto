@@ -61,7 +61,7 @@ fun SettingsListScreen(viewModel: AppViewModel, navController: NavController){
                         else if (name =="Paese/Lingua" )
                                 //TODO
                         else if (name == "Area Legale")
-                                 //TODO
+                            navController.navigate(Screen.AreaLegale.route)
                         else if(name=="Aiuto e contatti")
                             navController.navigate(Screen.AiutoEContatti.route)
                     }
