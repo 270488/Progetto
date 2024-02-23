@@ -41,7 +41,7 @@ import it.polito.database.R
 @Composable
 fun ScegliPalestraScreen(viewModel: AppViewModel, navController: NavController) {
     var listaPalestre = listOf<String>(
-        "McFit Via San Paolo, 25 \nTorino (TO), 10138",
+        "McFit Via San Paolo, 25 \nTorino (TO), 10141",
         "McFit Via Giuseppe Luigi Lagrange, 47 \nTorino (TO), 10123",
         "McFit C.so Giulio Cesare, 29 \nTorino (TO), 10152"
     )
