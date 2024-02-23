@@ -5,8 +5,6 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -73,7 +71,7 @@ fun SettingsListScreen(viewModel: AppViewModel, navController: NavController){
                         if (name == "Preferenze sulle notifiche")
                             navController.navigate(Screen.PreferenzaNotifiche.route)
                         else if (name == "Paese/Lingua")
-                        //TODO
+                            navController.navigate(Screen.PaeseELingua.route)
                         else if (name == "Area Legale")
                             navController.navigate(Screen.AreaLegale.route)
                         else if (name == "Aiuto e contatti")

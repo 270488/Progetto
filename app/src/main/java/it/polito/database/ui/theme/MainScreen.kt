@@ -4,7 +4,6 @@ package it.polito.database.ui.theme
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -68,7 +67,8 @@ fun MainScreen(viewModel: AppViewModel){
         Screen.DeliverOrder.route,
         Screen.CorriereProfile.route,
         Screen.CorriereDetails.route,
-        Screen.AccessoESicurezza.route
+        Screen.AccessoESicurezza.route,
+        Screen.PaeseELingua.route
     )
         Scaffold(
 
@@ -306,6 +306,7 @@ fun AddItem3(
                     Screen.AreaLegale.route->Text(text = "Area Legale", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                     Screen.PreferenzeCookies.route->Text(text = "Preferenze Cookies", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                     Screen.AccessoESicurezza.route->Text(text = "Accesso e sicurezza", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
+                    Screen.PaeseELingua.route->Text(text = "Paese e lingua", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                 }
                 //tante condizioni quante sono le schermate che hanno questa top Bar
                 //( con freccia per tornare indietro, impostazioni a destra

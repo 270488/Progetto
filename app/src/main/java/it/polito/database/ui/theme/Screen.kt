@@ -183,4 +183,9 @@ sealed class Screen (
         title = "AccessoESicurezza",
         icon = Icons.Default.Lock
     )
+    object PaeseELingua: Screen(
+        route = "paeseELingua",
+        title = "PaeseELingua",
+        icon = Icons.Default.Info
+    )
 }
