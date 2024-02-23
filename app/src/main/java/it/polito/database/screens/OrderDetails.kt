@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -47,6 +48,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -205,7 +207,7 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
         //Colonna con le card dei prodotti dell'ordine scrollabile
         Column(
             modifier = Modifier
-                .height(210.dp)
+                .heightIn(min = 0.dp, max = 210.dp)
                 .verticalScroll(rememberScrollState())
         ) {
             prodotti.forEach { (item, qty) ->
@@ -218,7 +220,7 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
                 )
             }
         }
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(10.dp))
         //Column con info generali
         Column {
             Text(
@@ -373,8 +375,9 @@ fun dettaglioProdotto(viewModel: AppViewModel, qty: Long, item: String, navContr
                     text = "Ordina di nuovo",
                     fontFamily = fontFamily,
                     color = MaterialTheme.colorScheme.onPrimary,
-                    fontSize = 16.sp,
+                    fontSize = 14.sp,
                     fontStyle = FontStyle.Italic,
+                    textDecoration = TextDecoration.Underline,
                     textAlign = TextAlign.Start,
                 )
                 
@@ -384,8 +387,9 @@ fun dettaglioProdotto(viewModel: AppViewModel, qty: Long, item: String, navContr
                     text = "Restituisci ordine",
                     fontFamily = fontFamily,
                     color = MaterialTheme.colorScheme.onPrimary,
-                    fontSize = 16.sp,
+                    fontSize = 14.sp,
                     fontStyle = FontStyle.Italic,
+                    textDecoration = TextDecoration.Underline,
                     textAlign = TextAlign.Start
                 )
                 
@@ -413,17 +417,37 @@ fun AlertDialog(
 ) {
     var ctx = LocalContext.current
     AlertDialog(
+        modifier = Modifier.border(2.dp, MaterialTheme.colorScheme.tertiary, RoundedCornerShape(15.dp)),
+        containerColor = MaterialTheme.colorScheme.primary,
+        shape = RoundedCornerShape(15.dp),
         title = {
-            Text(text = dialogTitle)
+            Text(
+                text = dialogTitle,
+                fontSize = 22.sp,
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                fontFamily = fontFamily,
+            )
         },
         text = {
-            Text(text = dialogText)
+            Text(
+                text = dialogText,
+                fontSize = 16.sp,
+                color = Color.White,
+                fontFamily = fontFamily,
+            )
                },
         onDismissRequest = {
             onDismissRequest()
         },
         confirmButton = {
             TextButton(
+                shape = RoundedCornerShape(3.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.tertiary,
+                    contentColor = MaterialTheme.colorScheme.onTertiary
+                ),
                 onClick = {
                     aggiungiReso(item, viewModel.ordineSelezionato,viewModel.uid, viewModel)
                     Toast.makeText(ctx, "Richiesta di reso confermata", Toast.LENGTH_SHORT).show()
@@ -431,16 +455,32 @@ fun AlertDialog(
                     onDismissRequest()
                 }
             ) {
-                Text("Avvia reso")
+                Text(
+                    text = "Avvia reso",
+                    fontFamily = fontFamily,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
         },
         dismissButton = {
             TextButton(
+                //modifier = Modifier.align(Alignment.End),
+                shape = RoundedCornerShape(3.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    contentColor = MaterialTheme.colorScheme.onErrorContainer
+                ),
                 onClick = {
                     onDismissRequest()
                 }
             ) {
-                Text("Annulla")
+                Text(
+                    text = "Annulla",
+                    fontFamily = fontFamily,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     )

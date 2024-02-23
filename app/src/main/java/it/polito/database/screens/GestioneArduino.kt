@@ -16,7 +16,7 @@ fun writeVariables(variabili: GestioneArduino) {
     variabili.variabiliPath.child("Sblocco").setValue(variabili.Sblocco)
     variabili.variabiliPath.child("SportelloG").setValue(variabili.SportelloG)
     variabili.variabiliPath.child("SportelloP").setValue(variabili.SportelloP)
-    variabili.variabiliPath.child("CodiceErrato").setValue(variabili.SportelloP)
+    variabili.variabiliPath.child("CodiceErrato").setValue(variabili.CodiceErrato)
 }
 
 data class GestioneArduino(

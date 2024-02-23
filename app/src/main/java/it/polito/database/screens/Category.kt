@@ -65,12 +65,54 @@ import it.polito.database.ui.theme.fontFamily
 @Composable
 fun CategoryScreen(viewModel: AppViewModel, navController: NavController) {
     Greetings(viewModel, navController)
+    //Categories(viewModel, navController)
 }
+
+@Composable
+private fun Categories(viewModel: AppViewModel, navController: NavController){
+
+    var listaCategorie by remember { mutableStateOf<List<String>>(emptyList()) }
+
+    database.child("categorie").get().addOnSuccessListener { dataSnapshot -> //prende tutti i figli del nodo categorie
+        if (dataSnapshot.exists()) {
+            val categorie = mutableListOf<String>()
+            for (childSnapshot in dataSnapshot.children) { //prende ogni figlio del nodo categorie
+                val categoria = childSnapshot.key.toString() //prende la chiave, quindi abbigliamento donna ecc...
+                categoria?.let {
+                    categorie.add(categoria) //aggiunge la chiave alla lista categoria, locale del for
+                }
+            }
+            listaCategorie = categorie //copia la lista locale del for nella listaCategorie fuori dalla funzione
+        }
+    }.addOnFailureListener { e ->
+        // Gestisci eventuali errori durante il recupero dei dati dal database
+        println("Errore durante il recupero delle categorie: ${e.message}")
+    }
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxHeight()
+            .background(Blue40)
+            .padding(top = 90.dp)
+            .padding(bottom = 74.dp)
+    ) {
+
+    }
+}
+
+
+
+
+
+
+
+
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-
 // list of items
 private fun Greetings(viewModel: AppViewModel,navController: NavController,
     modifier: Modifier = Modifier
