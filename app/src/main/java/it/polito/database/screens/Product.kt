@@ -46,6 +46,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.text.TextStyle
@@ -65,6 +66,7 @@ import it.polito.database.FindUrl
 import it.polito.database.database
 import it.polito.database.ui.theme.Blue20
 import it.polito.database.ui.theme.Blue40
+import it.polito.database.ui.theme.Red20
 import it.polito.database.ui.theme.Screen
 import it.polito.database.ui.theme.Yellow40
 import it.polito.database.ui.theme.fontFamily
@@ -137,7 +139,7 @@ fun ProductDetail(viewModel: AppViewModel, navController: NavController) {
         modifier = Modifier
             .layoutId("productImage")
             .fillMaxWidth()
-            .padding(bottom = 300.dp)
+            .padding(bottom = 150.dp)
             .verticalScroll(rememberScrollState())
 
         )
@@ -268,12 +270,14 @@ fun ProductDetail(viewModel: AppViewModel, navController: NavController) {
             if(filledHeart==false) {
                 Image(
                     imageVector = Icons.Outlined.FavoriteBorder,
+                    colorFilter = ColorFilter.tint(Red20),
                     contentDescription = "Empty Heart",
                     modifier = Modifier.size(50.dp)
                 )}else{
                 Image(
                     imageVector = Icons.Outlined.Favorite,
                     contentDescription = "Filled Heart",
+                    colorFilter = ColorFilter.tint(Red20),
                     modifier = Modifier.size(50.dp)
                 )
             }
