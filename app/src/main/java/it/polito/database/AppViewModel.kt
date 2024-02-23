@@ -277,7 +277,7 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                     Card(
                         modifier = Modifier
                             .background(Blue40)
-                            .size(200.dp, 120.dp)
+                            .size(170.dp, 102.dp)
                             .fillMaxWidth()
                             .padding(all = 4.dp)
                             .fillMaxHeight()
@@ -346,7 +346,7 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                     .size(700.dp, 1.dp)
             )*/
         }
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(22.dp))
         Divider(thickness = 1.dp, color = Yellow40, modifier = Modifier.padding(top = 4.dp, bottom = 16.dp))
         //Spacer(modifier = Modifier.weight(0.01f))
         //Seconda riga OFFERTE PER TE
@@ -395,7 +395,7 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                     Card(
                         modifier = Modifier
                             .background(Blue40)
-                            .size(200.dp, 120.dp)
+                            .size(170.dp, 102.dp)
                             .fillMaxWidth()
                             .padding(all = 4.dp)
                             .fillMaxHeight()
@@ -466,7 +466,7 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                 .background(Yellow40)
                 .size(700.dp, 1.dp)
         )*/
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(22.dp))
         Divider(thickness = 1.dp, color = Yellow40, modifier = Modifier.padding(top = 4.dp, bottom = 16.dp))
         //Spacer(modifier = Modifier.weight(0.01f))
         //Terza riga ACQUISTA DI NUOVO
@@ -513,7 +513,7 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                     Card(
                         modifier = Modifier
                             .background(Blue40)
-                            .size(200.dp, 120.dp)
+                            .size(170.dp, 102.dp)
                             .fillMaxWidth()
                             .padding(all = 4.dp)
                             .fillMaxHeight()
