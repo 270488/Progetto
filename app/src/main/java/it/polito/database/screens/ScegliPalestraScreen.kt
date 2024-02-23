@@ -2,6 +2,7 @@ package it.polito.database.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -24,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,7 +38,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,6 +49,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import it.polito.database.AppViewModel
 import it.polito.database.R
+import it.polito.database.ui.theme.Grey40
 import it.polito.database.ui.theme.fontFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,21 +70,41 @@ fun ScegliPalestraScreen(viewModel: AppViewModel, navController: NavController) 
     ) {
 
         OutlinedTextField(
+            shape = RoundedCornerShape(8.dp),
             value = searchText,
             onValueChange = { searchText = it },
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .background(MaterialTheme.colorScheme.onBackground),
-            label = {
-                Text("Cerca palestra", modifier = Modifier.padding(start = 25.dp))
+                .padding(16.dp),
+            placeholder =
+            { Text(
+                    text = "Inserisci CAP, indirizzo...",
+                    fontFamily = fontFamily,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Light,
+                    fontStyle = FontStyle.Italic,
+                    color = MaterialTheme.colorScheme.primaryContainer
+                )
+            },
+            leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = MaterialTheme.colorScheme.primaryContainer
                 )
             },
-            singleLine = true
+            singleLine = true,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                containerColor = MaterialTheme.colorScheme.secondary,
+                textColor = MaterialTheme.colorScheme.onPrimary,
+                focusedBorderColor = MaterialTheme.colorScheme.tertiary,
+                focusedLeadingIconColor = MaterialTheme.colorScheme.tertiary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onBackground,
+                cursorColor = MaterialTheme.colorScheme.primaryContainer,
+                selectionColors = TextSelectionColors(
+                    handleColor = MaterialTheme.colorScheme.tertiary,
+                    backgroundColor = Color(0x4DFFED37)
+                ),
+            ),
         )
 
         Column(
