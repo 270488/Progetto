@@ -93,7 +93,7 @@ fun CheckoutScreen(viewModel: AppViewModel, navController: NavController, modifi
             )
             {
                 Text(
-                    text = "FitLocker Via San Paolo, 25, Torino (TO), 10138",
+                    text = viewModel.lockerSelezionato.replace("/"," "),
                     fontFamily = fontFamily,
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 16.sp,
@@ -244,8 +244,8 @@ fun CheckoutScreen(viewModel: AppViewModel, navController: NavController, modifi
             {
                 Button(
                     onClick = {
-                              aggiungiOrdine(viewModel)
-                            navController.navigate(Screen.Orders.route)
+                        aggiungiOrdine(viewModel)
+                        navController.navigate(Screen.Orders.route)
                     },
                     modifier = Modifier
                         .layoutId("payment")

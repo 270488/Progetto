@@ -67,6 +67,7 @@ import it.polito.database.database
 import it.polito.database.ui.theme.Blue20
 import it.polito.database.ui.theme.Blue40
 import it.polito.database.ui.theme.Red20
+import it.polito.database.ui.theme.Red40
 import it.polito.database.ui.theme.Screen
 import it.polito.database.ui.theme.Yellow40
 import it.polito.database.ui.theme.fontFamily
@@ -277,7 +278,7 @@ fun ProductDetail(viewModel: AppViewModel, navController: NavController) {
                 Image(
                     imageVector = Icons.Outlined.Favorite,
                     contentDescription = "Filled Heart",
-                    colorFilter = ColorFilter.tint(Red20),
+                    colorFilter = ColorFilter.tint(Red40),
                     modifier = Modifier.size(50.dp)
                 )
             }

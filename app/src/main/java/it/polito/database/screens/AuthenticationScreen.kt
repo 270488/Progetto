@@ -87,7 +87,7 @@ fun AuthenticationScreen(navController: NavHostController,context: Authenticatio
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.primary)
-                .padding(start = 50.dp, end = 50.dp),
+                .padding(horizontal = 50.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             OutlinedTextField(
@@ -198,7 +198,8 @@ fun AuthenticationScreen(navController: NavHostController,context: Authenticatio
                 )
             }
             Row(
-                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.Bottom,
                 //modifier = Modifier.align(Alignment.End)
             ) {

@@ -256,7 +256,7 @@ fun Cart(viewModel: AppViewModel, navController: NavController, modifier: Modifi
                 .padding(horizontal = 12.dp))
             {
                 Text(
-                    text = "FitLocker Via San Paolo, 25, Torino (TO), 10138",
+                    text = viewModel.lockerSelezionato.replace("/"," "),
                     fontFamily = fontFamily,
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 16.sp,

@@ -302,7 +302,7 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
                 {
                     Text(
                         modifier = Modifier.padding(8.dp),
-                        text = viewModel.lockerSelezionato,
+                        text = viewModel.lockerSelezionato.replace("/","\n"),
                         fontSize = 16.sp,
                         fontFamily = fontFamily,
                     )

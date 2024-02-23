@@ -1,5 +1,6 @@
 package it.polito.database.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -56,6 +57,7 @@ import it.polito.database.ui.theme.fontFamily
 
 @Composable
 fun GestisciFitlockerScreen(viewModel: AppViewModel, navController: NavHostController) {
+
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -86,7 +88,7 @@ fun GestisciFitlockerScreen(viewModel: AppViewModel, navController: NavHostContr
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(8.dp))
-            InfoLocker(navController)
+            InfoLocker(viewModel, navController)
         }
 
         Column(
@@ -118,7 +120,11 @@ fun GestisciFitlockerScreen(viewModel: AppViewModel, navController: NavHostContr
 }
 
 @Composable
-fun InfoLocker(navController: NavController) {
+fun InfoLocker(vm: AppViewModel, navController: NavController) {
+
+    var selezionato by remember {
+        mutableStateOf(vm.lockerSelezionato)
+    }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -153,14 +159,14 @@ fun InfoLocker(navController: NavController) {
                 Text(
                     modifier = Modifier.padding(12.dp),
                     text = buildAnnotatedString {
-                        append("FitLocker Via San Paolo, 25\n")
+                        append(selezionato.substringBefore("/") + "\n")
                         withStyle(
                             style = SpanStyle(
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Normal,
                             )
                         ){
-                            append("Torino (TO), 10141")
+                            append(selezionato.substringAfter("/"))
                         }
                     },
                     fontWeight = FontWeight.Bold,
@@ -219,37 +225,28 @@ fun InfoLocker(navController: NavController) {
                     contentColor = Color.White
                 )
             ){
-                var listaLocker by remember { mutableStateOf<List<String>>(emptyList()) }
-
-                var locker = database.child("locker")
-                locker.addValueEventListener(object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) { //fa una foto al db in quel momento e la mette in dataSnapshot
-                        // Itera sui figli del nodo
-                        var list = mutableListOf<String>()
-
-
-                        for (childSnapshot in dataSnapshot.children) { //prende i figli di prodotti, quindi 0, 1...
-                            // Aggiungi il prodotto alla lista
-                            list.add(childSnapshot.value.toString())
-
-                        }
-                        listaLocker = list
-                    }
-
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        // Gestisci gli errori qui
-                        println("Errore nel leggere i dati dal database: ${databaseError.message}")
-                    }
-                })
-
+                var listaPalestre = listOf(
+                    "McFit Via San Paolo, 25/Torino (TO), 10141",
+                    "McFit Via Giuseppe Lagrange, 47/Torino (TO), 10123",
+                    "McFit C.so Giulio Cesare, 29/Torino (TO), 10152",
+                    "McFit Via Monginevro, 84/Torino (TO), 10138",
+                )
                 Column(
                     modifier = Modifier.verticalScroll(rememberScrollState()),
                 ) {
+                    var listaLocker = listaPalestre.filterNot { it == selezionato }
                     listaLocker.forEachIndexed { index, l ->
                         val indirizzo = l.substringBefore("/")
                         val citta = l.substringAfter("/", "")
+
                         Text(
-                            modifier = Modifier.padding(12.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    vm.setLocker(l)
+                                    selezionato = l
+                                }
+                                .padding(12.dp),
                             text = buildAnnotatedString {
                                 append(indirizzo+"\n")
                                 withStyle(
@@ -269,6 +266,9 @@ fun InfoLocker(navController: NavController) {
                         if (index < listaLocker.size - 1)
                             Divider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
                     }
+
+
+
                 }
             }
         }

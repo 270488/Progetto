@@ -262,7 +262,7 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
             )
 
             Text(
-                text = "Locker di destinazione: " + locker,
+                text = "Locker di destinazione: " + locker.replace("/"," "),
                 color = Color.White,
                 fontSize = 16.sp,
                 lineHeight = 18.sp,

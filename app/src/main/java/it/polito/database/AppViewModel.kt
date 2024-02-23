@@ -69,7 +69,7 @@ class AppViewModel: ViewModel() {
     var prodottoSelezionato="shaker"
     var resoSelezionato=""
     var ordineSelezionato=""
-    var lockerSelezionato="McFit Via San Paolo, 25 \nTorino (TO), 10138"
+    var lockerSelezionato="McFit Via San Paolo, 25/Torino (TO), 10141"
     var cat=""
     var sottocat=""
     var uid=""
@@ -80,6 +80,21 @@ class AppViewModel: ViewModel() {
 
     var variabili= GestioneArduino("", "","0000",0L,0L,0L,false, false, 0L)
 
+    var listaPalestre = listOf<String>(
+        "McFit Via San Paolo, 25/Torino (TO), 10141",
+        "McFit Via Giuseppe Lagrange, 47/Torino (TO), 10123",
+        "McFit C.so Giulio Cesare, 29/Torino (TO), 10152",
+        "McFit Via Bertola, 31/Torino (TO), 10122",
+        "McFit C.so Principe Oddone, 92/Torino (TO), 10158",
+        "McFit Via Giuseppe Gaibaldi, 72/Torino (TO), 10135",
+        "McFit Via Orietta Berti, 58/Torino (TO), 10155",
+        "McFit Via Monginevro, 84/Torino (TO), 10138",
+        "McFit Giorgio Mastrota, 22/Torino (TO), 10118",
+    )
+
+    fun setLocker(value: String){
+        lockerSelezionato = value
+    }
 
 
 

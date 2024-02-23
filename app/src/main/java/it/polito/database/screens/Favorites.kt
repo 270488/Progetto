@@ -125,7 +125,7 @@ fun FavoritesScreen(viewModel: AppViewModel, navController: NavController){
                     contentColor = MaterialTheme.colorScheme.onTertiary
                 ),
                 onClick = {
-                    navController.navigate(Screen.Home.route) //Va cambiato da HOME a I MIEI ORDINI
+                    navController.navigate(Screen.Orders.route) //Va cambiato da HOME a I MIEI ORDINI
                 }
             ){
                 Text(
