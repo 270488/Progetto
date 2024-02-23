@@ -110,6 +110,7 @@ fun CheckoutScreen(viewModel: AppViewModel, navController: NavController, modifi
             {
                 Button(
                     onClick = {
+                        navController.navigate(Screen.ScegliPalestraScreen.route)
                     },
                     modifier = Modifier
                         .layoutId("chooseAnotherLocker")
