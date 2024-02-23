@@ -1,7 +1,9 @@
 package it.polito.database.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,9 +14,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -25,10 +32,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -45,184 +57,222 @@ import it.polito.database.ui.theme.fontFamily
 @Composable
 fun GestisciFitlockerScreen(viewModel: AppViewModel, navController: NavHostController) {
     Column(
+        verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary)
-            .padding(top = 80.dp)
+            .padding(top = 60.dp, bottom = 110.dp)
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.fitlocker_logo),
-            contentDescription = "Logo fitlocker",
-            modifier = Modifier
-                .size(140.dp)
-        )
-        Text(
-            text = "FitLocker",
-            modifier = Modifier
-                .fillMaxWidth()
-                .offset(x = 0.dp, y = (-14).dp),
-            textAlign = TextAlign.Center,
-            fontFamily = fontFamily,
-            color = MaterialTheme.colorScheme.tertiary,
-            fontSize = 34.sp,
-            fontWeight = FontWeight.Bold
-        )
 
-        Spacer(modifier = Modifier.height(24.dp))
-
-        InfoLocker(navController)
-    }
-}
-
-@Composable
-fun InfoLocker(navController: NavController) {
-    Column {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp)
-        )
-        {
-            Text(
-                text = "Locker predefinito",
-                fontFamily = fontFamily,
-                color = MaterialTheme.colorScheme.onPrimary,
-                fontSize = 26.sp,
-                fontWeight = FontWeight.Bold,
-            )
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp)
-        )
-        {
-            Text(
-                text = "FitLocker Via San Paolo, 25, Torino (TO), 10138",
-                fontFamily = fontFamily,
-                color = MaterialTheme.colorScheme.onPrimary,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Normal,
-            )
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxWidth()
-        )
-        {
-            TextButton(
-                onClick = {navController.navigate(Screen.ScegliPalestraScreen.route)},
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.fitlocker_logo),
+                contentDescription = "Logo fitlocker",
                 modifier = Modifier
-                    .layoutId("chooseAnotherLocker")
-                    .padding(top = 20.dp, end = 8.dp),
+                    .size(140.dp)
+            )
+            Text(
+                text = "FitLocker",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .offset(x = 0.dp, y = (-10).dp),
+                textAlign = TextAlign.Center,
+                fontFamily = fontFamily,
+                color = MaterialTheme.colorScheme.tertiary,
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            InfoLocker(navController)
+        }
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(horizontal = 8.dp)
+        ) {
+            Divider(thickness = 2.dp, color = MaterialTheme.colorScheme.tertiary)
+            Spacer(modifier = Modifier.height(24.dp))
+            Button(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
                 shape = RoundedCornerShape(3.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.tertiary,
                     contentColor = MaterialTheme.colorScheme.onTertiary
                 ),
-            ) {
+                onClick = {
+                    navController.navigate(Screen.AccountScreen.route)
+                }
+            ){
                 Text(
-                    text = "Scegli un altro locker",
+                    text = "Il mio account",
                     fontFamily = fontFamily,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
-                Image(
-                    painter = painterResource(id = R.drawable.fitlocker_logo),
-                    contentDescription = "logo"
+            }
+        }
+    }
+}
+
+@Composable
+fun InfoLocker(navController: NavController) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+    ) {
+        Text(
+            text = "Locker selezionato",
+            fontFamily = fontFamily,
+            color = MaterialTheme.colorScheme.onPrimary,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        )
+        {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                border = BorderStroke(2.dp, Color.Black),
+                shape = RoundedCornerShape(15.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    contentColor = Color.White
+                )
+            )
+            {
+                Text(
+                    modifier = Modifier.padding(12.dp),
+                    text = buildAnnotatedString {
+                        append("FitLocker Via San Paolo, 25\n")
+                        withStyle(
+                            style = SpanStyle(
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Normal,
+                            )
+                        ){
+                            append("Torino (TO), 10141")
+                        }
+                    },
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    color = Color.White,
+                    fontFamily = fontFamily,
                 )
             }
         }
-        Spacer(modifier = Modifier.height(8.dp))
+        //Spacer(modifier = Modifier.height(8.dp))
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp)
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.End,
+            modifier = Modifier.fillMaxWidth()
         )
         {
             Text(
-                text = "Locker usati di recente",
+                modifier = Modifier
+                    .padding(top = 8.dp, end = 16.dp)
+                    .layoutId("chooseAnotherLocker")
+                    .clickable { navController.navigate(Screen.ScegliPalestraScreen.route) },
+                text = "Scegli un altro locker",
                 fontFamily = fontFamily,
-                color = MaterialTheme.colorScheme.onPrimary,
-                fontSize = 26.sp,
-                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp,
+                textDecoration = TextDecoration.Underline,
+                color = MaterialTheme.colorScheme.tertiary,
+                fontWeight = FontWeight.Bold
             )
+
         }
         Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = "Locker usati di recente",
+            fontFamily = fontFamily,
+            color = MaterialTheme.colorScheme.onPrimary,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp)
-        )
-        {
-            var listaLocker by remember { mutableStateOf<List<String>>(emptyList()) }
+                .padding(horizontal = 16.dp)
+        ){
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(140.dp),
+                border = BorderStroke(2.dp, Color.Black),
+                shape = RoundedCornerShape(15.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    contentColor = Color.White
+                )
+            ){
+                var listaLocker by remember { mutableStateOf<List<String>>(emptyList()) }
 
-            var locker = database.child("locker")
-            locker.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) { //fa una foto al db in quel momento e la mette in dataSnapshot
-                    // Itera sui figli del nodo
-                    var list = mutableListOf<String>()
+                var locker = database.child("locker")
+                locker.addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) { //fa una foto al db in quel momento e la mette in dataSnapshot
+                        // Itera sui figli del nodo
+                        var list = mutableListOf<String>()
 
 
-                    for (childSnapshot in dataSnapshot.children) { //prende i figli di prodotti, quindi 0, 1...
-                        // Aggiungi il prodotto alla lista
-                        list.add(childSnapshot.value.toString())
+                        for (childSnapshot in dataSnapshot.children) { //prende i figli di prodotti, quindi 0, 1...
+                            // Aggiungi il prodotto alla lista
+                            list.add(childSnapshot.value.toString())
 
-
+                        }
+                        listaLocker = list
                     }
-                    listaLocker = list
-                }
 
-                override fun onCancelled(databaseError: DatabaseError) {
-                    // Gestisci gli errori qui
-                    println("Errore nel leggere i dati dal database: ${databaseError.message}")
-                }
-            })
-            Card {
-                listaLocker.forEach { l ->
-                    Text(
-                        text = l,
-                        fontFamily = fontFamily,
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Normal,
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        // Gestisci gli errori qui
+                        println("Errore nel leggere i dati dal database: ${databaseError.message}")
+                    }
+                })
+
+                Column(
+                    modifier = Modifier.verticalScroll(rememberScrollState()),
+                ) {
+                    listaLocker.forEachIndexed { index, l ->
+                        val indirizzo = l.substringBefore("/")
+                        val citta = l.substringAfter("/", "")
+                        Text(
+                            modifier = Modifier.padding(12.dp),
+                            text = buildAnnotatedString {
+                                append(indirizzo+"\n")
+                                withStyle(
+                                    style = SpanStyle(
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Normal,
+                                    )
+                                ){
+                                    append(citta)
+                                }
+                            },
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp,
+                            color = Color.White,
+                            fontFamily = fontFamily,
+                        )
+                        if (index < listaLocker.size - 1)
+                            Divider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
+                    }
                 }
             }
         }
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(){
-                TextButton(
-                    onClick = {
-                        navController.navigate(Screen.AccountScreen.route)
-                    },
-                    modifier = Modifier
-                        .layoutId("il mio account")
-                        .padding(top = 20.dp, end = 8.dp),
-                    shape = RoundedCornerShape(3.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.tertiary,
-                        contentColor = MaterialTheme.colorScheme.onTertiary
-                    ),
-                ) {
-                    Text(
-                        text = "Il mio account",
-                        fontFamily = fontFamily,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-
-
+        //Spacer(modifier = Modifier.height(24.dp))
     }
 
 }
