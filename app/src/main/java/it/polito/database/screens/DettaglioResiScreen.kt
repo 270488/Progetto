@@ -416,7 +416,7 @@ private fun istruzioniConsegna() {
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color(0xCC1D232C))
-                    .padding(horizontal = 10.dp)
+                    .padding(horizontal = 20.dp)
             ){
                 Box(
                     modifier = Modifier

@@ -121,7 +121,7 @@ fun OrdineCard(ordine: String, viewModel: AppViewModel, navController: NavContro
         mutableStateOf("")
     }
     var sportello by remember {
-        mutableStateOf(0L)
+        mutableStateOf("")
     }
     var totale by remember {
         mutableStateOf(0.00)
@@ -138,7 +138,7 @@ fun OrdineCard(ordine: String, viewModel: AppViewModel, navController: NavContro
             dataConsegna=dataSnapshot.child("Data Consegna").value.toString()
             dataOrdine=dataSnapshot.child("Data Ordine").value.toString()
             locker=dataSnapshot.child("Locker").value.toString()
-            sportello=dataSnapshot.child("Sportello").value as Long
+            sportello=dataSnapshot.child("Sportello").value.toString()
             totale=dataSnapshot.child("Totale").value as Double
             stato=dataSnapshot.child("stato").value.toString()
             uid=dataSnapshot.child("uid").value.toString()

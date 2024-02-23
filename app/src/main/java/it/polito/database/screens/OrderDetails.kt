@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -32,6 +33,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -45,12 +47,16 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.google.firebase.database.DataSnapshot
@@ -67,6 +73,7 @@ import it.polito.database.ui.theme.fontFamily
 
 @Composable
 fun OrderDetails(viewModel: AppViewModel, navController: NavController){
+
     var ordine=viewModel.ordineSelezionato
     var ordiniEffettuati= database.child("ordini").child(ordine)
     var dataConsegna by remember {
@@ -79,7 +86,7 @@ fun OrderDetails(viewModel: AppViewModel, navController: NavController){
         mutableStateOf("")
     }
     var sportello by remember {
-        mutableStateOf(0L)
+        mutableStateOf("")
     }
     var totale by remember {
         mutableStateOf(0.00)
@@ -96,7 +103,7 @@ fun OrderDetails(viewModel: AppViewModel, navController: NavController){
             dataConsegna=dataSnapshot.child("Data Consegna").value.toString()
             dataOrdine=dataSnapshot.child("Data Ordine").value.toString()
             locker=dataSnapshot.child("Locker").value.toString()
-            sportello=dataSnapshot.child("Sportello").value as Long
+            sportello=dataSnapshot.child("Sportello").value.toString()
             totale=dataSnapshot.child("Totale").value as Double
             stato=dataSnapshot.child("stato").value.toString()
             uid=dataSnapshot.child("uid").value.toString()
@@ -207,7 +214,7 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
         //Colonna con le card dei prodotti dell'ordine scrollabile
         Column(
             modifier = Modifier
-                .heightIn(min = 0.dp, max = 210.dp)
+                .heightIn(min = 0.dp, max = 200.dp)
                 .verticalScroll(rememberScrollState())
         ) {
             prodotti.forEach { (item, qty) ->
@@ -216,6 +223,7 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
                     viewModel = viewModel,
                     qty = qty,
                     item = item,
+                    stato = stato,
                     navController
                 )
             }
@@ -280,7 +288,7 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun dettaglioProdotto(viewModel: AppViewModel, qty: Long, item: String, navController: NavController){
+fun dettaglioProdotto(viewModel: AppViewModel, qty: Long, item: String, stato: String, navController: NavController){
     var url= FindUrl(fileName = item+".jpg")
 
     Card(
@@ -344,30 +352,127 @@ fun dettaglioProdotto(viewModel: AppViewModel, qty: Long, item: String, navContr
                     .padding(horizontal = 12.dp)
             )
             {
-                var openAlertDialog = remember { mutableStateOf(false) }
+                var openAlertDialog by remember { mutableStateOf(false) }
+                var ctx = LocalContext.current
 
-                // ...
-                when {
-                    // ...
-                    openAlertDialog.value -> {
-                        AlertDialog(
-                            item = item,
-                            navController = navController,
-                            viewModel = viewModel,
-                            onDismissRequest = { openAlertDialog.value = false },
-                            onConfirmation = {
-                                openAlertDialog.value = false
-                                println("Confirmation registered") // Add logic here to handle confirmation.
-                            },
-                            dialogTitle = "Vuoi restituire un articolo? \n" +
-                                    "Nessun problema!",
-                            dialogText = "Se intendi restituire il tuo articolo non devi far altro che riconsegnarlo presso la reception della palestra in cui l’hai ritirato.\n" +
-                                    "\n" +
-                                    "Un corriere si occuperà in seguito di ritirare il tuo pacco e riceverai un rimborso completo non appena l’ordine sarà ricevuto dal magazzino."
-                        )
+                if (openAlertDialog){
+                    Popup(
+                        onDismissRequest = { openAlertDialog = false },
+                        //modifier = Modifier.fillMaxSize()
+                    ) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(Color(0xCC1D232C))
+                                .padding(horizontal = 20.dp)
+                        ){
+                            //EFFETTIVO BOX DEL POPUP
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(15.dp))
+                                    .background(
+                                        MaterialTheme.colorScheme.primary,
+                                        RoundedCornerShape(15.dp)
+                                    )
+                                    .border(
+                                        2.dp,
+                                        MaterialTheme.colorScheme.tertiary,
+                                        RoundedCornerShape(15.dp)
+                                    )
+                            ){
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier
+                                        //.fillMaxSize()
+                                        .background(MaterialTheme.colorScheme.primary)
+                                        .padding(16.dp)
+                                ){
+                                    Text(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        text = buildAnnotatedString {
+                                            append("Vuoi restituire un articolo?\n")
+                                            withStyle(
+                                                style = SpanStyle(
+                                                    color = MaterialTheme.colorScheme.tertiary,
+                                                )
+                                            ){
+                                                append("Nessun problema")
+                                            }
+                                        },
+                                        fontSize = 24.sp,
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Bold,
+                                        textAlign = TextAlign.Center,
+                                        fontFamily = fontFamily,
+                                    )
+                                    Spacer(modifier = Modifier.height(22.dp))
+                                    Column(modifier = Modifier.padding(horizontal = 18.dp)) {
+                                        Text(
+                                            text = "Se intendi restituire il tuo articolo non devi far altro che riconsegnarlo presso la reception della palestra in cui l’hai ritirato.",
+                                            fontSize = 16.sp,
+                                            color = MaterialTheme.colorScheme.onPrimary,
+                                            fontFamily = fontFamily,
+                                        )
+                                        Spacer(modifier = Modifier.height(16.dp))
+                                        Text(
+                                            text = "Un corriere si occuperà in seguito di ritirare il tuo pacco e riceverai un rimborso completo non appena l’ordine sarà ricevuto dal magazzino.",
+                                            fontSize = 16.sp,
+                                            color = MaterialTheme.colorScheme.onPrimary,
+                                            fontFamily = fontFamily,
+                                        )
+                                    }
+
+                                    Spacer(modifier = Modifier.height(22.dp))
+                                    Row(
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp)
+                                    ) {
+                                        TextButton(
+                                            modifier = Modifier.width(135.dp),
+                                            shape = RoundedCornerShape(3.dp),
+                                            colors = ButtonDefaults.buttonColors(
+                                                containerColor = MaterialTheme.colorScheme.tertiary,
+                                                contentColor = MaterialTheme.colorScheme.onTertiary
+                                            ),
+                                            onClick = {
+                                                aggiungiReso(item, viewModel.ordineSelezionato,viewModel.uid, viewModel)
+                                                Toast.makeText(ctx, "Richiesta di reso confermata", Toast.LENGTH_SHORT).show()
+                                                navController.navigate(Screen.ResiScreen.route)
+                                                openAlertDialog = false
+                                            }
+                                        ) {
+                                            Text(
+                                                text = "Avvia reso",
+                                                fontFamily = fontFamily,
+                                                fontSize = 18.sp,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        }
+                                        TextButton(
+                                            modifier = Modifier.width(135.dp),
+                                            shape = RoundedCornerShape(3.dp),
+                                            colors = ButtonDefaults.buttonColors(
+                                                containerColor = MaterialTheme.colorScheme.errorContainer,
+                                                contentColor = MaterialTheme.colorScheme.onErrorContainer
+                                            ),
+                                            onClick = {
+                                                openAlertDialog = false
+                                            }
+                                        ) {
+                                            Text(
+                                                text = "Annulla",
+                                                fontFamily = fontFamily,
+                                                fontSize = 18.sp,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
-
                 Text(
                     modifier = Modifier.clickable {
                         viewModel.prodottoSelezionato = item
@@ -378,19 +483,20 @@ fun dettaglioProdotto(viewModel: AppViewModel, qty: Long, item: String, navContr
                     fontSize = 14.sp,
                     fontStyle = FontStyle.Italic,
                     textDecoration = TextDecoration.Underline,
-                    textAlign = TextAlign.Start,
                 )
                 
                 Text(
-                    //modifier = Modifier.alpha(if (stato != "ritirato") 0.3f else 1f),
-                    modifier = Modifier.clickable { openAlertDialog.value = true },
+                    modifier = Modifier
+                        .clickable {
+                            openAlertDialog = true
+                        }
+                        .alpha(if (stato != "ritirato") 0.3f else 1f),
                     text = "Restituisci ordine",
                     fontFamily = fontFamily,
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 14.sp,
                     fontStyle = FontStyle.Italic,
                     textDecoration = TextDecoration.Underline,
-                    textAlign = TextAlign.Start
                 )
                 
                 
@@ -417,12 +523,24 @@ fun AlertDialog(
 ) {
     var ctx = LocalContext.current
     AlertDialog(
-        modifier = Modifier.border(2.dp, MaterialTheme.colorScheme.tertiary, RoundedCornerShape(15.dp)),
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(2.dp, MaterialTheme.colorScheme.tertiary, RoundedCornerShape(15.dp)),
         containerColor = MaterialTheme.colorScheme.primary,
         shape = RoundedCornerShape(15.dp),
         title = {
             Text(
-                text = dialogTitle,
+                modifier = Modifier.fillMaxWidth(),
+                text = buildAnnotatedString {
+                    append("Vuoi restituire un articolo?\n")
+                    withStyle(
+                        style = SpanStyle(
+                            color = MaterialTheme.colorScheme.tertiary,
+                        )
+                    ){
+                        append("Nessun problema")
+                    }
+                },
                 fontSize = 22.sp,
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
@@ -442,47 +560,51 @@ fun AlertDialog(
             onDismissRequest()
         },
         confirmButton = {
-            TextButton(
-                shape = RoundedCornerShape(3.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.tertiary,
-                    contentColor = MaterialTheme.colorScheme.onTertiary
-                ),
-                onClick = {
-                    aggiungiReso(item, viewModel.ordineSelezionato,viewModel.uid, viewModel)
-                    Toast.makeText(ctx, "Richiesta di reso confermata", Toast.LENGTH_SHORT).show()
-                    navController.navigate(Screen.ResiScreen.route)
-                    onDismissRequest()
-                }
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Text(
-                    text = "Avvia reso",
-                    fontFamily = fontFamily,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                TextButton(
+                    modifier = Modifier.width(125.dp),
+                    shape = RoundedCornerShape(3.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.tertiary,
+                        contentColor = MaterialTheme.colorScheme.onTertiary
+                    ),
+                    onClick = {
+                        aggiungiReso(item, viewModel.ordineSelezionato,viewModel.uid, viewModel)
+                        Toast.makeText(ctx, "Richiesta di reso confermata", Toast.LENGTH_SHORT).show()
+                        navController.navigate(Screen.ResiScreen.route)
+                        onDismissRequest()
+                    }
+                ) {
+                    Text(
+                        text = "Avvia reso",
+                        fontFamily = fontFamily,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                TextButton(
+                    modifier = Modifier.width(125.dp),
+                    shape = RoundedCornerShape(3.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer
+                    ),
+                    onClick = {
+                        onDismissRequest()
+                    }
+                ) {
+                    Text(
+                        text = "Annulla",
+                        fontFamily = fontFamily,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
         },
-        dismissButton = {
-            TextButton(
-                //modifier = Modifier.align(Alignment.End),
-                shape = RoundedCornerShape(3.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer,
-                    contentColor = MaterialTheme.colorScheme.onErrorContainer
-                ),
-                onClick = {
-                    onDismissRequest()
-                }
-            ) {
-                Text(
-                    text = "Annulla",
-                    fontFamily = fontFamily,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        }
     )
 }
 
