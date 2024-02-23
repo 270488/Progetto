@@ -117,9 +117,7 @@ fun InfoLocker(navController: NavController) {
         )
         {
             TextButton(
-                onClick = {
-                          //TODO
-                },
+                onClick = {navController.navigate(Screen.ScegliPalestraScreen.route)},
                 modifier = Modifier
                     .layoutId("chooseAnotherLocker")
                     .padding(top = 20.dp, end = 8.dp),

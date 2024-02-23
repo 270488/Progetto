@@ -62,7 +62,7 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
             NotificationsScreen(viewModel)
         }
         composable(route = Screen.Settings.route) {
-            SettingsScreen(viewModel)
+            SettingsScreen(viewModel, navController)
         }
         composable(route = Screen.Product.route) {
             ProductScreen(viewModel,navController)
