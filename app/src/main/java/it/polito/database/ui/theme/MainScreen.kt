@@ -60,6 +60,8 @@ fun MainScreen(viewModel: AppViewModel){
         Screen.OrderDetails.route,
         Screen.Newsletter.route,
         Screen.PreferenzaNotifiche.route,
+        Screen.AreaLegale.route,
+        Screen.PreferenzeCookies.route,
         Screen.GestisciFitlockerScreen.route,
         Screen.CorriereProfile.route,
         Screen.DeliverOrder.route,
@@ -288,6 +290,8 @@ fun AddItem3(
                     Screen.GestisciFitlockerScreen.route->Text(text = "Gestisci Fitlocker", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                     Screen.PreferenzaNotifiche.route->Text(text = "Preferenze Notifiche", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                     Screen.Newsletter.route->Text(text = "Newsletter", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
+                    Screen.AreaLegale.route->Text(text = "Area Legale", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
+                    Screen.PreferenzeCookies.route->Text(text = "Preferenze Cookies", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                 }
                 //tante condizioni quante sono le schermate che hanno questa top Bar
                 //( con freccia per tornare indietro, impostazioni a destra

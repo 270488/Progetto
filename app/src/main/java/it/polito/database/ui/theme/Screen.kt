@@ -173,5 +173,10 @@ sealed class Screen (
         title = "AreaLegale",
         icon = Icons.Default.Menu
     )
+    object PreferenzeCookies: Screen(
+        route = "preferenzeCookies",
+        title = "PreferenzeCookies",
+        icon = Icons.Default.Menu
+    )
 
 }
