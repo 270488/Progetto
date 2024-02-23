@@ -314,7 +314,7 @@ fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: Str
         color = Color.White,
         modifier = Modifier
             .layoutId("productPrice")
-            .padding(end = 8.dp, top = 35.dp)
+            .padding(end = 8.dp, top = 25.dp)
     )
     //val quantita = 0
 
@@ -356,7 +356,7 @@ fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: Str
             .layoutId("txtDescription")
             .padding(top = 8.dp),
         colors = CardDefaults.cardColors(Blue20),
-        border = BorderStroke(2.dp, Yellow40)
+        border = BorderStroke(1.dp, Yellow40)
         ) {
         Text(
             text = descrizione,
@@ -379,9 +379,9 @@ fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: Str
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
             .layoutId("btnBuy")
-            .padding(top = 16.dp, start = 90.dp, bottom = 16.dp)
-            .width(250.dp),
-        colors = ButtonDefaults.buttonColors(Color.Yellow),
+            .padding(top = 16.dp, bottom = 16.dp)
+            .width(185.dp),
+        colors = ButtonDefaults.buttonColors(Yellow40),
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = 0.dp,
             pressedElevation = 0.dp,
@@ -391,7 +391,7 @@ fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: Str
         Text(
             text = "Aggiungi al carrello",
             fontFamily = fontFamily,
-            fontSize = 23.sp,
+            fontSize = 16.sp,
             color = Color.Black,
             fontWeight = FontWeight.Bold
         )
@@ -432,7 +432,7 @@ fun OptionSelection() {
             expanded = isExpanded,
             onExpandedChange = { isExpanded = it },
             modifier = Modifier
-                .border(BorderStroke(2.dp, Yellow40), RoundedCornerShape(4.dp))
+                .border(BorderStroke(1.dp, Yellow40), RoundedCornerShape(4.dp))
                 .background(Blue20)
         ) {
             TextField(
@@ -490,7 +490,7 @@ fun QtySelection(viewModel: AppViewModel) {
             expanded = isExpanded,
             onExpandedChange = { isExpanded = it },
             modifier = Modifier
-                .border(BorderStroke(2.dp, Yellow40), RoundedCornerShape(4.dp))
+                .border(BorderStroke(1.dp, Yellow40), RoundedCornerShape(4.dp))
                 .background(Blue20)
         ) {
             TextField(
