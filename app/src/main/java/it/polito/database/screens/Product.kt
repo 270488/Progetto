@@ -381,7 +381,7 @@ fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: Str
             aggiungiAlCarrello(item = nome, id = id, qty = viewModel.quantita, viewModel)
             navController.navigate(Screen.Cart.route)
         },
-        shape = RoundedCornerShape(8.dp),
+        shape = RoundedCornerShape(3.dp),
         modifier = Modifier
             .layoutId("btnBuy")
             .padding(top = 16.dp, bottom = 16.dp)

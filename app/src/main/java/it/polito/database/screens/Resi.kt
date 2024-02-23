@@ -19,8 +19,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -86,35 +88,56 @@ fun ResiScreen(viewModel: AppViewModel, navController: NavController){
     })
 
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Column (horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween,
         modifier= Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary)
             .verticalScroll(rememberScrollState())
-            .padding(top = 90.dp, bottom = 110.dp)
-    ){
-
-        /*Button(onClick = { aggiungiReso("Pink Leggins", "1542", id) },
-            modifier = Modifier.background(Color.Yellow)) {
-            Text(text = "Aggiungi Reso")
-
-        }*/
-
-        if(listaResi.isEmpty()){
-            Text(
-                text = "Non sono presenti resi",
-                fontFamily = fontFamily,
-                color = MaterialTheme.colorScheme.onPrimary,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Normal,
-                fontStyle = FontStyle.Italic,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
+            .padding(top = 90.dp, bottom = 110.dp))
+    {
+        Column (
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ){
+            if(listaResi.isEmpty()){
+                Text(
+                    text = "Non sono presenti resi",
+                    fontFamily = fontFamily,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Normal,
+                    fontStyle = FontStyle.Italic,
+                    modifier = Modifier.padding(top = 150.dp, bottom = 16.dp)
+                )
+            }
+            else{
+                listaResi.forEach{
+                        i-> resiCard(numeroReso = i, viewModel, navController)
+                }
+            }
         }
-        else{
-            listaResi.forEach{
-                    i-> resiCard(numeroReso = i, viewModel, navController)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(horizontal = 8.dp)
+        ) {
+            Divider(thickness = 2.dp, color = MaterialTheme.colorScheme.tertiary)
+            Spacer(modifier = Modifier.height(30.dp))
+            Button(
+                shape = RoundedCornerShape(3.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.tertiary,
+                    contentColor = MaterialTheme.colorScheme.onTertiary
+                ),
+                onClick = {
+                    navController.navigate(Screen.Orders.route)
+                }
+            ){
+                Text(
+                    text = "I miei ordini",
+                    fontFamily = fontFamily,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
         

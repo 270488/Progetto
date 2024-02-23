@@ -87,14 +87,15 @@ fun Orders(viewModel: AppViewModel, navController: NavController){
                 .padding(horizontal = 20.dp)
         ){
             if(listaOrdini.isEmpty()){
+
                 Text(
                     text = "Non sono stati effettuati ordini",
                     fontFamily = fontFamily,
                     color = MaterialTheme.colorScheme.onPrimary,
-                    fontSize = 24.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Normal,
                     fontStyle = FontStyle.Italic,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(top = 150.dp, bottom = 16.dp)
                 )
 
                 }
@@ -128,9 +129,6 @@ fun Orders(viewModel: AppViewModel, navController: NavController){
                 )
             }
         }
-
-
-
     }
 }
 @OptIn(ExperimentalMaterial3Api::class)
