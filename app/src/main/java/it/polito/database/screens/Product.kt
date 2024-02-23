@@ -273,13 +273,13 @@ fun ProductDetail(viewModel: AppViewModel, navController: NavController) {
                     imageVector = Icons.Outlined.FavoriteBorder,
                     colorFilter = ColorFilter.tint(Red20),
                     contentDescription = "Empty Heart",
-                    modifier = Modifier.size(50.dp)
+                    modifier = Modifier.size(45.dp)
                 )}else{
                 Image(
                     imageVector = Icons.Outlined.Favorite,
                     contentDescription = "Filled Heart",
                     colorFilter = ColorFilter.tint(Red40),
-                    modifier = Modifier.size(50.dp)
+                    modifier = Modifier.size(45.dp)
                 )
             }
         }

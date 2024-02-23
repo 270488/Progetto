@@ -4,6 +4,7 @@ package it.polito.database.ui.theme
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -250,7 +251,17 @@ fun SmallTopAppBar(navController: NavHostController, viewModel: AppViewModel) {
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-        NavigationBar(containerColor = MaterialTheme.colorScheme.primary){
+        NavigationBar(
+            containerColor =
+            if(currentDestination?.route == Screen.Settings.route
+                || currentDestination?.route == Screen.PreferenzaNotifiche.route
+                || currentDestination?.route == Screen.AreaLegale.route
+                || currentDestination?.route == Screen.AccessoESicurezza.route
+            //&& currentDestination?.route == Screen.PaeseELingua.route
+            ){
+                MaterialTheme.colorScheme.background
+            } else MaterialTheme.colorScheme.primary
+        ){
                 AddItem3(
                     navController = navController,
                     currentDestination = currentDestination, viewModel
@@ -266,7 +277,8 @@ fun AddItem3(
     currentDestination: NavDestination?, viewModel: AppViewModel
 ) {
     TopAppBar(
-        modifier = Modifier.padding(top = 6.dp),
+        modifier = Modifier
+            .padding(top = 6.dp),
         title = {
             Box(
                 modifier = Modifier.fillMaxWidth(),
@@ -300,16 +312,55 @@ fun AddItem3(
             }
         },
         colors = TopAppBarDefaults.smallTopAppBarColors(
-            containerColor =  MaterialTheme.colorScheme.primary
+            containerColor =
+            if(currentDestination?.route == Screen.Settings.route
+                || currentDestination?.route == Screen.PreferenzaNotifiche.route
+                || currentDestination?.route == Screen.AreaLegale.route
+                || currentDestination?.route == Screen.AccessoESicurezza.route
+                //&& currentDestination?.route == Screen.PaeseELingua.route
+                ){
+                MaterialTheme.colorScheme.background
+            }else MaterialTheme.colorScheme.primary,
+
+            navigationIconContentColor =
+            if(currentDestination?.route == Screen.Settings.route
+                || currentDestination?.route == Screen.PreferenzaNotifiche.route
+                || currentDestination?.route == Screen.AreaLegale.route
+                || currentDestination?.route == Screen.AccessoESicurezza.route
+            //&& currentDestination?.route == Screen.PaeseELingua.route
+            ){
+                MaterialTheme.colorScheme.onBackground
+            }else MaterialTheme.colorScheme.tertiary,
+
+            actionIconContentColor =
+            if(currentDestination?.route == Screen.Settings.route
+                || currentDestination?.route == Screen.PreferenzaNotifiche.route
+                || currentDestination?.route == Screen.AreaLegale.route
+                || currentDestination?.route == Screen.AccessoESicurezza.route
+            //&& currentDestination?.route == Screen.PaeseELingua.route
+            ){
+                MaterialTheme.colorScheme.onBackground
+            }else MaterialTheme.colorScheme.tertiary,
+
+            titleContentColor =
+            if(currentDestination?.route == Screen.Settings.route
+                || currentDestination?.route == Screen.PreferenzaNotifiche.route
+                || currentDestination?.route == Screen.AreaLegale.route
+                || currentDestination?.route == Screen.AccessoESicurezza.route
+            //&& currentDestination?.route == Screen.PaeseELingua.route
+            ){
+                MaterialTheme.colorScheme.onBackground
+            }else MaterialTheme.colorScheme.onPrimary,
+
         ),
         navigationIcon = {
             IconButton(
                 onClick = {
                     navController.navigateUp()
                 },
-                colors = IconButtonDefaults.iconButtonColors(
+                /*colors = IconButtonDefaults.iconButtonColors(
                     contentColor = MaterialTheme.colorScheme.tertiary
-                )
+                )*/
             ){
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
@@ -325,9 +376,9 @@ fun AddItem3(
                 onClick = {
                     navController.navigate(Screen.Settings.route)
                 },
-                colors = IconButtonDefaults.iconButtonColors(
+                /*colors = IconButtonDefaults.iconButtonColors(
                     contentColor = MaterialTheme.colorScheme.tertiary
-                )
+                )*/
             ) {
                 Icon(
                     imageVector = Screen.Settings.icon,
@@ -335,6 +386,9 @@ fun AddItem3(
                     modifier = Modifier.size(40.dp)
                 )
             }
+            }
+            if(currentDestination?.route == Screen.Settings.route){
+                Box(modifier = Modifier.size(40.dp))
             }
         }
     )

@@ -45,46 +45,21 @@ fun PreferenzaNotifiche(viewModel: AppViewModel, navController: NavController){
 }
 
 @Composable
-fun PreferenzaNotificheScreen(viewModel: AppViewModel, navController: NavController, modifier: Modifier = Modifier
-    .padding(top = 74.dp)
-    .padding(bottom = 74.dp)) {
-
+fun PreferenzaNotificheScreen(viewModel: AppViewModel, navController: NavController)
+{
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier= Modifier
             .fillMaxSize()
-            .background(Color.White)
-            .verticalScroll(rememberScrollState())
-            .padding(top = 90.dp, bottom = 110.dp)
+            .background(MaterialTheme.colorScheme.background)
+            .padding(top = 70.dp, bottom = 250.dp)
     )
     {
-        Column (
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier= Modifier
-                .padding(horizontal = 20.dp)
-        ){
-                Text(
-                    text = "Preferenze sulle notifiche",
-                    fontFamily = fontFamily,
-                    color = Color.Black,
-                    fontSize = 26.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-            }
-
-        Box(
-            contentAlignment = Alignment.Center,
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(
-                    Color.White,
-                    shape = MaterialTheme.shapes.large
-                )
                 .padding(12.dp)
-                .padding(vertical = 16.dp)
         ) {
             Column(modifier = Modifier.padding(vertical = 16.dp)) {
                 Row(
@@ -102,7 +77,7 @@ fun PreferenzaNotificheScreen(viewModel: AppViewModel, navController: NavControl
                             fontFamily = fontFamily,
                             fontSize = 22.sp,
                             textAlign = TextAlign.Start,
-                            fontWeight = FontWeight.SemiBold,
+                            fontWeight = FontWeight.Bold,
                             color = Color.Black,
                             modifier = Modifier
                                 .offset(x = 0.dp, y = (-2).dp)
@@ -119,12 +94,10 @@ fun PreferenzaNotificheScreen(viewModel: AppViewModel, navController: NavControl
                                 .padding(horizontal = 16.dp)
                         )
                     }
-                    NotificheSwitch(modifier = Modifier
-                        .padding(end = 30.dp)
-                        .weight(0.4f), "account", viewModel)
+                    NotificheSwitch(modifier = Modifier, "account", viewModel)
                 }
                 Spacer(modifier = Modifier.height(16.dp) )
-                Divider(thickness = 1.dp, color = MaterialTheme.colorScheme.primaryContainer, modifier = Modifier.padding(start = 16.dp, end = 16.dp))
+                Divider(thickness = 2.dp, color = MaterialTheme.colorScheme.onBackground, modifier = Modifier.padding(start = 16.dp, end = 4.dp))
                 Spacer(modifier = Modifier.height(16.dp) )
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -140,7 +113,7 @@ fun PreferenzaNotificheScreen(viewModel: AppViewModel, navController: NavControl
                             fontFamily = fontFamily,
                             fontSize = 22.sp,
                             textAlign = TextAlign.Start,
-                            fontWeight = FontWeight.SemiBold,
+                            fontWeight = FontWeight.Bold,
                             color = Color.Black,
                             modifier = Modifier
                                 .offset(x = 0.dp, y = (-2).dp)
@@ -157,9 +130,7 @@ fun PreferenzaNotificheScreen(viewModel: AppViewModel, navController: NavControl
                                 .padding(horizontal = 16.dp)
                         )
                     }
-                    NotificheSwitch(modifier = Modifier
-                        .padding(end = 30.dp)
-                        .weight(0.4f),"spedizioni",viewModel)
+                    NotificheSwitch(modifier = Modifier,"spedizioni",viewModel)
                 }
             }
         }
