@@ -186,7 +186,7 @@ fun ColoredSwitch(modifier: Modifier, opt: String, viewModel: AppViewModel) {
         Switch(
             checked = checked2,
             onCheckedChange = {
-                checked2 = !checked2
+                    checked2 = !checked2
                     if (opzione2 == false) {
                         database.child("utenti").child(id).child("newsletter").child("opzione2")
                             .setValue(true)

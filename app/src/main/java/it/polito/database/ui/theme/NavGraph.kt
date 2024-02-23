@@ -30,6 +30,7 @@ import it.polito.database.screens.NotificationsScreen
 import it.polito.database.screens.OrderDetails
 import it.polito.database.screens.Orders
 import it.polito.database.screens.PreferenzaNotificheScreen
+import it.polito.database.screens.PreferenzeCookiesScreen
 import it.polito.database.screens.ProductListScreen
 import it.polito.database.screens.ProductScreen
 import it.polito.database.screens.ProfileScreen
@@ -133,6 +134,9 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
         }
         composable(route = Screen.AreaLegale.route) {
             AreaLegaleScreen(viewModel, navController)
+        }
+        composable(route = Screen.PreferenzeCookies.route) {
+            PreferenzeCookiesScreen(viewModel, navController)
         }
     }
 }
