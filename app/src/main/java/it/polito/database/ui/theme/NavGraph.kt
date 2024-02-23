@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import it.polito.database.AppViewModel
 import it.polito.database.HomePage
+import it.polito.database.screens.AccessoESicureezzaScreen
 import it.polito.database.screens.AiutoEContatti
 import it.polito.database.screens.AreaLegaleScreen
 import it.polito.database.screens.AuthenticationActivity
@@ -137,6 +138,9 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
         }
         composable(route = Screen.PreferenzeCookies.route) {
             PreferenzeCookiesScreen(viewModel, navController)
+        }
+        composable(route = Screen.AccessoESicurezza.route) {
+            AccessoESicureezzaScreen(viewModel, navController)
         }
     }
 }

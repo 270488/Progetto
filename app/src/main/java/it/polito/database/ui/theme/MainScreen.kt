@@ -66,7 +66,8 @@ fun MainScreen(viewModel: AppViewModel){
         Screen.CorriereProfile.route,
         Screen.DeliverOrder.route,
         Screen.CorriereProfile.route,
-        Screen.CorriereDetails.route
+        Screen.CorriereDetails.route,
+        Screen.AccessoESicurezza.route
     )
         Scaffold(
 
@@ -292,6 +293,7 @@ fun AddItem3(
                     Screen.Newsletter.route->Text(text = "Newsletter", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                     Screen.AreaLegale.route->Text(text = "Area Legale", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                     Screen.PreferenzeCookies.route->Text(text = "Preferenze Cookies", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
+                    Screen.AccessoESicurezza.route->Text(text = "Accesso e sicurezza", fontFamily = fontFamily, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                 }
                 //tante condizioni quante sono le schermate che hanno questa top Bar
                 //( con freccia per tornare indietro, impostazioni a destra

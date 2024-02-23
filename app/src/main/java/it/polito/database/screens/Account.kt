@@ -113,6 +113,9 @@ fun Opzioni(navController: NavHostController) {
                     } else if (name =="Preferenze cookies" ) {
                 //TODO inserire alert
                 navController.navigate(Screen.PreferenzeCookies.route)
+            } else if (name =="Accesso e sicurezza" ) {
+                //TODO inserire alert
+                navController.navigate(Screen.AccessoESicurezza.route)
             }
                     //TODO else if () per le altre sezioni
                 }) {

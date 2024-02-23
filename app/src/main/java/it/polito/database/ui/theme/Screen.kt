@@ -178,5 +178,9 @@ sealed class Screen (
         title = "PreferenzeCookies",
         icon = Icons.Default.Menu
     )
-
+    object AccessoESicurezza: Screen(
+        route = "accessoESicurezza",
+        title = "AccessoESicurezza",
+        icon = Icons.Default.Lock
+    )
 }
