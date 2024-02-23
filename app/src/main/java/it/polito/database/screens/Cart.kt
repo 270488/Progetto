@@ -110,13 +110,20 @@ fun Cart(viewModel: AppViewModel, navController: NavController, modifier: Modifi
                 totale=0.00
                 viewModel.tot=0.00
                 Text(
-                    text = "Il tuo carrello è vuoto.",
+                    text = "Il tuo carrello [$numItem]",
                     fontFamily = fontFamily,
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "Il tuo carrello è vuoto.",
+                    fontFamily = fontFamily,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Normal,
                     fontStyle = FontStyle.Italic,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(top = 130.dp, bottom = 16.dp)
                 )
             }else {
                 listaCarrello.forEach { item ->
