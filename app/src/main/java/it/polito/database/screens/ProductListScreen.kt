@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -46,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shadow
@@ -71,6 +73,8 @@ import it.polito.database.LoadImageFromUrl
 import it.polito.database.database
 import it.polito.database.ui.theme.Blue20
 import it.polito.database.ui.theme.Blue40
+import it.polito.database.ui.theme.Red20
+import it.polito.database.ui.theme.Red40
 import it.polito.database.ui.theme.Screen
 import it.polito.database.ui.theme.fontFamily
 
@@ -183,6 +187,7 @@ fun ProductList(modifier: Modifier = Modifier
             val url= FindUrl(fileName = fileName)
             contentCard(nome = nome, prezzo = prezzo, url=url, navController, viewModel )
         }
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
@@ -319,26 +324,24 @@ fun contentCard(nome: String, prezzo: String, url: String, navController: NavCon
                         if (filledHeart == false) {
                             Image(
                                 imageVector = Icons.Outlined.FavoriteBorder,
+                                colorFilter = ColorFilter.tint(Red20),
                                 contentDescription = "Empty Heart",
                                 modifier = Modifier
-                                    .size(50.dp, 50.dp)
+                                    .size(40.dp)
                             )
                         } else {
                             Image(
                                 imageVector = Icons.Outlined.Favorite,
+                                colorFilter = ColorFilter.tint(Red40),
                                 contentDescription = "Filled Heart",
-                                modifier = Modifier.size(50.dp, 50.dp)
+                                modifier = Modifier.size(40.dp)
                             )
                         }
                     }
                 }
 
-
-
-
-
-
         }
+
     }
 
 

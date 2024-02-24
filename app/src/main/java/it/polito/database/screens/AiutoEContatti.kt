@@ -414,7 +414,7 @@ fun Request(navController: NavController){
     Button(
         shape = RoundedCornerShape(3.dp),
         modifier = Modifier
-            .width(100.dp)
+            .width(120.dp)
             .border(width = 2.dp, color = Color.Black, RoundedCornerShape(3.dp)),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.tertiary
@@ -429,7 +429,7 @@ fun Request(navController: NavController){
             fontSize = 22.sp,
             fontFamily = fontFamily,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.secondary,
+            color = Color.Black,
             modifier = Modifier.offset(x = 0.dp, y = (-2).dp)
         )
     }
