@@ -37,9 +37,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -184,7 +187,7 @@ fun OrdineCard(ordine: String, viewModel: AppViewModel, navController: NavContro
     })
 
     Card(
-        modifier = Modifier.height(100.dp),
+        modifier = Modifier.height(90.dp),
         shape = RoundedCornerShape(15.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.secondary,
@@ -266,16 +269,37 @@ fun OrdineCard(ordine: String, viewModel: AppViewModel, navController: NavContro
                         modifier = Modifier
                             .fillMaxWidth()
                     ) {
-
                         Text(
-                            text = "Stato ordine: ",
+                            text = buildAnnotatedString {
+                                append("Stato ordine: ")
+                                withStyle(
+                                    style = SpanStyle(
+                                        color =
+                                        if (stato == "rispedito") MaterialTheme.colorScheme.errorContainer
+                                        else  MaterialTheme.colorScheme.tertiary,
+                                    )
+                                ){
+                                    append(stato)
+                                }
+                            },
                             fontFamily = fontFamily,
                             color = MaterialTheme.colorScheme.onPrimary,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Start
                         )
-                        Box(modifier = Modifier.fillMaxSize().align(Alignment.CenterVertically))
+
+
+
+                        /*Text(
+                            text = "Stato ordine: " +stato,
+                            fontFamily = fontFamily,
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Start
+                        )*/
+                        /*Box(modifier = Modifier.fillMaxSize().align(Alignment.CenterVertically))
                         {
                             if(stato=="ordinato"){
                                 Icon(painter = painterResource(id = R.drawable.ordinato), contentDescription = "ordinato", tint = Yellow40, modifier = Modifier.width(60.dp))
@@ -292,7 +316,7 @@ fun OrdineCard(ordine: String, viewModel: AppViewModel, navController: NavContro
                             else if(stato=="rispedito"){
                                 Icon(painter = painterResource(id = R.drawable.reso_scaduto), contentDescription = "rispedito", tint = Yellow40, modifier = Modifier.width(60.dp))
                             }
-                        }
+                        }*/
                     }
                 }
 

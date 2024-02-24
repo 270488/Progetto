@@ -37,9 +37,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -228,6 +232,24 @@ fun resiCard(numeroReso: String, viewModel: AppViewModel, navController: NavCont
                 verticalAlignment = Alignment.CenterVertically
             ){
                 Text(
+                    text = buildAnnotatedString {
+                        append("Stato: ")
+                        withStyle(
+                            style = SpanStyle(
+                                color =
+                                if (stato == "scaduto") MaterialTheme.colorScheme.errorContainer
+                                else  MaterialTheme.colorScheme.tertiary,
+                            )
+                        ){
+                            append(stato)
+                        }
+                    },
+                    fontFamily = fontFamily,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                /*Text(
                     text = "Stato: " + stato,
                     color =
                     if (stato == "scaduto") MaterialTheme.colorScheme.errorContainer
@@ -235,7 +257,7 @@ fun resiCard(numeroReso: String, viewModel: AppViewModel, navController: NavCont
                     fontFamily = fontFamily,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp
-                )
+                )*/
                 Text(
                     text = "Scadenza: " + scadenza,
                     fontFamily = fontFamily,

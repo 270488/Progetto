@@ -131,7 +131,7 @@ fun OrderDetails(viewModel: AppViewModel, navController: NavController){
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary)
             //.verticalScroll(rememberScrollState())
-            .padding(top = 80.dp, bottom = 110.dp)) {
+            .padding(top = 80.dp, bottom = 100.dp)) {
 
         DettaglioOrdineCard(viewModel, navController, prodotti, stato=stato, totale=totale, dataOrdine = dataOrdine, dataConsegna = dataConsegna, locker=locker)
 
@@ -251,94 +251,48 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
             )
 
             if (stato == "ordinato") {
-                Column (
-                    verticalArrangement = Arrangement.SpaceBetween,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
                     Icon(painter = painterResource(id = R.drawable.ordinato),
                         contentDescription = "ordinato",
                         modifier = Modifier
-                            .size(80.dp)
+                            .size(72.dp)
                             .padding(top = 8.dp),
-                        tint = Yellow40)
-
-                    Image(
-                        painter = painterResource(id = R.drawable.barrastatoordine1),
-                        contentDescription = "",
-                        contentScale = ContentScale.FillWidth,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(5.dp)
+                        tint = Yellow40
                     )
-                }
             } else if (stato == "spedito") {
                 Icon(
                     painter = painterResource(id = R.drawable.spedito),
                     contentDescription = "spedito",
                     modifier = Modifier
-                        .size(80.dp)
+                        .size(72.dp)
                         .padding(top = 8.dp),
                     tint = Yellow40
-                )
-                Image(
-                        painter = painterResource(id = R.drawable.barrastatoordine2),
-                contentDescription = "",
-                contentScale = ContentScale.FillWidth,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(5.dp)
                 )
             } else if (stato == "consegnato") {
                 Icon(
                     painter = painterResource(id = R.drawable.consegnato),
                     contentDescription = "consegnato",
                     modifier = Modifier
-                        .size(80.dp)
+                        .size(72.dp)
                         .padding(top = 8.dp),
                     tint = Yellow40
-                )
-                Image(
-                    painter = painterResource(id = R.drawable.barrastatoordine3),
-                    contentDescription = "",
-                    contentScale = ContentScale.FillWidth,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(5.dp)
                 )
             } else if (stato == "ritirato") {
                 Icon(
                     painter = painterResource(id = R.drawable.reso_completato),
                     contentDescription = "ritirato",
                     modifier = Modifier
-                        .size(80.dp)
+                        .size(72.dp)
                         .padding(top = 8.dp),
                     tint = Yellow40
-                )
-                Image(
-                    painter = painterResource(id = R.drawable.barrastatoordine4),
-                    contentDescription = "",
-                    contentScale = ContentScale.FillWidth,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(5.dp)
                 )
             } else if (stato == "rispedito") {
                 Icon(
                     painter = painterResource(id = R.drawable.reso_scaduto),
                     contentDescription = "rispedito",
                     modifier = Modifier
-                        .size(80.dp)
+                        .size(72.dp)
                         .padding(top = 8.dp),
                     tint = Yellow40
-                )
-                Image(
-                    painter = painterResource(id = R.drawable.barrastatoordine5),
-                    contentDescription = "",
-                    contentScale = ContentScale.FillWidth,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(5.dp)
                 )
             }
             Text(
@@ -347,7 +301,7 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
                 color = Color.White,
                 fontFamily = fontFamily,
                 fontStyle = FontStyle.Italic,
-                modifier = Modifier.align(Alignment.Start).padding(bottom = 4.dp)
+                modifier = Modifier.align(Alignment.Start).padding(top = 6.dp, bottom = 4.dp)
             )
             Text(
                 text = "Data ordine: " + dataOrdine,
@@ -373,6 +327,53 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
                 modifier = Modifier
                     .align(Alignment.Start)
             )
+
+            if (stato == "ordinato") {
+                Image(
+                    painter = painterResource(id = R.drawable.barrastatoordine1),
+                    contentDescription = "",
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp)
+                )
+            } else if (stato == "spedito") {
+                Image(
+                    painter = painterResource(id = R.drawable.barrastatoordine2),
+                    contentDescription = "",
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp)
+                )
+            } else if (stato == "consegnato") {
+                Image(
+                    painter = painterResource(id = R.drawable.barrastatoordine3),
+                    contentDescription = "",
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp)
+                )
+            } else if (stato == "ritirato") {
+                Image(
+                    painter = painterResource(id = R.drawable.barrastatoordine4),
+                    contentDescription = "",
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp)
+                )
+            } else if (stato == "rispedito") {
+                Image(
+                    painter = painterResource(id = R.drawable.barrastatoordine5),
+                    contentDescription = "",
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp)
+                )
+            }
 
             Spacer(modifier = Modifier.height(8.dp))
 
