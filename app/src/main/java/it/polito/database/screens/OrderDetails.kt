@@ -2,6 +2,7 @@ package it.polito.database.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -28,6 +29,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -41,12 +43,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
@@ -59,11 +63,13 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import it.polito.database.AppViewModel
 import it.polito.database.FindUrl
+import it.polito.database.R
 import it.polito.database.database
 import it.polito.database.ui.theme.Blue20
 import it.polito.database.ui.theme.Blue40
@@ -124,7 +130,7 @@ fun OrderDetails(viewModel: AppViewModel, navController: NavController){
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary)
             //.verticalScroll(rememberScrollState())
-            .padding(top = 90.dp, bottom = 110.dp)) {
+            .padding(top = 80.dp, bottom = 110.dp)) {
 
         DettaglioOrdineCard(viewModel, navController, prodotti, stato=stato, totale=totale, dataOrdine = dataOrdine, dataConsegna = dataConsegna, locker=locker)
 
@@ -133,7 +139,7 @@ fun OrderDetails(viewModel: AppViewModel, navController: NavController){
             modifier = Modifier.padding(horizontal = 8.dp)
         ){
             Divider(thickness = 2.dp, color = MaterialTheme.colorScheme.tertiary)
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(15.dp))
 
             if(stato=="consegnato"){
                 Button(onClick = { navController.navigate(Screen.CollectOrder.route)
@@ -228,49 +234,127 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
                 )
             }
         }
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(5.dp))
         //Column con info generali
-        Column {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Text(
                 text = "Stato della spedizione:",
                 color = Color.White,
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 fontFamily = fontFamily,
-                fontStyle = FontStyle.Italic
+                fontStyle = FontStyle.Italic,
+                modifier = Modifier.align(Alignment.Start)
             )
 
             if (stato == "ordinato") {
                 //TODO icona ordinato
+                Column (
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(painter = painterResource(id = R.drawable.ordinato),
+                        contentDescription = "",
+                        modifier = Modifier
+                            .size(100.dp)
+                            .padding(top = 15.dp),
+                        tint = Yellow40)
+
+                    Image(
+                        painter = painterResource(id = R.drawable.barrastatoordine1),
+                        contentDescription = "",
+                        contentScale = ContentScale.FillWidth,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(5.dp)
+                    )
+                }
             } else if (stato == "spedito") {
+                Icon(
+                    painter = painterResource(id = R.drawable.spedito),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .size(100.dp)
+                        .padding(top = 15.dp),
+                    tint = Yellow40
+                )
+                Image(
+                        painter = painterResource(id = R.drawable.barrastatoordine2),
+                contentDescription = "",
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp)
+                )
                 //TODO icona in consegna
             } else if (stato == "consegnato") {
+                Icon(
+                    painter = painterResource(id = R.drawable.consegnato),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .size(100.dp)
+                        .padding(top = 15.dp),
+                    tint = Yellow40
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.barrastatoordine3),
+                    contentDescription = "",
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp)
+                )
                 //TODO icona in consegna
             } else if (stato == "ritirato") {
+                Icon(
+                    painter = painterResource(id = R.drawable.reso_completato),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .size(100.dp)
+                        .padding(top = 15.dp),
+                    tint = Yellow40
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.barrastatoordine4),
+                    contentDescription = "",
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp)
+                )
                 //TODO icona in consegna
             }
             Text(
                 text = "Data ordine: " + dataOrdine,
                 color = Color.White,
-                fontSize = 16.sp,
-                fontFamily = fontFamily
+                fontSize = 13.sp,
+                fontFamily = fontFamily,
+                modifier = Modifier.align(Alignment.Start)
             )
             Text(
                 text = "Data consegna prevista: " + dataConsegna,
                 color = Color.White,
-                fontSize = 16.sp,
-                fontFamily = fontFamily
+                fontSize = 13.sp,
+                fontFamily = fontFamily,
+                modifier = Modifier.align(Alignment.Start)
             )
 
             Text(
                 text = "Locker di destinazione: " + locker.replace("/"," "),
                 color = Color.White,
-                fontSize = 16.sp,
+                fontSize = 13.sp,
                 lineHeight = 18.sp,
-                fontFamily = fontFamily
+                fontFamily = fontFamily,
+                modifier = Modifier
+                    .padding(top= 10.dp)
+                    .align(Alignment.Start)
             )
 
 
-            if (stato == "ordinato") {
+          /*  if (stato == "ordinato") {
                 //TODO icona ordinato
             } else if (stato == "spedito") {
                 //TODO icona in consegna
@@ -278,7 +362,7 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
                 //TODO icona in consegna
             } else if (stato == "ritirato") {
                 //TODO icona in consegna
-            }
+            }*/
         }
 
     }
@@ -310,8 +394,7 @@ fun dettaglioProdotto(viewModel: AppViewModel, qty: Long, item: String, stato: S
                     contentDescription = null,
                     modifier = Modifier
                         .clip(RoundedCornerShape(15.dp))
-                        .size(130.dp, 78.dp)
-                        .border(2.dp, Color.White, RoundedCornerShape(5)),
+                        .size(130.dp, 78.dp),
                     contentScale = ContentScale.Crop
                 )
                 Spacer(modifier = Modifier.width(8.dp))
@@ -426,7 +509,9 @@ fun dettaglioProdotto(viewModel: AppViewModel, qty: Long, item: String, stato: S
                                     Spacer(modifier = Modifier.height(22.dp))
                                     Row(
                                         horizontalArrangement = Arrangement.SpaceBetween,
-                                        modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp)
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(horizontal = 12.dp)
                                     ) {
                                         TextButton(
                                             modifier = Modifier.width(135.dp),
