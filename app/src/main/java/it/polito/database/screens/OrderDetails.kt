@@ -251,16 +251,15 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
             )
 
             if (stato == "ordinato") {
-                //TODO icona ordinato
                 Column (
                     verticalArrangement = Arrangement.SpaceBetween,
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(painter = painterResource(id = R.drawable.ordinato),
-                        contentDescription = "",
+                        contentDescription = "ordinato",
                         modifier = Modifier
-                            .size(48.dp)
+                            .size(80.dp)
                             .padding(top = 8.dp),
                         tint = Yellow40)
 
@@ -276,9 +275,9 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
             } else if (stato == "spedito") {
                 Icon(
                     painter = painterResource(id = R.drawable.spedito),
-                    contentDescription = "",
+                    contentDescription = "spedito",
                     modifier = Modifier
-                        .size(48.dp)
+                        .size(80.dp)
                         .padding(top = 8.dp),
                     tint = Yellow40
                 )
@@ -290,13 +289,12 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
                     .fillMaxWidth()
                     .padding(5.dp)
                 )
-                //TODO icona in consegna
             } else if (stato == "consegnato") {
                 Icon(
                     painter = painterResource(id = R.drawable.consegnato),
-                    contentDescription = "",
+                    contentDescription = "consegnato",
                     modifier = Modifier
-                        .size(48.dp)
+                        .size(80.dp)
                         .padding(top = 8.dp),
                     tint = Yellow40
                 )
@@ -308,13 +306,12 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
                         .fillMaxWidth()
                         .padding(5.dp)
                 )
-                //TODO icona in consegna
             } else if (stato == "ritirato") {
                 Icon(
                     painter = painterResource(id = R.drawable.reso_completato),
-                    contentDescription = "",
+                    contentDescription = "ritirato",
                     modifier = Modifier
-                        .size(48.dp)
+                        .size(80.dp)
                         .padding(top = 8.dp),
                     tint = Yellow40
                 )
@@ -326,7 +323,23 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
                         .fillMaxWidth()
                         .padding(5.dp)
                 )
-                //TODO icona in consegna
+            } else if (stato == "rispedito") {
+                Icon(
+                    painter = painterResource(id = R.drawable.reso_scaduto),
+                    contentDescription = "rispedito",
+                    modifier = Modifier
+                        .size(80.dp)
+                        .padding(top = 8.dp),
+                    tint = Yellow40
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.barrastatoordine5),
+                    contentDescription = "",
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp)
+                )
             }
             Text(
                 text = "Riepilogo",

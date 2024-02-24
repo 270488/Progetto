@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,6 +24,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -46,8 +49,10 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import it.polito.database.AppViewModel
 import it.polito.database.FindUrl
+import it.polito.database.R
 import it.polito.database.database
 import it.polito.database.ui.theme.Screen
+import it.polito.database.ui.theme.Yellow40
 import it.polito.database.ui.theme.fontFamily
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -179,7 +184,7 @@ fun OrdineCard(ordine: String, viewModel: AppViewModel, navController: NavContro
     })
 
     Card(
-        modifier = Modifier.height(90.dp),
+        modifier = Modifier.height(100.dp),
         shape = RoundedCornerShape(15.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.secondary,
@@ -191,25 +196,17 @@ fun OrdineCard(ordine: String, viewModel: AppViewModel, navController: NavContro
             navController.navigate(Screen.OrderDetails.route)
         }
     ){
-        Box(modifier = Modifier.fillMaxSize())
+        Box(modifier = Modifier
+            .fillMaxSize()
+            )
         {
-            if(stato=="ordinato"){
-                //TODO icona ordinato
-            }
-            else if(stato=="spedito"){
-                //TODO icona in consegna
-            }
-            else if(stato=="consegnato"){
-                //TODO icona in consegna
-            }
-            else if(stato=="ritirato"){
-                //TODO icona in consegna
-            }
+
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 //horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxSize()
             ) {
+
                 var url= FindUrl(fileName = prodotti.keys.firstOrNull()+".jpg")
                 AsyncImage(
                     model = url,
@@ -271,13 +268,31 @@ fun OrdineCard(ordine: String, viewModel: AppViewModel, navController: NavContro
                     ) {
 
                         Text(
-                            text = "Stato ordine: "+stato,
+                            text = "Stato ordine: ",
                             fontFamily = fontFamily,
                             color = MaterialTheme.colorScheme.onPrimary,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Start
                         )
+                        Box(modifier = Modifier.fillMaxSize().align(Alignment.CenterVertically))
+                        {
+                            if(stato=="ordinato"){
+                                Icon(painter = painterResource(id = R.drawable.ordinato), contentDescription = "ordinato", tint = Yellow40, modifier = Modifier.width(60.dp))
+                            }
+                            else if(stato=="spedito"){
+                                Icon(painter = painterResource(id = R.drawable.spedito), contentDescription = "spedito", tint = Yellow40, modifier = Modifier.width(80.dp))
+                            }
+                            else if(stato=="consegnato"){
+                                Icon(painter = painterResource(id = R.drawable.consegnato), contentDescription = "consegnato", tint = Yellow40, modifier = Modifier.width(60.dp))
+                            }
+                            else if(stato=="ritirato"){
+                                Icon(painter = painterResource(id = R.drawable.reso_completato), contentDescription = "ritirato", tint = Yellow40, modifier = Modifier.width(60.dp))
+                            }
+                            else if(stato=="rispedito"){
+                                Icon(painter = painterResource(id = R.drawable.reso_scaduto), contentDescription = "rispedito", tint = Yellow40, modifier = Modifier.width(60.dp))
+                            }
+                        }
                     }
                 }
 
