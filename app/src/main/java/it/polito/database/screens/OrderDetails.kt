@@ -1,5 +1,6 @@
 package it.polito.database.screens
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -349,7 +350,7 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
                 lineHeight = 18.sp,
                 fontFamily = fontFamily,
                 modifier = Modifier
-                    .padding(top= 10.dp)
+                    .padding(top = 10.dp)
                     .align(Alignment.Start)
             )
 
@@ -374,6 +375,36 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
 @Composable
 fun dettaglioProdotto(viewModel: AppViewModel, qty: Long, item: String, stato: String, navController: NavController){
     var url= FindUrl(fileName = item+".jpg")
+    var numeroOrdine=viewModel.ordineSelezionato
+
+    var resi= database.child("resi")
+    var resoAvviato by remember {
+        mutableStateOf(false)
+    }
+    resi.addValueEventListener(object: ValueEventListener{
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            Log.d("DataSnapshot", dataSnapshot.toString())
+            for (childSnapshot in dataSnapshot.children) {
+                var r = false
+                Log.d("childSnapshot", childSnapshot.toString())
+                Log.d("numero ordine", numeroOrdine)
+                Log.d("prodotti", item)
+                Log.d("ordine", childSnapshot.child("ordine").value.toString())
+                Log.d("ordine", childSnapshot.child("prodotti").value.toString())
+
+
+                if (childSnapshot.child("ordine").value.toString() == numeroOrdine) {
+                    if (childSnapshot.child("prodotti").value.toString() == item) {
+                        r = true
+                    }
+                    resoAvviato = r
+                }
+        }
+        }
+        override fun onCancelled(databaseError: DatabaseError) {
+            println("Errore nel leggere i dati dal database: ${databaseError.message}")
+        }
+    })
 
     Card(
         //modifier= Modifier.fillMaxSize(),
@@ -521,7 +552,10 @@ fun dettaglioProdotto(viewModel: AppViewModel, qty: Long, item: String, stato: S
                                                 contentColor = MaterialTheme.colorScheme.onTertiary
                                             ),
                                             onClick = {
-                                                aggiungiReso(item, viewModel.ordineSelezionato,viewModel.uid, viewModel)
+                                                if(!resoAvviato){
+                                                    aggiungiReso(item, viewModel.ordineSelezionato,viewModel.uid, viewModel)
+                                                }
+
                                                 Toast.makeText(ctx, "Richiesta di reso confermata", Toast.LENGTH_SHORT).show()
                                                 navController.navigate(Screen.ResiScreen.route)
                                                 openAlertDialog = false
@@ -569,13 +603,14 @@ fun dettaglioProdotto(viewModel: AppViewModel, qty: Long, item: String, stato: S
                     fontStyle = FontStyle.Italic,
                     textDecoration = TextDecoration.Underline,
                 )
-                
+                Log.d("Reso avviato: ", resoAvviato.toString())
                 Text(
                     modifier = Modifier
                         .clickable {
-                            openAlertDialog = true
+                            if(!resoAvviato)
+                                openAlertDialog = true
                         }
-                        .alpha(if (stato != "ritirato") 0.3f else 1f),
+                        .alpha(if (stato == "ritirato" || resoAvviato) 0.3f else 1f),
                     text = "Restituisci ordine",
                     fontFamily = fontFamily,
                     color = MaterialTheme.colorScheme.onPrimary,
