@@ -42,6 +42,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.google.firebase.database.DataSnapshot
@@ -174,7 +175,9 @@ fun resiCard(numeroReso: String, viewModel: AppViewModel, navController: NavCont
     url= FindUrl(fileName = prodotti+".jpg")
 
     Card(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp),
         shape = RoundedCornerShape(15.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.secondary,
@@ -219,7 +222,9 @@ fun resiCard(numeroReso: String, viewModel: AppViewModel, navController: NavCont
             }
             Spacer(modifier = Modifier.height(12.dp))
             Row(
-                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 12.dp),
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalAlignment = Alignment.CenterVertically
             ){
@@ -262,6 +267,35 @@ fun aggiungiReso(prodotto: String, ordine: String, uid: String, viewModel: AppVi
 
     database.child("utenti").child(uid).child("resi").child(numeroReso.toString()).setValue(prodotto)
 
+
+
+
+}
+
+fun eliminaReso(viewModel: AppViewModel){
+    val numeroReso= viewModel.resoSelezionato
+    val uid=viewModel.uid
+    val resi= database.child("resi").child(numeroReso)
+    val resiAccount= database.child("utenti").child(uid).child("resi").child(numeroReso)
+
+    resi.addListenerForSingleValueEvent(object : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) { //fa una foto al db in quel momento e la mette in dataSnapshot
+            dataSnapshot.ref.removeValue()
+
+        }
+        override fun onCancelled(databaseError: DatabaseError) {
+            println("Errore nel leggere i dati dal database: ${databaseError.message}")
+        }
+    })
+    resiAccount.addListenerForSingleValueEvent(object : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) { //fa una foto al db in quel momento e la mette in dataSnapshot
+            dataSnapshot.ref.removeValue()
+
+        }
+        override fun onCancelled(databaseError: DatabaseError) {
+            println("Errore nel leggere i dati dal database: ${databaseError.message}")
+        }
+    })
 
 
 

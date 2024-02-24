@@ -113,21 +113,26 @@ fun DettaglioResiScreen (viewModel: AppViewModel, navController: NavController) 
             verticalAlignment = Alignment.CenterVertically
         ) {
             istruzioniConsegna()
-            Button(
-                shape = RoundedCornerShape(3.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer,
-                    contentColor = MaterialTheme.colorScheme.onErrorContainer
-                ),
-                onClick = { } //TODO Aggiungere eliminazione reso
-            ){
-                Text(
-                    text = "Annulla reso",
-                    fontFamily = fontFamily,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
+            if(stato=="avviato"){
+                Button(
+                    shape = RoundedCornerShape(3.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer
+                    ),
+                    onClick = { eliminaReso(viewModel = viewModel)
+                        navController.navigate(Screen.ResiScreen.route)} //TODO Aggiungere eliminazione reso
+                ){
+                    Text(
+                        text = "Annulla reso",
+                        fontFamily = fontFamily,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
             }
+
         }
     }
 
