@@ -16,7 +16,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
@@ -30,6 +32,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -73,10 +76,9 @@ import it.polito.database.ui.theme.fontFamily
 fun AiutoEContatti(viewModel: AppViewModel, navController: NavController) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-
         modifier = Modifier
             .fillMaxSize()
-            .padding(vertical = 120.dp)
+            .padding(top = 90.dp, bottom = 100.dp)
             .verticalScroll(rememberScrollState())
     ){
         Info()
@@ -90,7 +92,7 @@ fun Info(){
         Modifier.align(CenterVertically)
         HorizontalAlign.Center
         Icon(
-            painter = painterResource(R.drawable.cutomservice),
+            painter = painterResource(R.drawable.customservice),
             contentDescription = "call center",
             Modifier
                 .padding(3.dp)
@@ -104,31 +106,25 @@ fun Info(){
             )
     }
      Spacer(modifier = Modifier.height(16.dp) )
-     Row {
+     Column(
+         horizontalAlignment = Alignment.CenterHorizontally
+     ) {
          Icon(
-             imageVector = Icons.Default.Call,
+             painter = painterResource(id = R.drawable.numero),
              contentDescription = "Call",
-             Modifier
-                 .padding(3.dp)
-                 .size(38.dp)
          )
          Text(
-             text = "+39 314 159 2653",
+             text = "Dal lunedì al venerdì dalle ore 13 alle ore 17",
              fontFamily = fontFamily,
-             fontWeight = FontWeight.Bold,
-             fontSize = 26.sp,
+             fontWeight = FontWeight.Normal,
+             fontSize = 16.sp,
+             modifier = Modifier
+                 .fillMaxWidth()
+                 .padding(16.dp),
+             textAlign = TextAlign.Center
          )
+         Divider(color = Color.Black, thickness = 2.dp, modifier = Modifier.padding(20.dp))
      }
-     Text(
-         text = "Dal lunedì al venerdì dalle ore 13 alle ore 17",
-         fontFamily = fontFamily,
-         fontWeight = FontWeight.Normal,
-         fontSize = 22.sp,
-         modifier= Modifier.padding(40.dp,20.dp,40.dp,20.dp),
-         textAlign = TextAlign.Center
-     )
-     Divider(color = Color.Black, thickness = 2.dp, modifier = Modifier.padding(20.dp))
-
 }
 
 
@@ -161,20 +157,17 @@ fun Request(navController: NavController){
             }
         })
     }
-    Row{
-        HorizontalAlign.Center
-        Modifier
-            .align(CenterVertically)
-            .background(MaterialTheme.colorScheme.primary)
-        Text(
-            text = "Invia la tua richiesta" ,
-            fontFamily = fontFamily,
-            fontWeight = FontWeight.Bold,
-            fontSize = 26.sp,
-        )
-    }
+
+    Text(
+        modifier = Modifier.fillMaxWidth(),
+        text = "Invia la tua richiesta" ,
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 24.sp,
+        textAlign = TextAlign.Center
+    )
     Spacer(modifier = Modifier.height(16.dp) )
-    Row {
+    /*Row {
         HorizontalAlign.Center
         Modifier
             .align(CenterVertically)
@@ -182,44 +175,51 @@ fun Request(navController: NavController){
             selectedCity = currentCity,
             onCitySelected = { city -> setCurrentCity(city) })
     }
-    Spacer(modifier = Modifier.height(16.dp) )
-    Row {
-        HorizontalAlign.Center
-        Modifier
-            .align(CenterVertically)
+    Spacer(modifier = Modifier.height(16.dp) )*/
 
-        OutlinedTextField(
-            value = currentEmail,
-            placeholder = {
-                Text(
-                    text = "Email",
-                    color = MaterialTheme.colorScheme.onSecondary,
-                    fontFamily = fontFamily,
-                    fontWeight = FontWeight.Light,
-                    fontStyle = FontStyle.Italic,
-                    fontSize = 18.sp
-                )
-            },
-            onValueChange = {
-                setCurrentEmail(it)
-            },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            singleLine = true,
-            textStyle = TextStyle(
+    OutlinedTextField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
+            .border(2.dp, Color.Black, RoundedCornerShape(15.dp)),
+        shape = RoundedCornerShape(15.dp),
+        value = currentEmail,
+        placeholder = {
+            Text(
+                text = "Email",
+                color = Color.Black,
                 fontFamily = fontFamily,
-                fontWeight = FontWeight.Normal,
-                fontSize = 18.sp,
-                color = Color.Black
+                fontWeight = FontWeight.Light,
+                fontStyle = FontStyle.Italic,
+                fontSize = 18.sp
             )
-        )
-    }
+        },
+        onValueChange = {
+            setCurrentEmail(it)
+        },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+        singleLine = true,
+        textStyle = TextStyle(
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 18.sp,
+        ),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            containerColor = Color.White,
+            textColor = Color.Black,
+        ),
+    )
+
     Spacer(modifier = Modifier.height(16.dp) )
 
     Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         OutlinedTextField(
+            shape = RoundedCornerShape(15.dp),
             value = currentName,
             placeholder = {
                 Text(
@@ -238,19 +238,23 @@ fun Request(navController: NavController){
             singleLine = true,
             modifier = Modifier
                 .weight(1F)
-                .absolutePadding(left = 55.dp), // Aggiungi i margini sinistro e destro
+                .border(2.dp, Color.Black, RoundedCornerShape(15.dp)), // Aggiungi i margini sinistro e destro
             textStyle = TextStyle(
                 fontFamily = fontFamily,
                 fontWeight = FontWeight.Normal,
-                fontSize = 18.sp,
-                color = Color.Black
-            )
+                fontSize = 18.sp
+            ),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                containerColor = Color.White,
+                textColor = Color.Black,
+            ),
         )
 
         Spacer(modifier = Modifier.height(16.dp))
         Spacer(modifier = Modifier.width(8.dp))
 
         OutlinedTextField(
+            shape = RoundedCornerShape(15.dp),
             value = currentSurname,
             placeholder = {
                 Text(
@@ -269,13 +273,16 @@ fun Request(navController: NavController){
             singleLine = true,
             modifier = Modifier
                 .weight(1F)
-                .absolutePadding(right = 55.dp), // Aggiungi i margini sinistro e destro
+                .border(2.dp, Color.Black, RoundedCornerShape(15.dp)), // Aggiungi i margini sinistro e destro
             textStyle = TextStyle(
                 fontFamily = fontFamily,
                 fontWeight = FontWeight.Normal,
-                fontSize = 18.sp,
-                color = Color.Black
-            )
+                fontSize = 18.sp
+            ),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                containerColor = Color.White,
+                textColor = Color.Black,
+            ),
         )
     }
     Spacer(modifier = Modifier.height(16.dp))
@@ -297,9 +304,10 @@ fun Request(navController: NavController){
         painterResource(id = R.drawable.frecciasopra)
     } else painterResource(id = R.drawable.frecciasotto)
 
-    Column{
-        OutlinedTextField(
 
+    Column {
+        OutlinedTextField(
+            shape = RoundedCornerShape(15.dp),
             value = arg,
             onValueChange = {},
             readOnly = false,
@@ -309,31 +317,45 @@ fun Request(navController: NavController){
                         .clickable { isExpanded = !isExpanded }
                         .size(16.dp))
             },
+            placeholder = {
+                Text(
+                    text = "Argomento",
+                    color = MaterialTheme.colorScheme.onBackground,
+                    fontFamily = fontFamily,
+                    fontWeight = FontWeight.Light,
+                    fontStyle = FontStyle.Italic,
+                    fontSize = 18.sp
+                )
+            },
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                containerColor = Color.White,
+                textColor = Color.Black,
+            ),
             textStyle = TextStyle(
                 fontFamily = fontFamily,
                 fontWeight = FontWeight.Normal,
-                fontSize = 18.sp,
-                color = Color.Black),
+                fontSize = 18.sp),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 55.dp)
+                .padding(horizontal = 20.dp)
+                .border(2.dp, Color.Black, RoundedCornerShape(15.dp))
                 .onGloballyPositioned { coordinates ->
                     textFiledSize = coordinates.size.toSize()
                 }
-
         )
         DropdownMenu(
-            offset = DpOffset(50.dp, (-10).dp),
+            offset = DpOffset(20.dp, (10).dp),
             modifier = Modifier
                 .width(with(LocalDensity.current) { textFiledSize.width.toDp() })
-                .background(MaterialTheme.colorScheme.primaryContainer)
+                .background(Color.White)
                 .verticalScroll(rememberScrollState())
                 .height(200.dp)
-                .border(1.dp, MaterialTheme.colorScheme.onPrimary),
+                .border(2.dp, MaterialTheme.colorScheme.onBackground),
             expanded = isExpanded,
             onDismissRequest = { isExpanded = false },
         ) {
-            for (arg in argomenti) {
+            for (index in argomenti.indices) {
+                val arg = argomenti[index]
                 DropdownMenuItem(
                     text = {
                         Text(
@@ -348,52 +370,58 @@ fun Request(navController: NavController){
                         isExpanded = false
                     }
                 )
+                if (index < argomenti.size - 1){
+                    Divider(thickness = 1.dp, color = Color(0x1A000000))
+                }
             }
         }
     }
 
     Spacer(modifier = Modifier.height(16.dp))
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center
-    ) {
 
-        OutlinedTextField(
-            value = description,
-            modifier = Modifier.height(80.dp),
-            placeholder = { Text(
-                text = "Desrizione*",
-                fontFamily = fontFamily,
-                fontWeight = FontWeight.Light,
-                color = Color.Black,
-                fontSize = 18.sp)
-            },
-            onValueChange = {
-                setDescription(it)
-            },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-            singleLine = true,
-            textStyle = TextStyle(
-                fontFamily = fontFamily,
-                fontWeight = FontWeight.Normal,
-                fontSize = 18.sp,
-                color = Color.Black)
-        )
-    }
+    OutlinedTextField(
+        shape = RoundedCornerShape(15.dp),
+        value = description,
+        modifier = Modifier
+            .height(150.dp)
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
+            .border(2.dp, Color.Black, RoundedCornerShape(15.dp)),
+        placeholder = { Text(
+            text = "Desrizione*",
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Light,
+            color = Color.Black,
+            fontSize = 18.sp)
+        },
+        onValueChange = {
+            setDescription(it)
+        },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+        singleLine = false,
+        textStyle = TextStyle(
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 18.sp),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            containerColor = Color.White,
+            textColor = Color.Black,
+        ),
+
+    )
 
     Spacer(modifier = Modifier.height(16.dp))
     Button(
+        shape = RoundedCornerShape(3.dp),
         modifier = Modifier
-            .border(
-                width = 1.dp, color = Color.Black,
-            ),
+            .width(100.dp)
+            .border(width = 2.dp, color = Color.Black, RoundedCornerShape(3.dp)),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.tertiary
         ),
         onClick = {
             navController.navigate(Screen.Home.route)
-                }
-
+        }
     )
     {
         Text(

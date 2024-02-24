@@ -1,7 +1,9 @@
 package it.polito.database.screens
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -22,8 +24,8 @@ fun AreaLegaleScreen(viewModel: AppViewModel, navController: NavHostController) 
  Column(modifier = Modifier
      .verticalScroll(rememberScrollState())
      .fillMaxSize()
-     .padding(top = 100.dp, bottom = 100.dp)
-     .padding(horizontal = 16.dp)
+     .padding(top = 90.dp, bottom = 100.dp)
+     .padding(horizontal = 20.dp)
  ) {
      Text(
          text = "Condizioni generali d'utilizzo",
@@ -32,6 +34,7 @@ fun AreaLegaleScreen(viewModel: AppViewModel, navController: NavHostController) 
          fontFamily = fontFamily,
          fontWeight = FontWeight.Bold
          )
+     Spacer(modifier = Modifier.height(12.dp))
      Text(text =
              "Salvo ove diversamente specificato, le condizioni d’uso di questa Applicazione esposte in questa sezione hanno validità generale.\n" +
              "\n" +
@@ -40,7 +43,7 @@ fun AreaLegaleScreen(viewModel: AppViewModel, navController: NavHostController) 
              "Utilizzando questa Applicazione l’Utente dichiara di soddisfare i seguenti requisiti:\n" +
              "\n" +
              "Non ci sono restrizioni riferite agli Utenti rispetto al fatto che essi siano Consumatori o Utenti Professionisti;\n" +
-             "Registrazione\n" +
+             "\nRegistrazione\n" +
              "Per usufruire del Servizio l’Utente può aprire un account indicando tutti i dati e le informazioni richieste in maniera completa e veritiera.\n" +
              "Non è possibile usufruire del Servizio senza aprire un account Utente.\n" +
              "\n" +
@@ -59,8 +62,9 @@ fun AreaLegaleScreen(viewModel: AppViewModel, navController: NavHostController) 
              "\n" +
              "La sospensione o cancellazione di un account per cause addebitabili all’Utente non esonera l’Utente dal pagamento dei compensi o prezzi eventualmente applicabili.",
          color = Color.Black,
-         fontSize = 14.sp,
+         fontSize = 15.sp,
          fontFamily = fontFamily,
+         lineHeight = 18.sp,
          fontWeight = FontWeight.Normal
      )
  }

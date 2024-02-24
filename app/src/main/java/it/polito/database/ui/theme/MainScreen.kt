@@ -256,8 +256,8 @@ fun SmallTopAppBar(navController: NavHostController, viewModel: AppViewModel) {
             if(currentDestination?.route == Screen.Settings.route
                 || currentDestination?.route == Screen.PreferenzaNotifiche.route
                 || currentDestination?.route == Screen.AreaLegale.route
-                || currentDestination?.route == Screen.AccessoESicurezza.route
-            //&& currentDestination?.route == Screen.PaeseELingua.route
+                || currentDestination?.route == Screen.AiutoEContatti.route
+                ||currentDestination?.route == Screen.PaeseELingua.route
             ){
                 MaterialTheme.colorScheme.background
             } else MaterialTheme.colorScheme.primary
@@ -317,8 +317,8 @@ fun AddItem3(
             if(currentDestination?.route == Screen.Settings.route
                 || currentDestination?.route == Screen.PreferenzaNotifiche.route
                 || currentDestination?.route == Screen.AreaLegale.route
-                || currentDestination?.route == Screen.AccessoESicurezza.route
-                //&& currentDestination?.route == Screen.PaeseELingua.route
+                || currentDestination?.route == Screen.AiutoEContatti.route
+                ||currentDestination?.route == Screen.PaeseELingua.route
                 ){
                 MaterialTheme.colorScheme.background
             }else MaterialTheme.colorScheme.primary,
@@ -327,8 +327,8 @@ fun AddItem3(
             if(currentDestination?.route == Screen.Settings.route
                 || currentDestination?.route == Screen.PreferenzaNotifiche.route
                 || currentDestination?.route == Screen.AreaLegale.route
-                || currentDestination?.route == Screen.AccessoESicurezza.route
-            //&& currentDestination?.route == Screen.PaeseELingua.route
+                || currentDestination?.route == Screen.AiutoEContatti.route
+                ||currentDestination?.route == Screen.PaeseELingua.route
             ){
                 MaterialTheme.colorScheme.onBackground
             }else MaterialTheme.colorScheme.tertiary,
@@ -337,8 +337,8 @@ fun AddItem3(
             if(currentDestination?.route == Screen.Settings.route
                 || currentDestination?.route == Screen.PreferenzaNotifiche.route
                 || currentDestination?.route == Screen.AreaLegale.route
-                || currentDestination?.route == Screen.AccessoESicurezza.route
-            //&& currentDestination?.route == Screen.PaeseELingua.route
+                || currentDestination?.route == Screen.AiutoEContatti.route
+                ||currentDestination?.route == Screen.PaeseELingua.route
             ){
                 MaterialTheme.colorScheme.onBackground
             }else MaterialTheme.colorScheme.tertiary,
@@ -347,8 +347,8 @@ fun AddItem3(
             if(currentDestination?.route == Screen.Settings.route
                 || currentDestination?.route == Screen.PreferenzaNotifiche.route
                 || currentDestination?.route == Screen.AreaLegale.route
-                || currentDestination?.route == Screen.AccessoESicurezza.route
-            //&& currentDestination?.route == Screen.PaeseELingua.route
+                || currentDestination?.route == Screen.AiutoEContatti.route
+                ||currentDestination?.route == Screen.PaeseELingua.route
             ){
                 MaterialTheme.colorScheme.onBackground
             }else MaterialTheme.colorScheme.onPrimary,
