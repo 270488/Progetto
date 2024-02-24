@@ -47,7 +47,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.google.firebase.database.DataSnapshot
@@ -70,6 +69,18 @@ import java.lang.Double.sum
 fun Cart(viewModel: AppViewModel, navController: NavController, modifier: Modifier = Modifier
     .padding(top = 74.dp)
     .padding(bottom = 74.dp)){
+
+    var credenziali= database.child("utenti").child(viewModel.uid)
+    var nome by remember { mutableStateOf("") }
+
+    credenziali.addValueEventListener(object: ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            nome=dataSnapshot.child("nome").value.toString()
+        }
+        override fun onCancelled(databaseError: DatabaseError) {
+            println("Errore nel leggere i dati dal database: ${databaseError.message}")
+        }
+    })
 
     var listaCarrello by remember { mutableStateOf<List<String>>(emptyList()) }
     var id=viewModel.uid
@@ -239,7 +250,7 @@ fun Cart(viewModel: AppViewModel, navController: NavController, modifier: Modifi
                                 color = MaterialTheme.colorScheme.tertiary
                             )
                         ){
-                            append("Pippo")
+                            append(nome.capitalize())
                         }
                     },
                     fontFamily = fontFamily,
