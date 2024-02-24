@@ -119,7 +119,7 @@ fun AccessoESicureezzaScreen(viewModel: AppViewModel, navController: NavHostCont
                     if (name == "Logout")
                         navController.navigate(Screen.AuthenticationScreen.route)
                 }) {
-                    if (name != "Preferenze Cookies" && name != "Logout") {
+                    if (name != "Preferenze cookies" && name != "Logout") {
                         Icon(
                             imageVector = Icons.Default.Edit,
                             tint = MaterialTheme.colorScheme.tertiary,
