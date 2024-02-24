@@ -6,7 +6,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -46,20 +48,39 @@ fun AccessoESicureezzaScreen(viewModel: AppViewModel, navController: NavHostCont
         "Preferenze cookies",
         "Logout"
     )
+    var credenziali= database.child("utenti").child(viewModel.uid)
+    var email by remember { mutableStateOf("") }
+    var pw by remember { mutableStateOf("") }
 
-    Column(modifier = Modifier.padding(top=100.dp)){
+    credenziali.addValueEventListener(object: ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            email=dataSnapshot.child("email").value.toString()
+            pw=dataSnapshot.child("password").value.toString()
+        }
+        override fun onCancelled(databaseError: DatabaseError) {
+            println("Errore nel leggere i dati dal database: ${databaseError.message}")
+        }
+    })
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.primary)
+            .padding(top = 100.dp))
+    {
         Divider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
         pozioni.forEach { name ->
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.Start,
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.secondary)
-                    .padding(12.dp)
                     .fillMaxWidth()
+                    .height(80.dp)
+                    .padding(12.dp)
                     .animateContentSize()
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Column {
                     Text(
                         text = name,
                         fontFamily = fontFamily,
@@ -73,66 +94,49 @@ fun AccessoESicureezzaScreen(viewModel: AppViewModel, navController: NavHostCont
                             }
                         }
                     )
-                    IconButton(onClick = {
-                        if (name == "Logout")
-                            navController.navigate(Screen.AuthenticationScreen.route)
-                    }) {
-                        if (name != "Preferenze Cookies" && name != "Logout") {
-                            Icon(
-                                imageVector = Icons.Default.Edit,
-                                tint = MaterialTheme.colorScheme.tertiary,
-                                contentDescription = "selezione",
-                                modifier = Modifier.size(32.dp)
+                        if (name == "Modifica mail") {
+                            Text(
+                                text = email,
+                                fontFamily = fontFamily,
+                                fontSize = 20.sp,
+                                color = MaterialTheme.colorScheme.primaryContainer
                             )
-                        } else if (name == "Logout") {
-                            Icon(
-                                painter = painterResource(id = R.drawable.frecciadx),
-                                tint = MaterialTheme.colorScheme.tertiary,
-                                contentDescription = "selezione",
-                                modifier = Modifier.size(32.dp)
-                            )
-                        }
-                    }
-                }
-
-                var credenziali= database.child("utenti").child(viewModel.uid)
-                var email by remember { mutableStateOf("") }
-                var pw by remember { mutableStateOf("") }
-
-                credenziali.addValueEventListener(object: ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        email=dataSnapshot.child("email").value.toString()
-                        pw=dataSnapshot.child("password").value.toString()
-                    }
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        println("Errore nel leggere i dati dal database: ${databaseError.message}")
-                    }
-                })
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    if (name == "Modifica mail") {
-                        Text(
-                            text = email,
-                            fontFamily = fontFamily,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onPrimary
-                        )
-                    } else if (name == "Modifica password") {
-                        pw.forEach {
+                        } else if (name == "Modifica password") {
                             Row {
-                                Text(
-                                    text = "•",
-                                    fontFamily = fontFamily,
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onPrimary
-                                )
+                                pw.forEach {
+                                    Text(
+                                        text = "• ",
+                                        fontFamily = fontFamily,
+                                        fontSize = 32.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onPrimary
+                                    )
+                                }
                             }
                         }
+                }
+                IconButton(onClick = {
+                    if (name == "Logout")
+                        navController.navigate(Screen.AuthenticationScreen.route)
+                }) {
+                    if (name != "Preferenze Cookies" && name != "Logout") {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            tint = MaterialTheme.colorScheme.tertiary,
+                            contentDescription = "selezione",
+                            modifier = Modifier.size(32.dp)
+                        )
+                    } else if (name == "Logout") {
+                        Icon(
+                            painter = painterResource(id = R.drawable.frecciadx),
+                            tint = MaterialTheme.colorScheme.tertiary,
+                            contentDescription = "selezione",
+                            modifier = Modifier.size(32.dp)
+                        )
                     }
                 }
-                Divider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
             }
+            Divider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
         }
     }
 }
