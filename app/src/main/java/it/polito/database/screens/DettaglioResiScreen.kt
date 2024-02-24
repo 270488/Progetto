@@ -102,7 +102,7 @@ fun DettaglioResiScreen (viewModel: AppViewModel, navController: NavController) 
         modifier= Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary)
-            .padding(top = 90.dp, bottom = 90.dp)
+            .padding(top = 86.dp, bottom = 90.dp)
             .verticalScroll(rememberScrollState())
     ){
         DettaglioResoCard(navController,viewModel= viewModel, prezzo= prezzo,prodotto = prodotti, scadenza = scadenza, numeroOrdine = ordine, stato = stato, url = url)
@@ -178,13 +178,13 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
                     )
                     Text(
                         text = "Ordine No. " + numeroOrdine,
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = fontFamily,
                     )
                     Text(
                         text = "Scadenza: " + scadenza,
                         fontFamily = fontFamily,
-                        fontSize = 16.sp
+                        fontSize = 14.sp
                     )
                 }
             }
@@ -215,7 +215,7 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
                             text = "Reso avviato",
-                            fontSize = 16.sp,
+                            fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.tertiary,
                             fontFamily = fontFamily,
                             fontStyle = FontStyle.Italic
@@ -235,7 +235,7 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
                             text = "Pacco consegnato",
-                            fontSize = 16.sp,
+                            fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.tertiary,
                             fontFamily = fontFamily,
                             fontStyle = FontStyle.Italic
@@ -255,7 +255,7 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
                             text = "Reso scaduto",
-                            fontSize = 16.sp,
+                            fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.tertiary,
                             fontFamily = fontFamily,
                             fontStyle = FontStyle.Italic
@@ -275,7 +275,7 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
                             text = "Reso completato",
-                            fontSize = 16.sp,
+                            fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.tertiary,
                             fontFamily = fontFamily,
                             fontStyle = FontStyle.Italic
@@ -302,13 +302,14 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
                     colors = CardDefaults.cardColors(
                         containerColor = Color.Black,
                         contentColor = Color.White
-                    )
+                    ),
+                    modifier = Modifier.width(185.dp)
                 )
                 {
                     Text(
                         modifier = Modifier.padding(8.dp),
                         text = viewModel.lockerSelezionato.replace("/","\n"),
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = fontFamily,
                     )
                 }
@@ -318,7 +319,7 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
                             .align(Alignment.CenterVertically)
                             .clickable { navController.navigate(Screen.ScegliPalestraScreen.route) },
                         text = "Scegli un' altra\npalestra",
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         lineHeight = 18.sp,
                         color = MaterialTheme.colorScheme.tertiary,
                         textDecoration = TextDecoration.Underline,
@@ -366,21 +367,21 @@ fun DettaglioResoCard(navController: NavController,viewModel: AppViewModel,prezz
             Text(
                 modifier = Modifier.padding(start = 8.dp, end = 8.dp, bottom = 4.dp),
                 text = "Riepilogo",
-                fontSize = 18.sp,
+                fontSize = 16.sp,
                 fontFamily = fontFamily,
-                fontWeight = FontWeight.Bold
+                fontStyle = FontStyle.Italic
             )
             Column(
                 modifier = Modifier.padding(start = 8.dp, end = 8.dp, bottom = 16.dp)
             ){
                 Text(
                     text = "Il reso stimato è di euro "+prezzo,
-                    fontSize = 16.sp,
+                    fontSize = 14.sp,
                     fontFamily = fontFamily,
                 )
                 Text(
                     text = "Il reso sarà accreditato sul tuo metodo di pagamento predefinito",
-                    fontSize = 16.sp,
+                    fontSize = 14.sp,
                     lineHeight = 20.sp,
                     fontFamily = fontFamily,
                 )
@@ -402,7 +403,7 @@ private fun istruzioniConsegna() {
         modifier = Modifier
             .clickable { isDialogOpen = true },
         text = "Istruzioni per\nla consegna",
-        fontSize = 16.sp,
+        fontSize = 14.sp,
         lineHeight = 20.sp,
         color = MaterialTheme.colorScheme.tertiary,
         textDecoration = TextDecoration.Underline,

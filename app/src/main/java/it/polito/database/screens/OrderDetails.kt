@@ -213,7 +213,7 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
             text = "Ordine No: " + viewModel.ordineSelezionato,
             fontFamily = fontFamily,
             color = MaterialTheme.colorScheme.onPrimary,
-            fontSize = 24.sp,
+            fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Start
         )
@@ -221,7 +221,7 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
         //Colonna con le card dei prodotti dell'ordine scrollabile
         Column(
             modifier = Modifier
-                .heightIn(min = 0.dp, max = 200.dp)
+                .heightIn(min = 0.dp, max = 180.dp)
                 .verticalScroll(rememberScrollState())
         ) {
             prodotti.forEach { (item, qty) ->
@@ -235,7 +235,7 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
                 )
             }
         }
-        Spacer(modifier = Modifier.height(5.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         //Column con info generali
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -244,7 +244,7 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
             Text(
                 text = "Stato della spedizione:",
                 color = Color.White,
-                fontSize = 14.sp,
+                fontSize = 16.sp,
                 fontFamily = fontFamily,
                 fontStyle = FontStyle.Italic,
                 modifier = Modifier.align(Alignment.Start)
@@ -260,8 +260,8 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
                     Icon(painter = painterResource(id = R.drawable.ordinato),
                         contentDescription = "",
                         modifier = Modifier
-                            .size(100.dp)
-                            .padding(top = 15.dp),
+                            .size(48.dp)
+                            .padding(top = 8.dp),
                         tint = Yellow40)
 
                     Image(
@@ -278,8 +278,8 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
                     painter = painterResource(id = R.drawable.spedito),
                     contentDescription = "",
                     modifier = Modifier
-                        .size(100.dp)
-                        .padding(top = 15.dp),
+                        .size(48.dp)
+                        .padding(top = 8.dp),
                     tint = Yellow40
                 )
                 Image(
@@ -296,8 +296,8 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
                     painter = painterResource(id = R.drawable.consegnato),
                     contentDescription = "",
                     modifier = Modifier
-                        .size(100.dp)
-                        .padding(top = 15.dp),
+                        .size(48.dp)
+                        .padding(top = 8.dp),
                     tint = Yellow40
                 )
                 Image(
@@ -314,8 +314,8 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
                     painter = painterResource(id = R.drawable.reso_completato),
                     contentDescription = "",
                     modifier = Modifier
-                        .size(100.dp)
-                        .padding(top = 15.dp),
+                        .size(48.dp)
+                        .padding(top = 8.dp),
                     tint = Yellow40
                 )
                 Image(
@@ -329,16 +329,24 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
                 //TODO icona in consegna
             }
             Text(
+                text = "Riepilogo",
+                fontSize = 16.sp,
+                color = Color.White,
+                fontFamily = fontFamily,
+                fontStyle = FontStyle.Italic,
+                modifier = Modifier.align(Alignment.Start).padding(bottom = 4.dp)
+            )
+            Text(
                 text = "Data ordine: " + dataOrdine,
                 color = Color.White,
-                fontSize = 13.sp,
+                fontSize = 14.sp,
                 fontFamily = fontFamily,
                 modifier = Modifier.align(Alignment.Start)
             )
             Text(
                 text = "Data consegna prevista: " + dataConsegna,
                 color = Color.White,
-                fontSize = 13.sp,
+                fontSize = 14.sp,
                 fontFamily = fontFamily,
                 modifier = Modifier.align(Alignment.Start)
             )
@@ -346,13 +354,14 @@ fun DettaglioOrdineCard(viewModel: AppViewModel,
             Text(
                 text = "Locker di destinazione: " + locker.replace("/"," "),
                 color = Color.White,
-                fontSize = 13.sp,
+                fontSize = 14.sp,
                 lineHeight = 18.sp,
                 fontFamily = fontFamily,
                 modifier = Modifier
-                    .padding(top = 10.dp)
                     .align(Alignment.Start)
             )
+
+            Spacer(modifier = Modifier.height(8.dp))
 
 
           /*  if (stato == "ordinato") {

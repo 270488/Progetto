@@ -240,7 +240,7 @@ fun OrdineCard(ordine: String, viewModel: AppViewModel, navController: NavContro
                             text = "Ordine No: "+ordine,
                             fontFamily = fontFamily,
                             color = MaterialTheme.colorScheme.onPrimary,
-                            fontSize = 18.sp,
+                            fontSize = 14.sp,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Start
                         )
@@ -256,7 +256,7 @@ fun OrdineCard(ordine: String, viewModel: AppViewModel, navController: NavContro
                             text = "%.2f".format(totale)+"€",
                             fontFamily = fontFamily,
                             color = MaterialTheme.colorScheme.onPrimary,
-                            fontSize = 24.sp,
+                            fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Start
                         )

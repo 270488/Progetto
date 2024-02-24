@@ -215,16 +215,15 @@ fun resiCard(numeroReso: String, viewModel: AppViewModel, navController: NavCont
                     )
                     Text(
                         text = "Ordine No. " + ordine,
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = fontFamily,
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(6.dp))
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 12.dp),
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalAlignment = Alignment.CenterVertically
             ){
@@ -235,15 +234,15 @@ fun resiCard(numeroReso: String, viewModel: AppViewModel, navController: NavCont
                     else  MaterialTheme.colorScheme.tertiary,
                     fontFamily = fontFamily,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
+                    fontSize = 14.sp
                 )
                 Text(
                     text = "Scadenza: " + scadenza,
                     fontFamily = fontFamily,
-                    fontSize = 16.sp
+                    fontSize = 14.sp
                 )
             }
-
+            Spacer(modifier = Modifier.height(8.dp))
 
         }
 
