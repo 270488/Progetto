@@ -619,7 +619,7 @@ fun FindUrl(fileName: String): String{
     }.addOnFailureListener {
         // Handle any errors
         Log.e("Foto Error", "Errore nel listener "+fileName)
-    }
+    }/*
     if (url == ""){
         var fileNameNew = fileName.substring(0, fileName.length - 3) +
                 fileName.substring(fileName.length - 3).uppercase()
@@ -630,8 +630,7 @@ fun FindUrl(fileName: String): String{
             // Handle any errors
             Log.e("Foto Error", "Errore nel listener "+fileName)
         }
-    }
-
+    }*/
     return url
 }
 
