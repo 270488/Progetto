@@ -48,6 +48,7 @@ import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.capitalize
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
@@ -108,6 +109,17 @@ fun FavoritesScreen(viewModel: AppViewModel, navController: NavController){
             modifier= Modifier
                 .padding(horizontal = 20.dp)
         ) {
+            if(listaPreferiti.isEmpty()){
+                Text(
+                    text = "Non hai prodotti preferiti",
+                    fontFamily = fontFamily,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Normal,
+                    fontStyle = FontStyle.Italic,
+                    modifier = Modifier.padding(top = 160.dp, bottom = 16.dp)
+                )
+            }
             listaPreferiti.forEach { preferito ->
                 FavoriteCard(preferito, viewModel, id, navController)
             }

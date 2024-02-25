@@ -460,7 +460,7 @@ fun ItemCard(
                     verticalArrangement = Arrangement.SpaceAround,
                     modifier = Modifier
                         .fillMaxHeight()
-                        .padding(horizontal = 12.dp, vertical = 12.dp)
+                        .padding(horizontal = 10.dp, vertical = 12.dp)
                 )
                 {
                     Row(
@@ -478,7 +478,7 @@ fun ItemCard(
                             text = nomeTroncato.replaceFirstChar{ it.uppercase() },
                             fontFamily = fontFamily,
                             color = MaterialTheme.colorScheme.onPrimary,
-                            fontSize = 18.sp,
+                            fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Start
                         )
@@ -495,14 +495,14 @@ fun ItemCard(
                             text = prezzo + "€",
                             fontFamily = fontFamily,
                             color = MaterialTheme.colorScheme.onPrimary,
-                            fontSize = 24.sp,
+                            fontSize = 22.sp,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Start
                         )
                         Text(
                             text = "Rimuovi",
                             fontFamily = fontFamily,
-                            fontSize = 16.sp,
+                            fontSize = 14.sp,
                             textDecoration = TextDecoration.Underline,
                             color = MaterialTheme.colorScheme.onPrimary,
                             textAlign = TextAlign.Start,
@@ -539,7 +539,7 @@ fun SelettoreQuantita(viewModel: AppViewModel, quantita: Long) {
     {
         Text(
             text = "-",
-            fontSize = 28.sp,
+            fontSize = 26.sp,
             fontWeight = FontWeight.ExtraBold,
             fontFamily = fontFamily,
             color = MaterialTheme.colorScheme.tertiary,
@@ -553,14 +553,14 @@ fun SelettoreQuantita(viewModel: AppViewModel, quantita: Long) {
         Text(
             text = count.toString(),
             fontFamily = fontFamily,
-            fontSize = 20.sp,
+            fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onPrimary
         )
         Spacer(modifier = Modifier.width(6.dp))
         Text(
             text = "+",
-            fontSize = 28.sp,
+            fontSize = 26.sp,
             fontWeight = FontWeight.ExtraBold,
             fontFamily = fontFamily,
             color = MaterialTheme.colorScheme.tertiary,

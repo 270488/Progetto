@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -374,7 +375,7 @@ fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: Str
                 .verticalScroll(rememberScrollState())
         )
     }
-
+    Spacer(modifier = Modifier.height(16.dp))
     Button(
         onClick = {
             Log.d("quantità selezionata: ", viewModel.quantita.toString())
@@ -383,9 +384,8 @@ fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: Str
         },
         shape = RoundedCornerShape(3.dp),
         modifier = Modifier
-            .layoutId("btnBuy")
-            .padding(top = 16.dp, bottom = 16.dp)
-            .width(185.dp),
+            .layoutId("btnBuy"),
+            //.padding(top = 16.dp, bottom = 16.dp),
         colors = ButtonDefaults.buttonColors(Yellow40),
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = 0.dp,
@@ -396,9 +396,10 @@ fun CardContent(nome: String, prezzo: Double, descrizione:String, categoria: Str
         Text(
             text = "Aggiungi al carrello",
             fontFamily = fontFamily,
-            fontSize = 16.sp,
+            fontSize = 18.sp,
             color = Color.Black,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.offset(x = 0.dp, y = (-2).dp),
         )
     }
 }

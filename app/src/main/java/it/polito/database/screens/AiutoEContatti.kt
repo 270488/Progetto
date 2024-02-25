@@ -78,7 +78,7 @@ fun AiutoEContatti(viewModel: AppViewModel, navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 90.dp, bottom = 100.dp)
+            .padding(top = 90.dp, bottom = 80.dp)
             .verticalScroll(rememberScrollState())
     ){
         Info()
@@ -433,5 +433,6 @@ fun Request(navController: NavController){
             modifier = Modifier.offset(x = 0.dp, y = (-2).dp)
         )
     }
+    Spacer(modifier = Modifier.height(16.dp))
 
 }
