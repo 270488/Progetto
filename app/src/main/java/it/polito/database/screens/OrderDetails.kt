@@ -130,7 +130,7 @@ fun OrderDetails(viewModel: AppViewModel, navController: NavController){
         modifier= Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary)
-            //.verticalScroll(rememberScrollState())
+            .verticalScroll(rememberScrollState())
             .padding(top = 80.dp, bottom = 100.dp)) {
 
         DettaglioOrdineCard(viewModel, navController, prodotti, stato=stato, totale=totale, dataOrdine = dataOrdine, dataConsegna = dataConsegna, locker=locker)
