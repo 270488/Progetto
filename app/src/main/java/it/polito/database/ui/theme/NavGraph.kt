@@ -45,7 +45,7 @@ import it.polito.database.screens.SettingsScreen
 fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
     NavHost(
         navController = navController,
-        startDestination = Screen.PreferenzeCookies.route
+        startDestination = Screen.AuthenticationScreen.route
     ) {
         composable(route = Screen.Home.route) {
             HomePage(viewModel, navController)
