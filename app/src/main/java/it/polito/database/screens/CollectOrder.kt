@@ -41,6 +41,7 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
     var sblocco by remember{ mutableStateOf(false) }
     var sbloccoPP by remember{ mutableStateOf(0L) }
     var sbloccoPG by remember{ mutableStateOf(0L) }
+    var codiceTastierino by remember{ mutableStateOf("") }
     var codiceDB= database.child("ordini").child(viewModel.ordineSelezionato).child("CodiceSbloccoUtente")
     var codice by remember {
         mutableStateOf("")
@@ -97,8 +98,12 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
             if(viewModel.variabili.PPAperta==1L && sbloccoPP==0L){
                 sbloccoPP=1L
             }
+            if(codiceTastierino!=viewModel.variabili.CodiceTastierino && viewModel.variabili.CodiceTastierino!="0000"){
+                confrontoCodici(viewModel.variabili)
+                codiceTastierino=viewModel.variabili.CodiceTastierino
+            }
 
-            confrontoCodici(viewModel.variabili)
+
         }
 
         override fun onCancelled(databaseError: DatabaseError) {
@@ -150,5 +155,5 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
         }
 
     }
-    cambioVariabili(variabili = viewModel.variabili)
+    //cambioVariabili(variabili = viewModel.variabili)
 }

@@ -72,5 +72,5 @@ fun DeliverOrder(viewModel: AppViewModel, navController: NavController) {
         }
 
     }
-    cambioVariabili(variabili = viewModel.variabili)
+    //cambioVariabili(variabili = viewModel.variabili)
 }
