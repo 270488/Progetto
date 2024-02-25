@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -44,6 +45,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -54,7 +56,9 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
@@ -70,12 +74,14 @@ import it.polito.database.AppViewModel
 import it.polito.database.FindUrl
 
 import it.polito.database.LoadImageFromUrl
+import it.polito.database.R
 import it.polito.database.database
 import it.polito.database.ui.theme.Blue20
 import it.polito.database.ui.theme.Blue40
 import it.polito.database.ui.theme.Red20
 import it.polito.database.ui.theme.Red40
 import it.polito.database.ui.theme.Screen
+import it.polito.database.ui.theme.Yellow40
 import it.polito.database.ui.theme.fontFamily
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -134,31 +140,44 @@ fun ProductList(modifier: Modifier = Modifier
         Row(modifier= Modifier
             .fillMaxWidth()
             .background(Blue40)
-            .padding(5.dp)){
-            Icon(
-                imageVector = Icons.Filled.List, //andrebbe messa icona del filtro
-                contentDescription = ""
+            //.padding(5.dp)
+                )
+                 {
 
-            )
-            Text(text = "Filtri",
+            /*Text(text = "Filtri",
                 style = MaterialTheme.typography.headlineSmall
-                    .copy(fontWeight = FontWeight.Medium, color = Color.Yellow, fontFamily = fontFamily))
+                    .copy(fontWeight = FontWeight.Medium, color = Color.Yellow, fontFamily = fontFamily))*/
             Row(
                 modifier = Modifier
-                    .padding(12.dp)
+                    .padding(horizontal = 12.dp)
                     .background(Blue40)
                     .animateContentSize()
+            ) {Column(
+                modifier = Modifier
+                    .weight(2f)
+                    .background(Blue40)
+                    .align(Alignment.Top)
             ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.filtri),
+                    contentDescription = "filtri",
+                    modifier = Modifier
+                        .size(80.dp)
+                        .padding(horizontal = 20.dp),
+                    tint = Yellow40
+                )
+            }
                 Column(
                     modifier = Modifier
-                        .weight(1f)
+                        .weight(4f)
                         .background(Blue40)
                         .padding(12.dp)
                 ) {
                     Text(
                         text = "Filtri",
-                        color = Color.White,
-                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Medium, fontFamily = fontFamily)
+                        color = Yellow40,
+                        //modifier = Modifier.padding(bottom = 5.dp),
+                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.SemiBold, fontFamily = fontFamily, fontStyle = FontStyle.Italic)
                     )
                     if(expanded){
                         filtri.forEach{f-> elementoFiltro(filtro = f)
@@ -166,17 +185,24 @@ fun ProductList(modifier: Modifier = Modifier
 
                     }
                 }
-                IconButton(onClick = { expanded = !expanded }) {
-                    Icon(
-                        imageVector = if (expanded) Icons.Filled.KeyboardArrowDown else Icons.Filled.KeyboardArrowRight,
-                        contentDescription =
-                        if (expanded) {
-                            "show less"
-                        } else {
-                            "show more"
-                        },
-                        tint = Color.White
-                    )
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .background(Blue40)
+                ) {
+                    IconButton(onClick = { expanded = !expanded }) {
+                        Icon(
+                            imageVector = if (expanded) Icons.Filled.KeyboardArrowDown else Icons.Filled.KeyboardArrowRight,
+                            contentDescription =
+                            if (expanded) {
+                                "show less"
+                            } else {
+                                "show more"
+                            },
+                            tint = Yellow40,
+                            modifier = Modifier.size(30.dp)
+                        )
+                    }
                 }
             }
         }
@@ -352,13 +378,13 @@ fun elementoFiltro(filtro: String){
     Column (modifier= Modifier
         .padding(2.dp)
         .fillMaxWidth()
-        .border(width = 1.dp, color = Color.White, shape = RectangleShape),
+        .border(width = 1.dp, color = Yellow40, shape = RoundedCornerShape(15)),
         verticalArrangement = Arrangement.Center) {
         Row(modifier= Modifier
             .padding(all = 2.dp)
             .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween){
-            Text(text = filtro, color = Color.White, style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Medium, fontFamily = fontFamily) )
+            Text(text = filtro, color = Color.White, style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Medium, fontFamily = fontFamily, fontStyle = FontStyle.Italic) )
         }
     }
 }
