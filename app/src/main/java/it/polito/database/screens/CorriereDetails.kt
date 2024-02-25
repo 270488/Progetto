@@ -112,15 +112,6 @@ fun DettaglioCard(viewModel: AppViewModel,
             ) {
                 Text(text = "Stato della spedizione:", color = Color.White, fontFamily = fontFamily)
             }
-            if (stato == "ordinato") {
-                //TODO icona ordinato
-            } else if (stato == "spedito") {
-                //TODO icona in consegna
-            } else if (stato == "consegnato") {
-                //TODO icona in consegna
-            } else if (stato == "ritirato") {
-                //TODO icona in consegna
-            }
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -129,7 +120,11 @@ fun DettaglioCard(viewModel: AppViewModel,
                     .fillMaxSize()
                     .padding(start = 5.dp, end = 5.dp, bottom = 5.dp)
             ) {
-                Text(text = "Data consegna prevista: " + dataConsegna,color = Color.White, fontFamily = fontFamily)
+                Text(
+                    text = "Data consegna prevista: " + dataConsegna,
+                    color = Color.White,
+                    fontFamily = fontFamily
+                )
             }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -138,14 +133,20 @@ fun DettaglioCard(viewModel: AppViewModel,
                     .fillMaxSize()
                     .padding(5.dp,)
             ) {
-                Text(text = "Locker di destinazione: " + locker,color = Color.White, fontFamily = fontFamily)
+                Text(
+                    text = "Locker di destinazione: " + locker,
+                    color = Color.White,
+                    fontFamily = fontFamily
+                )
             }
 
             if (stato == "ordinato") {
                 Button(
                     onClick = {
-                    database.child("ordini").child(viewModel.ordineSelezionato).child("stato").setValue("spedito")
-                        database.child("utenti").child(id).child("ordini").child(viewModel.ordineSelezionato).setValue("spedito")
+                        database.child("ordini").child(viewModel.ordineSelezionato).child("stato")
+                            .setValue("spedito")
+                        database.child("utenti").child(id).child("ordini")
+                            .child(viewModel.ordineSelezionato).setValue("spedito")
 
                     }) {
                     Text(text = "spedito")
@@ -158,10 +159,21 @@ fun DettaglioCard(viewModel: AppViewModel,
                     }) {
                     Text(text = "sblocca locker")
                 }
+            } else if (stato == "ritirato") {
+                Button(
+                    onClick = {
+                        database.child("ordini").child(viewModel.ordineSelezionato).child("stato")
+                            .setValue("ritirato")
+                        database.child("utenti").child(id).child("ordini")
+                            .child(viewModel.ordineSelezionato).setValue("ritirato")
+                        // TODO togliere dalla lista l'ordine
+                        // TODO stessa cosa se stato è null
+                    }) {
+                    Text(text = "spedito")
+                }
             }
+
         }
-
-
     }
 }
 

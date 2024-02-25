@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -122,7 +121,7 @@ fun Ordine(ordine: String, viewModel: AppViewModel, navController: NavController
         mutableStateOf("")
     }
     var sportello by remember {
-        mutableStateOf(0L)
+        mutableStateOf("")
     }
     var stato by remember {
         mutableStateOf("")
@@ -136,7 +135,7 @@ fun Ordine(ordine: String, viewModel: AppViewModel, navController: NavController
             dataConsegna=dataSnapshot.child("Data Consegna").value.toString()
             dataOrdine=dataSnapshot.child("Data Ordine").value.toString()
             locker=dataSnapshot.child("Locker").value.toString()
-            sportello=dataSnapshot.child("Sportello").value as Long
+            sportello= dataSnapshot.child("Sportello").value.toString()
             stato=dataSnapshot.child("stato").value.toString()
             uid=dataSnapshot.child("uid").value.toString()
             var listaProdotti= mutableMapOf<String, Long>()
@@ -149,82 +148,68 @@ fun Ordine(ordine: String, viewModel: AppViewModel, navController: NavController
             println("Errore nel leggere i dati dal database: ${databaseError.message}")
         }
     })
+    if (stato != "null") {
+        Card(
+            modifier = Modifier.height(90.dp),
+            shape = RoundedCornerShape(15.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary,
+            ),
+            border = BorderStroke(2.dp, MaterialTheme.colorScheme.outline),
+            onClick = {
+                viewModel.ordineSelezionato = ordine
+                navController.navigate(Screen.CorriereDetails.route)
+            }
+        ) {
 
-    Card(
-        modifier = Modifier.height(90.dp),
-        shape = RoundedCornerShape(15.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondary,
-            contentColor= MaterialTheme.colorScheme.onSecondary,
-        ),
-        border = BorderStroke(2.dp, MaterialTheme.colorScheme.outline),
-        onClick = {
-            viewModel.ordineSelezionato = ordine
-            navController.navigate(Screen.CorriereDetails.route)
-        }
-    ){
-        Box(modifier = Modifier.fillMaxSize())
-        {
-            if(stato=="ordinato"){
-                //TODO icona ordinato
-            }
-            else if(stato=="spedito"){
-                //TODO icona in consegna
-            }
-            else if(stato=="consegnato"){
-                //TODO icona in consegna
-            }
-            else if(stato=="ritirato"){
-                //TODO icona in consegna
-            }
-
-                Column(
-                    verticalArrangement = Arrangement.SpaceAround,
+            Column(
+                verticalArrangement = Arrangement.SpaceAround,
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(horizontal = 12.dp, vertical = 12.dp)
+            )
+            {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Top,
                     modifier = Modifier
-                        .fillMaxHeight()
-                        .padding(horizontal = 12.dp, vertical = 12.dp)
-                )
-                {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Top,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
+                        .fillMaxWidth()
+                ) {
 
-                        Text(
-                            text = "Ordine No: $ordine",
-                            fontFamily = fontFamily,
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Start
-                        )
-                    }
-
-
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Top,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-
-                        Text(
-                            text = "Stato ordine: $stato",
-                            fontFamily = fontFamily,
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Start
-                        )
-                    }
+                    Text(
+                        text = "Ordine No: $ordine",
+                        fontFamily = fontFamily,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Start
+                    )
                 }
 
-            }
 
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Top,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+
+                    Text(
+                        text = "Stato ordine: $stato",
+                        fontFamily = fontFamily,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Start
+                    )
+                }
+            }
 
         }
     }
+    }
+
+
 
 
