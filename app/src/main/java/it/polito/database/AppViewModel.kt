@@ -45,6 +45,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
@@ -618,6 +619,17 @@ fun FindUrl(fileName: String): String{
     }.addOnFailureListener {
         // Handle any errors
         Log.e("Foto Error", "Errore nel listener "+fileName)
+    }
+    if (url == ""){
+        var fileNameNew = fileName.substring(0, fileName.length - 3) +
+                fileName.substring(fileName.length - 3).uppercase()
+        storage.child(fileNameNew).downloadUrl.addOnSuccessListener {
+            // Got the download URL for 'users/me/profile.png'
+            url=it.toString()
+        }.addOnFailureListener {
+            // Handle any errors
+            Log.e("Foto Error", "Errore nel listener "+fileName)
+        }
     }
 
     return url

@@ -77,15 +77,20 @@ fun ProfileScreen(viewModel: AppViewModel, navController: NavHostController) {
                 .padding(horizontal = 16.dp)
         ) {
             // Icona
-            Image(
-                painter = painterResource(id = R.drawable.profile_picture),
-                contentDescription = "Profile icon",
-                contentScale = ContentScale.Fit,
+            Box(
+                contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .clip(CircleShape)
+                    .size(120.dp)
                     .weight(0.35f)
                     .border(1.dp, MaterialTheme.colorScheme.tertiary, CircleShape)
-            )
+            ){
+                Image(
+                    painter = painterResource(id = R.drawable.profile_picture),
+                    contentDescription = "Profile icon",
+                    contentScale = ContentScale.Crop,
+                )
+            }
             Spacer(modifier = Modifier.width(16.dp))
             // Scritte
             Box(
