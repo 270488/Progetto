@@ -167,7 +167,7 @@ fun DettaglioCard(viewModel: AppViewModel,
                         database.child("utenti").child(id).child("ordini")
                             .child(viewModel.ordineSelezionato).setValue("ritirato")
                         // TODO togliere dalla lista l'ordine
-                        // TODO stessa cosa se stato è null
+
                     }) {
                     Text(text = "spedito")
                 }
