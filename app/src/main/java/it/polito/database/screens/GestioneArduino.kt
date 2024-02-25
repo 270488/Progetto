@@ -34,6 +34,39 @@ data class GestioneArduino(
 
 
 }
+fun cambioVariabili(variabili: GestioneArduino){
+
+    variabili.variabiliPath.addValueEventListener(object : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) { //fa una foto al db in quel momento e la mette in dataSnapshot
+            variabili.CodeP=dataSnapshot.child("CodeP").value.toString()
+            variabili.CodeG=dataSnapshot.child("CodeG").value.toString()
+            variabili.CodiceTastierino=dataSnapshot.child("CodiceTastierino").value.toString()
+            variabili.PPAperta=dataSnapshot.child("PPAperta").value as Long
+            variabili.PGAperta=dataSnapshot.child("PGAperta").value as Long
+            variabili.Sblocco=dataSnapshot.child("Sblocco").value as Long
+            variabili.SportelloP=dataSnapshot.child("SportelloP").value as Boolean
+            variabili.SportelloG=dataSnapshot.child("SportelloG").value as Boolean
+            variabili.CodiceErrato=dataSnapshot.child("CodiceErrato").value as Long
+
+            println("CodeP: "+variabili.CodeP)
+            println("CodeG: "+variabili.CodeG)
+            println("CodiceTastierino: "+variabili.CodiceTastierino)
+            println("PPAPerta: "+variabili.PPAperta)
+            println("PGAperta: "+variabili.PGAperta)
+            println("Sblocco: "+variabili.Sblocco)
+            println("SportelloP: "+variabili.SportelloP)
+            println("SportelloG: "+variabili.SportelloG)
+            println("CodiceErrato: "+variabili.CodiceErrato)
+
+            confrontoCodici(variabili)
+        }
+
+        override fun onCancelled(databaseError: DatabaseError) {
+            // Gestisci gli errori qui
+            println("Errore nel leggere i dati dal database: ${databaseError.message}")
+        }
+    })
+}
 
 fun confrontoCodici(variabili: GestioneArduino){
     if(variabili.CodiceTastierino==variabili.CodeP){
