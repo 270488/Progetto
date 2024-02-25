@@ -469,7 +469,7 @@ fun ItemCard(
                         modifier = Modifier
                         .fillMaxWidth()
                     ) {
-                        val nomeTroncato = if (nome.length > 11) {
+                        val nomeTroncato = if (nome.length > 12) {
                             nome.take(12) + ".."
                         } else {
                             nome
