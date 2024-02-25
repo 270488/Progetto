@@ -1,16 +1,31 @@
 package it.polito.database.screens
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,9 +35,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -119,41 +139,115 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
         modifier= Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary)
-            .verticalScroll(rememberScrollState())
-            .padding(top = 90.dp, bottom = 110.dp)) {
-        Column (
-            horizontalAlignment = Alignment.CenterHorizontally,
+            .padding(top = 90.dp, bottom = 130.dp)) {
+        Box (
+            contentAlignment = Alignment.Center,
             modifier= Modifier
-                .padding(horizontal = 20.dp)
+                .fillMaxSize()
         ){
             if(sblocco){
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Top,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.Gray)
+                Column(
+                    modifier = Modifier.padding(16.dp).align(Alignment.TopStart)
                 ) {
-
                     Text(
-                        text = "Il codice per il ritiro è:\n"+codice,
+                        text = "Codice per il ritiro:",
                         fontFamily = fontFamily,
                         color = Color.White,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.height(28.dp))
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .width(150.dp)
+                                .background(
+                                    MaterialTheme.colorScheme.secondary,
+                                    RoundedCornerShape(15.dp)
+                                )
+                                .border(
+                                    2.dp,
+                                    MaterialTheme.colorScheme.onBackground,
+                                    RoundedCornerShape(15.dp)
+                                )
+                                .padding(16.dp)
+                        ) {
+                            Text(
+                                text = codice.uppercase(),
+                                fontFamily = fontFamily,
+                                color = Color.White,
+                                fontSize = 32.sp,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(28.dp))
+
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = buildAnnotatedString {
+                            append("*Inserisci il codice soprastante per aprire lo sportello del locker e ritirare il tuo ordine. ")
+                            withStyle(
+                                style = SpanStyle(
+                                    textDecoration = TextDecoration.Underline
+                                )
+                            ){
+                                append("Chiudi lo sportello per confermare di aver completato il ritiro.")
+                            }
+                        },
+                        fontFamily = fontFamily,
+                        color = Color.White,
+                        fontSize = 16.sp,
                         textAlign = TextAlign.Start
                     )
+
                 }
 
-
+            }
+            if (!sblocco){
+                val scaleAnimation = rememberInfiniteTransition(label = "")
+                val scale by scaleAnimation.animateFloat(
+                    initialValue = 1.15f,
+                    targetValue = 0.95f,
+                    animationSpec = infiniteRepeatable(
+                        animation = tween(
+                            durationMillis = 1800,
+                            easing = FastOutSlowInEasing
+                        ),
+                        repeatMode = RepeatMode.Reverse
+                    ), label = ""
+                )
+                Button(
+                    onClick = {
+                        sblocco = true
+                        viewModel.variabili.Sblocco = 1L
+                        writeVariables(viewModel.variabili)
+                    },
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .scale(scale),
+                    shape = RoundedCornerShape(3.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.tertiary,
+                        contentColor = MaterialTheme.colorScheme.onTertiary
+                    )
+                ) {
+                    Text(
+                        text = "SBLOCCA LOCKER",
+                        fontFamily = fontFamily,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.offset(x = 0.dp, y = (-2).dp)
+                    )
+                }
             }
 
-            Button(onClick = { sblocco=true;
-            viewModel.variabili.Sblocco=1L;
-            writeVariables(viewModel.variabili)
-            }) {
-                Text(text = "Sblocca Locker")
-            }
         }
 
     }
