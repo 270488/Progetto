@@ -137,7 +137,7 @@ fun ProductDetail(viewModel: AppViewModel, navController: NavController) {
         AsyncImage(
             model=url,
         contentDescription = "Product Image",
-        contentScale = ContentScale.FillWidth,
+        contentScale = ContentScale.Crop,
         modifier = Modifier
             .layoutId("productImage")
             .fillMaxWidth()

@@ -262,6 +262,7 @@ fun contentCard(nome: String, prezzo: String, url: String, navController: NavCon
         .padding(10.dp)
         .background(Blue40)
         .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
 
         ) {
@@ -270,7 +271,7 @@ fun contentCard(nome: String, prezzo: String, url: String, navController: NavCon
             navController.navigate(Screen.Product.route)
         },
             modifier = Modifier
-                .size(width = Dp.Unspecified, height = 150.dp)
+                .height(200.dp)
                 .fillMaxWidth()
                 .background(Blue40),
         )  { Box (modifier = Modifier.fillMaxSize())
