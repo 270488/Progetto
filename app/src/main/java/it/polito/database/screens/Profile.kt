@@ -30,6 +30,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -76,9 +78,11 @@ fun ProfileScreen(viewModel: AppViewModel, navController: NavHostController) {
         ) {
             // Icona
             Image(
-                painter = painterResource(id = R.drawable.profile),
+                painter = painterResource(id = R.drawable.profile_picture),
                 contentDescription = "Profile icon",
+                contentScale = ContentScale.Fit,
                 modifier = Modifier
+                    .clip(CircleShape)
                     .weight(0.35f)
                     .border(1.dp, MaterialTheme.colorScheme.tertiary, CircleShape)
             )
