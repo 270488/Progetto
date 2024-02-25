@@ -254,7 +254,8 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                     text = "Cerca", color = MaterialTheme.colorScheme.onPrimary,
                     fontFamily = fontFamily,
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.clickable { navController.navigate(Screen.Category.route) }
                 )
             }
             //Contiene i bottoni con i prodotti

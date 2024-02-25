@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
@@ -26,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,9 +41,7 @@ fun PreferenzeCookies(viewModel: AppViewModel, navController: NavController){
 }
 
 @Composable
-fun PreferenzeCookiesScreen(viewModel: AppViewModel, navController: NavController, modifier: Modifier = Modifier
-    .padding(top = 74.dp)
-    .padding(bottom = 74.dp)) {
+fun PreferenzeCookiesScreen(viewModel: AppViewModel, navController: NavController){
 
 
     val biscotti = listOf(
@@ -53,18 +53,45 @@ fun PreferenzeCookiesScreen(viewModel: AppViewModel, navController: NavControlle
         "Assicurare sicurezza, prevenire frodi e debug"
     )
 
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
-            .verticalScroll(rememberScrollState())
+            .background(MaterialTheme.colorScheme.primary)
             .padding(top = 90.dp, bottom = 110.dp)
+            .verticalScroll(rememberScrollState())
     )
     {
-        biscotti.forEach { b ->
+        biscotti.forEach {b ->
+            Column() {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Text(
+                        text = b,
+                        fontFamily = fontFamily,
+                        fontSize = 18.sp,
+                        color = Color.White,
+                        modifier = Modifier.widthIn(0.dp, 280.dp)
+                    )
+                    BiscottiSwitch(
+                        modifier = Modifier
+                            .layoutId("switch"),
+                        "b${biscotti.indexOf(b)}", viewModel
+                    )
+                }
+                if (b != biscotti.last())
+                Divider(
+                    thickness = 1.dp,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+            }
+
+            /*
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
@@ -110,7 +137,7 @@ fun PreferenzeCookiesScreen(viewModel: AppViewModel, navController: NavControlle
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     }
-                }
+                }*/
             }
         }
     }
