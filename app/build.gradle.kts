@@ -53,16 +53,18 @@ android {
 }
 
 dependencies {
+    implementation("androidx.compose.ui:ui:1.6.2")
+    implementation("androidx.compose.animation:animation:1.6.2")
     implementation("com.github.a914-gowtham:compose-ratingbar:1.3.4")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
-    implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation ("com.google.android.material:material:1.11.0")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material:material:1.6.2")
     implementation("com.google.firebase:firebase-common-ktx:20.4.2")
     implementation("androidx.browser:browser:1.7.0")
     testImplementation("junit:junit:4.13.2")

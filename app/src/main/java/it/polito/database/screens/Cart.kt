@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,16 +16,23 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.rememberSwipeableState
+import androidx.compose.material.swipeable
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,8 +44,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
@@ -45,6 +55,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -58,6 +69,7 @@ import it.polito.database.database
 import it.polito.database.ui.theme.Screen
 import it.polito.database.ui.theme.fontFamily
 import java.lang.Double.sum
+import kotlin.math.roundToInt
 
 
 @Composable
@@ -360,24 +372,20 @@ fun eliminaDalCarrello(item: String, id: String, viewModel: AppViewModel){
     })
 }
 
-@Composable
-fun CartItem(nome: String, prezzo: Int, quantita: Int){
-
-}
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun ItemCard(
     viewModel: AppViewModel,
     item: String,
     id: String,
     navController: NavController
-){
-    val product= viewModel.products.observeAsState(emptyList()).value
+) {
+    val product = viewModel.products.observeAsState(emptyList()).value
         .filter { it.child("nome").value.toString() == item }
 
-    var nome=""
-    var prezzo=""
-    var url=""
+    var nome = ""
+    var prezzo = ""
+    var url = ""
     var originalQty by remember {
         mutableStateOf(0L)
     }
@@ -385,17 +393,17 @@ fun ItemCard(
         mutableStateOf(0L)
     }
     product.forEach { p ->
-        nome=p.child("nome").value.toString()
-        prezzo=p.child("prezzo").value.toString()
-        url= FindUrl(fileName = nome+".jpg")
+        nome = p.child("nome").value.toString()
+        prezzo = p.child("prezzo").value.toString()
+        url = FindUrl(fileName = nome + ".jpg")
 
     }
-    val prodCarrello= database.child("utenti").child(id).child("carrello")
+    val prodCarrello = database.child("utenti").child(id).child("carrello")
     prodCarrello.addListenerForSingleValueEvent(object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) { //fa una foto al db in quel momento e la mette in dataSnapshot
             for (childSnapshot in dataSnapshot.children) {
 
-                if(childSnapshot.child("nome").value.toString()==item){
+                if (childSnapshot.child("nome").value.toString() == item) {
 
                     try {
                         val newQty = (childSnapshot.child("qty").value as Long).toLong()
@@ -415,117 +423,155 @@ fun ItemCard(
 
             }
         }
+
         override fun onCancelled(databaseError: DatabaseError) {
             println("Errore nel leggere i dati dal database: ${databaseError.message}")
         }
     })
 
-    Card(
-        modifier = Modifier.height(90.dp),
-        shape = RoundedCornerShape(15.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondary,
-            contentColor= MaterialTheme.colorScheme.onSecondary,
-        ),
-        border = BorderStroke(2.dp, MaterialTheme.colorScheme.outline),
-        onClick = {
-            viewModel.prodottoSelezionato = nome
-            navController.navigate(Screen.Product.route)
-        }
+    val squareSize = 80.dp
+    val swipeAbleState = rememberSwipeableState(initialValue = 0)
+    val sizePx = with(LocalDensity.current) { squareSize.toPx() }
+    val anchors = mapOf(0f to 0, -sizePx to 1)
+
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(15.dp))
+            .background(MaterialTheme.colorScheme.tertiary)
+            .swipeable(
+                state = swipeAbleState,
+                anchors = anchors,
+                thresholds = { _, _ ->
+                    androidx.compose.material.FractionalThreshold(0.3f)
+                },
+                orientation = Orientation.Horizontal
+            )
     ) {
-
-        var clicked by remember {
-            mutableStateOf(true)
+        //ICONE CHE COMPAIONO
+        Column(
+            modifier = Modifier.padding(24.dp).align(Alignment.CenterEnd)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Delete,
+                modifier = Modifier
+                    .size(28.dp)
+                    .clickable {
+                    eliminaDalCarrello(
+                        item = nome,
+                        id = id,
+                        viewModel
+                    )
+                },
+                contentDescription = "Delete",
+                tint = Color.Black
+            )
         }
+        Card(
+            modifier = Modifier
+                .height(90.dp)
+                .offset {
+                    IntOffset(
+                        swipeAbleState.offset.value.roundToInt(), 0
+                    )
+                },
+            shape = RoundedCornerShape(15.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary,
+            ),
+            border = BorderStroke(2.dp, MaterialTheme.colorScheme.outline),
+            onClick = {
+                viewModel.prodottoSelezionato = nome
+                navController.navigate(Screen.Product.route)
+            }
+        ) {
 
-        Box(modifier = Modifier.fillMaxSize())
-        {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                //horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                AsyncImage(
-                    model = url,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(15.dp))
-                        .width(150.dp),
-                    contentScale = ContentScale.Crop
-                )
-
-                //Spacer(modifier = Modifier.width(16.dp))
-
-                Column(
-                    verticalArrangement = Arrangement.SpaceAround,
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .padding(horizontal = 10.dp, vertical = 12.dp)
-                )
-                {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Top,
-                        modifier = Modifier
-                        .fillMaxWidth()
-                    ) {
-                        val nomeTroncato = if (nome.length > 12) {
-                            nome.take(12) + ".."
-                        } else {
-                            nome
-                        }
-                        Text(
-                            text = nomeTroncato.replaceFirstChar{ it.uppercase() },
-                            fontFamily = fontFamily,
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Start
-                        )
-                        SelettoreQuantita(viewModel,qty)
-                    }
-
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Bottom,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        Text(
-                            text = prezzo + "€",
-                            fontFamily = fontFamily,
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Start
-                        )
-                        Text(
-                            text = "Rimuovi",
-                            fontFamily = fontFamily,
-                            fontSize = 14.sp,
-                            textDecoration = TextDecoration.Underline,
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            textAlign = TextAlign.Start,
-                            modifier = Modifier.clickable { eliminaDalCarrello(item = nome, id = id, viewModel) }
-                        )
-
-                    }
-                }
-
-                //Text(text = nome)
-                //Text(text = prezzo + "€")
-
-                //Non metterei la possibilità di aggiungere ai preferiti anche dal carrello
-                /*TextButton(onClick = { aggiungiPreferito(prod = nome, id = id)
-                eliminaDalCarrello(item = nome, id = id)}) {
-                    Text(text = "Salva nei preferiti", color = MaterialTheme.colorScheme.onPrimary)}*/
+            var clicked by remember {
+                mutableStateOf(true)
             }
 
+            Box(modifier = Modifier.fillMaxSize())
+            {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    //horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    AsyncImage(
+                        model = url,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(15.dp))
+                            .width(150.dp),
+                        contentScale = ContentScale.Crop
+                    )
 
+                    //Spacer(modifier = Modifier.width(16.dp))
+
+                    Column(
+                        verticalArrangement = Arrangement.SpaceAround,
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .padding(horizontal = 10.dp, vertical = 12.dp)
+                    )
+                    {
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.Top,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            val nomeTroncato = if (nome.length > 16) {
+                                nome.take(16) + ".."
+                            } else {
+                                nome
+                            }
+                            Text(
+                                text = nomeTroncato.replaceFirstChar { it.uppercase() },
+                                fontFamily = fontFamily,
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Start
+                            )
+                        }
+
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.Bottom,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            Text(
+                                text = prezzo + "€",
+                                fontFamily = fontFamily,
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Start
+                            )
+                            SelettoreQuantita(viewModel, qty)
+
+                        }
+                    }
+
+                    //Text(text = nome)
+                    //Text(text = prezzo + "€")
+
+                    //Non metterei la possibilità di aggiungere ai preferiti anche dal carrello
+                    /*TextButton(onClick = { aggiungiPreferito(prod = nome, id = id)
+                eliminaDalCarrello(item = nome, id = id)}) {
+                    Text(text = "Salva nei preferiti", color = MaterialTheme.colorScheme.onPrimary)}*/
+                }
+
+
+            }
         }
+        //Spacer(modifier = Modifier.height(16.dp))
     }
     Spacer(modifier = Modifier.height(16.dp))
-
 }
 
 @Composable
@@ -534,12 +580,13 @@ fun SelettoreQuantita(viewModel: AppViewModel, quantita: Long) {
     // var count by remember { mutableIntStateOf(quantita.toInt()) } // TODO Cambiare valore iniziale con valore della quantità inserita e aggiornare vm e db di conseguenza (possiamo anche lasciarlo finto)
 
     Row(
-        modifier = Modifier.offset(y = (-5).dp),
-        verticalAlignment = Alignment.CenterVertically)
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.offset(y = (2).dp)
+    )
     {
         Text(
             text = "-",
-            fontSize = 26.sp,
+            fontSize = 28.sp,
             fontWeight = FontWeight.ExtraBold,
             fontFamily = fontFamily,
             color = MaterialTheme.colorScheme.tertiary,
@@ -549,7 +596,7 @@ fun SelettoreQuantita(viewModel: AppViewModel, quantita: Long) {
                 }
             }
         )
-        Spacer(modifier = Modifier.width(6.dp))
+        Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = count.toString(),
             fontFamily = fontFamily,
@@ -557,10 +604,10 @@ fun SelettoreQuantita(viewModel: AppViewModel, quantita: Long) {
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onPrimary
         )
-        Spacer(modifier = Modifier.width(6.dp))
+        Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = "+",
-            fontSize = 26.sp,
+            fontSize = 28.sp,
             fontWeight = FontWeight.ExtraBold,
             fontFamily = fontFamily,
             color = MaterialTheme.colorScheme.tertiary,
