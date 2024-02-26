@@ -446,7 +446,18 @@ fun OptionSelection() {
                     DropdownMenuItem(
                         modifier = Modifier.padding(vertical = 0.dp),
                         text = {
-                            Text(text = o, color = Color.White, fontFamily= fontFamily, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center
+                            ){
+                                Text(
+                                    text = o,
+                                    color = Color.White,
+                                    fontFamily= fontFamily,
+                                    fontStyle = FontStyle.Italic,
+                                    fontSize = 14.sp)
+                            }
                         },
                         onClick = {
                             selectedOption = o
@@ -516,12 +527,18 @@ fun QtySelection(viewModel: AppViewModel) {
                 qty.forEachIndexed() {index, q ->
                     DropdownMenuItem(
                         text = {
-                            Text(
-                                text = q.toString(),
-                                color = Color.White,
-                                fontFamily= fontFamily,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 14.sp)
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center
+                            ){
+                                Text(
+                                    text = q.toString(),
+                                    color = Color.White,
+                                    fontFamily= fontFamily,
+                                    fontStyle = FontStyle.Italic,
+                                    fontSize = 14.sp)
+                            }
                         },
                         onClick = {
                             selectedQty = q

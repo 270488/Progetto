@@ -3,6 +3,7 @@ package it.polito.database.screens
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.rememberScrollableState
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,7 +14,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,9 +26,15 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -37,13 +46,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -55,6 +68,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.values
 import it.polito.database.AppViewModel
 import it.polito.database.FindUrl
+import it.polito.database.R
 import it.polito.database.database
 import it.polito.database.ui.theme.Screen
 import it.polito.database.ui.theme.fontFamily
@@ -64,6 +78,7 @@ import java.time.format.DateTimeFormatter
 import kotlin.random.Random
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResiScreen(viewModel: AppViewModel, navController: NavController){
 
@@ -116,8 +131,110 @@ fun ResiScreen(viewModel: AppViewModel, navController: NavController){
                 )
             }
             else{
+                //FILTRO ORDINI PER STATO
+
+                val listStates= listOf<String>("In corso", "Terminati", "Tutti")
+
+                var selectedState by remember {
+                    mutableStateOf<String>("In corso")
+                }
+
+                var expanded by remember { mutableStateOf(false) }
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .layoutId("menuOptions")
+                            .width(165.dp)
+                            .height(50.dp)
+                            .border(
+                                BorderStroke(2.dp, Color.Black),
+                                RoundedCornerShape(3.dp)
+                            )
+                            .background(
+                                MaterialTheme.colorScheme.secondary,
+                                RoundedCornerShape(3.dp)
+                            )
+                    ){
+                        ExposedDropdownMenuBox(
+                            modifier = Modifier.fillMaxSize(),
+                            expanded = expanded,
+                            onExpandedChange = { expanded = it },
+                        ) {
+                            TextField(
+                                value = selectedState,
+                                onValueChange = {},
+                                readOnly = true,
+                                textStyle = TextStyle(
+                                    fontFamily= fontFamily, fontWeight = FontWeight.Bold, fontSize = 15.sp),
+                                colors = TextFieldDefaults.outlinedTextFieldColors(
+                                    containerColor = MaterialTheme.colorScheme.secondary,
+                                    textColor = Color.White),
+                                leadingIcon = {
+                                    Icon(
+                                        modifier = Modifier.size(23.dp),
+                                        painter = painterResource(id = R.drawable.filtri),
+                                        contentDescription = "",
+                                        tint = MaterialTheme.colorScheme.tertiary
+                                    )
+                                },
+                                modifier = Modifier.menuAnchor()
+                            )
+                            DropdownMenu(
+                                offset = DpOffset((0).dp, (4).dp),
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false },
+                                modifier = Modifier
+                                    .width(165.dp)
+                                    .background(MaterialTheme.colorScheme.secondary)
+                                    .border(
+                                        BorderStroke(2.dp, Color.Black),
+                                        RoundedCornerShape(3.dp)
+                                    )
+                            ) {
+
+                                listStates.forEachIndexed() {index, o ->
+                                    DropdownMenuItem(
+                                        text = {
+                                            Row(
+                                                modifier = Modifier
+                                                    .fillMaxWidth(),
+                                                horizontalArrangement = Arrangement.Center
+                                            )
+                                            {
+                                                Text(
+                                                    modifier = Modifier
+                                                        .offset(y = if(index == 0)(-4).dp else if(index == 2) 4.dp else 0.dp),
+                                                    text = o,
+                                                    color = Color.White,
+                                                    fontFamily= fontFamily,
+                                                    fontStyle = FontStyle.Italic,
+                                                    fontSize = 15.sp)
+                                            }
+
+                                        },
+                                        onClick = {
+                                            selectedState = o
+                                            expanded =
+                                                false
+                                        })
+                                    if (index < listStates.size - 1){
+                                        Divider(thickness = 1.dp, color = MaterialTheme.colorScheme.primaryContainer)
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
                 listaResi.forEach{
-                        i-> resiCard(numeroReso = i, viewModel, navController)
+                        i-> resiCard(numeroReso = i, viewModel, navController, selectedState)
                 }
             }
         }
@@ -153,7 +270,7 @@ fun ResiScreen(viewModel: AppViewModel, navController: NavController){
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun resiCard(numeroReso: String, viewModel: AppViewModel, navController: NavController){
+fun resiCard(numeroReso: String, viewModel: AppViewModel, navController: NavController, filtro: String){
 
     var reso= database.child("resi").child(numeroReso)
 
@@ -176,100 +293,121 @@ fun resiCard(numeroReso: String, viewModel: AppViewModel, navController: NavCont
         }
     })
 
+    var filteredStates by remember {
+        mutableStateOf<List<String>>(emptyList())
+    }
+
+    when(filtro){
+        "In corso" -> {
+            filteredStates = listOf("avviato", "consegnato")
+        }
+        "Terminati" -> {
+            filteredStates = listOf("completato","scaduto")
+        }
+        "Tutti" -> {
+            filteredStates = listOf("avviato","consegnato", "completato", "scaduto")
+        }
+    }
+
     url= FindUrl(fileName = prodotti+".jpg")
 
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp),
-        shape = RoundedCornerShape(15.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondary,
-            contentColor= MaterialTheme.colorScheme.onSecondary,
-        ),
-        border = BorderStroke(2.dp, Color.Black),
-        onClick = {
-            navController.navigate(Screen.DettaglioResiScreen.route)
-            viewModel.resoSelezionato=numeroReso
-        }
-    )
-    {
-        Column(){
-            Row(){
-                AsyncImage(
-                    model = url,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(15.dp))
-                        .height(90.dp)
-                        .width(150.dp),
-                    contentScale = ContentScale.Crop
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-                Column(
-                    modifier = Modifier
-                        .align(Alignment.CenterVertically)
-                        .padding(end = 8.dp)
-                ) {
-                    Text(
-                        text = prodotti,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = fontFamily,
+    if(filteredStates.contains(stato)){
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp),
+            shape = RoundedCornerShape(15.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor= MaterialTheme.colorScheme.onSecondary,
+            ),
+            border = BorderStroke(2.dp, Color.Black),
+            onClick = {
+                navController.navigate(Screen.DettaglioResiScreen.route)
+                viewModel.resoSelezionato=numeroReso
+            }
+        )
+        {
+            Column(){
+                Row(){
+                    AsyncImage(
+                        model = url,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(15.dp))
+                            .height(90.dp)
+                            .width(150.dp),
+                        contentScale = ContentScale.Crop
                     )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Column(
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                            .padding(end = 8.dp)
+                    ) {
+                        Text(
+                            text = prodotti,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = fontFamily,
+                        )
+                        Text(
+                            text = "Ordine No. " + ordine,
+                            fontSize = 14.sp,
+                            fontFamily = fontFamily,
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(6.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically
+                ){
                     Text(
-                        text = "Ordine No. " + ordine,
-                        fontSize = 14.sp,
+                        text = buildAnnotatedString {
+                            append("Stato: ")
+                            withStyle(
+                                style = SpanStyle(
+                                    color =
+                                    if (stato == "scaduto") MaterialTheme.colorScheme.errorContainer
+                                    else if (stato == "completato") Color.White
+                                    else  MaterialTheme.colorScheme.tertiary,
+                                )
+                            ){
+                                append(stato)
+                            }
+                        },
                         fontFamily = fontFamily,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    /*Text(
+                        text = "Stato: " + stato,
+                        color =
+                        if (stato == "scaduto") MaterialTheme.colorScheme.errorContainer
+                        else  MaterialTheme.colorScheme.tertiary,
+                        fontFamily = fontFamily,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp
+                    )*/
+                    Text(
+                        text = "Scadenza: " + scadenza,
+                        fontFamily = fontFamily,
+                        fontSize = 14.sp
                     )
                 }
+                Spacer(modifier = Modifier.height(8.dp))
+
             }
-            Spacer(modifier = Modifier.height(6.dp))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Text(
-                    text = buildAnnotatedString {
-                        append("Stato: ")
-                        withStyle(
-                            style = SpanStyle(
-                                color =
-                                if (stato == "scaduto") MaterialTheme.colorScheme.errorContainer
-                                else  MaterialTheme.colorScheme.tertiary,
-                            )
-                        ){
-                            append(stato)
-                        }
-                    },
-                    fontFamily = fontFamily,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                /*Text(
-                    text = "Stato: " + stato,
-                    color =
-                    if (stato == "scaduto") MaterialTheme.colorScheme.errorContainer
-                    else  MaterialTheme.colorScheme.tertiary,
-                    fontFamily = fontFamily,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp
-                )*/
-                Text(
-                    text = "Scadenza: " + scadenza,
-                    fontFamily = fontFamily,
-                    fontSize = 14.sp
-                )
-            }
-            Spacer(modifier = Modifier.height(8.dp))
 
         }
-
+        Spacer(modifier = Modifier.height(16.dp))
     }
-    Spacer(modifier = Modifier.height(16.dp))
+
+
 }
 
 @SuppressLint("NewApi")

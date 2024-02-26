@@ -121,7 +121,7 @@ fun Orders(viewModel: AppViewModel, navController: NavController){
             else{
                 //FILTRO ORDINI PER STATO
 
-                val listStates= listOf<String>("In corso", "Completati", "Tutti")
+                val listStates= listOf<String>("In corso", "Terminati", "Tutti")
 
                 var selectedState by remember {
                     mutableStateOf<String>("In corso")
@@ -198,6 +198,7 @@ fun Orders(viewModel: AppViewModel, navController: NavController){
                                                         .offset(y = if(index == 0)(-4).dp else if(index == 2) 4.dp else 0.dp),
                                                     text = o,
                                                     color = Color.White,
+                                                    fontStyle = FontStyle.Italic,
                                                     fontFamily= fontFamily,
                                                     fontSize = 15.sp)
                                             }
@@ -307,7 +308,7 @@ fun OrdineCard(ordine: String, viewModel: AppViewModel, navController: NavContro
         "In corso" -> {
             filteredStates = listOf("ordinato", "spedito", "consegnato")
         }
-        "Completati" -> {
+        "Terminati" -> {
             filteredStates = listOf("ritirato","rispedito")
         }
         "Tutti" -> {
