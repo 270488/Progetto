@@ -79,7 +79,6 @@ fun AccessoESicureezzaScreen(viewModel: AppViewModel, navController: NavHostCont
                         else MaterialTheme.colorScheme.secondary
                     )
                     .fillMaxWidth()
-                    .height(80.dp)
                     .padding(12.dp)
                     .animateContentSize()
             ) {

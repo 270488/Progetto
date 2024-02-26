@@ -44,6 +44,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
@@ -244,23 +245,27 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp, top = 8.dp), horizontalArrangement = Arrangement.SpaceBetween
+                    .padding(bottom = 8.dp, top = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Bottom
             ) {
                 Text(
                     text = "Da non perdere", color = MaterialTheme.colorScheme.onPrimary,
                     fontFamily = fontFamily,
-                    fontSize = 18.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = "Cerca", color = MaterialTheme.colorScheme.onPrimary,
                     fontFamily = fontFamily,
                     fontSize = 18.sp,
+                    textDecoration = TextDecoration.Underline,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.clickable { navController.navigate(Screen.Category.route) }
                 )
             }
             //Contiene i bottoni con i prodotti
+            Spacer(modifier = Modifier.height(4.dp))
             Row(
                 modifier = Modifier
                     .horizontalScroll(rememberScrollState())
@@ -296,7 +301,7 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                     Card(
                         modifier = Modifier
                             .background(Blue40)
-                            .size(170.dp, 102.dp)
+                            .size(175.dp, 105.dp)
                             .fillMaxWidth()
                             .padding(all = 4.dp)
                             .fillMaxHeight()
@@ -365,7 +370,7 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                     .size(700.dp, 1.dp)
             )*/
         }
-        Spacer(modifier = Modifier.height(22.dp))
+        Spacer(modifier = Modifier.height(18.dp))
         Divider(thickness = 1.dp, color = Yellow40, modifier = Modifier.padding(top = 4.dp, bottom = 16.dp))
         //Spacer(modifier = Modifier.weight(0.01f))
         //Seconda riga OFFERTE PER TE
@@ -378,11 +383,12 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                 Text(
                     text = "Offerte per te", color = MaterialTheme.colorScheme.onPrimary,
                     fontFamily = fontFamily,
-                    fontSize = 18.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
             }
             Spacer(modifier = Modifier.weight(0.01f))
+            Spacer(modifier = Modifier.height(4.dp))
             Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
 
                 val offerte = listaFiltrata(categoria = "offerte", viewModel = viewModel)
@@ -414,7 +420,7 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                     Card(
                         modifier = Modifier
                             .background(Blue40)
-                            .size(170.dp, 102.dp)
+                            .size(175.dp, 105.dp)
                             .fillMaxWidth()
                             .padding(all = 4.dp)
                             .fillMaxHeight()
@@ -485,7 +491,7 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                 .background(Yellow40)
                 .size(700.dp, 1.dp)
         )*/
-        Spacer(modifier = Modifier.height(22.dp))
+        Spacer(modifier = Modifier.height(18.dp))
         Divider(thickness = 1.dp, color = Yellow40, modifier = Modifier.padding(top = 4.dp, bottom = 16.dp))
         //Spacer(modifier = Modifier.weight(0.01f))
         //Terza riga ACQUISTA DI NUOVO
@@ -497,11 +503,12 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                 Text(
                     text = "Acquista di nuovo", color = MaterialTheme.colorScheme.onPrimary,
                     fontFamily = fontFamily,
-                    fontSize = 18.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
             }
             Spacer(modifier = Modifier.weight(0.01f))
+            Spacer(modifier = Modifier.height(4.dp))
             Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
                 val acquista = listaFiltrata(categoria = "acquista", viewModel = viewModel)
                 var isLoading by remember { mutableStateOf(true) }
@@ -532,7 +539,7 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                     Card(
                         modifier = Modifier
                             .background(Blue40)
-                            .size(170.dp, 102.dp)
+                            .size(175.dp, 105.dp)
                             .fillMaxWidth()
                             .padding(all = 4.dp)
                             .fillMaxHeight()
