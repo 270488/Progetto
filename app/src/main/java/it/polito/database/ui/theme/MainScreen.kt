@@ -83,7 +83,9 @@ fun MainScreen(viewModel: AppViewModel){
                 }},
                 bottomBar = {
                     if(currentDestination?.route !== Screen.AuthenticationScreen.route
-                        && currentDestination?.route !== Screen.NewAccount.route) {
+                        && currentDestination?.route !== Screen.NewAccount.route &&
+                        currentDestination?.route !== Screen.CorriereProfile.route
+                        && currentDestination?.route !== Screen.CorriereHome.route) {
                         BottomBar(navController = navController)
                     }
                 }
@@ -167,15 +169,33 @@ fun TopBar(navController: NavHostController) {
         Screen.Notifications,
         Screen.Settings,
     )
+    val screensCorriere = listOf(
+        Screen.Notifications,
+        Screen.CorriereProfile,
+    )
+
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 //serve ad osservare lo stato ed essere notificati quando questo cambia
     val currentDestination = navBackStackEntry?.destination
 
-    if (currentDestination?.route !== Screen.AuthenticationScreen.route ) {
+    if (currentDestination?.route !== Screen.AuthenticationScreen.route &&
+        currentDestination?.route !== Screen.CorriereHome.route) {
         NavigationBar(
             containerColor = MaterialTheme.colorScheme.primary
         ) {
             screens.forEach { screen ->
+                AddItem2(
+                    navController = navController
+                )
+            }
+
+        }
+    } else if(currentDestination?.route == Screen.CorriereHome.route){
+
+        NavigationBar(
+            containerColor = MaterialTheme.colorScheme.primary
+        ) {
+            screensCorriere.forEach { screen ->
                 AddItem2(
                     navController = navController
                 )
@@ -190,6 +210,8 @@ fun TopBar(navController: NavHostController) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddItem2(navController: NavHostController){
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
     TopAppBar(
         modifier = Modifier.padding(top = 6.dp),
         title = {
@@ -233,14 +255,26 @@ fun AddItem2(navController: NavHostController){
             }
                          },
         actions = {
-            IconButton(onClick = {  navController.navigate(Screen.Settings.route) },
-                colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.tertiary)) {
-                Icon(
-                    imageVector = Screen.Settings.icon,
-                    contentDescription = "Impostazioni",
-                    modifier = Modifier.size(40.dp)
-                )
-            }
+               if(currentDestination?.route !== Screen.CorriereHome.route &&
+                   currentDestination?.route !== Screen.CorriereProfile.route) {
+                   IconButton(onClick = {  navController.navigate(Screen.Settings.route) },
+                       colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.tertiary)) {
+                   Icon(
+                       imageVector = Screen.Settings.icon,
+                       contentDescription = "Impostazioni",
+                       modifier = Modifier.size(40.dp)
+                   )
+               }}else {
+                   IconButton(onClick = {  navController.navigate(Screen.CorriereProfile.route) },
+                       colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.tertiary)) {
+                       Icon(
+                           imageVector = Screen.CorriereProfile.icon,
+                           contentDescription = "Account",
+                           modifier = Modifier.size(40.dp)
+                       )
+                   }
+               }
+
         }
     )
 }
