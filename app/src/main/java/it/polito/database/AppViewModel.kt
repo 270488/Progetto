@@ -84,7 +84,7 @@ class AppViewModel: ViewModel() {
         "McFit Via San Paolo, 25/Torino (TO), 10141",
         "McFit Via Giuseppe Lagrange, 47/Torino (TO), 10123",
         "McFit C.so Giulio Cesare, 29/Torino (TO), 10152",
-        "McFit Punti Progetto, 10/Torino (TO), 10128",
+        "McFit Via Punti Progetto, 10/Torino (TO), 10128",
         "McFit Via Bertola, 31/Torino (TO), 10122",
         "McFit C.so Principe Oddone, 92/Torino (TO), 10158",
         "McFit Via Giuseppe Gaibaldi, 72/Torino (TO), 10135",
