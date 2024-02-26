@@ -1,19 +1,10 @@
 package it.polito.database.screens
 
-import android.media.AudioManager
-import android.media.MediaPlayer
-import android.os.CountDownTimer
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import it.polito.database.AppViewModel
 import it.polito.database.database
-import java.io.IOException
 import kotlin.random.Random
 
 fun writeVariables(variabili: GestioneArduino) {
@@ -89,8 +80,8 @@ fun confrontoCodici(variabili: GestioneArduino){
     }
     else if(variabili.CodiceTastierino==variabili.CodeG){
         variabili.Sblocco=0L
-        variabili.CodeG=""
         variabili.PGAperta=1L
+        variabili.CodeG=""
         variabili.CodiceTastierino="0000"
         variabili.CodiceErrato=0L
         writeVariables(variabili)
@@ -141,6 +132,8 @@ fun generazioneCodiceCasuale(): String{
         .joinToString("")
     return stringaCasuale
 }
+
+/*
 @Composable
 fun GestioneTempo(variabili: GestioneArduino){
     var tempoScaduto by remember { mutableStateOf(false) }
@@ -178,3 +171,4 @@ private fun startTimer(){
         }
     }.start()
 }
+*/

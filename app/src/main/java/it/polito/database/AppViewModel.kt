@@ -64,7 +64,9 @@ import it.polito.database.ui.theme.fontFamily
 
 
 class AppViewModel: ViewModel() {
-
+    //PPAperta e PGAperta a 0 è chiuso quindi false
+    //sblocco a zero è false
+    //SportelloG e P a true quando occupati
     var products=MutableLiveData<List<DataSnapshot>>(emptyList())
     var resi=MutableLiveData<List<DataSnapshot>>(emptyList())
     var prodottoSelezionato="shaker"
