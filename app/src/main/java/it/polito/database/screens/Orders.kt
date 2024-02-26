@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,7 +23,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,7 +34,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
@@ -52,10 +49,8 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import it.polito.database.AppViewModel
 import it.polito.database.FindUrl
-import it.polito.database.R
 import it.polito.database.database
 import it.polito.database.ui.theme.Screen
-import it.polito.database.ui.theme.Yellow40
 import it.polito.database.ui.theme.fontFamily
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -337,7 +332,7 @@ fun aggiungiOrdine(viewModel: AppViewModel){
     var dataConsegna=dataAttuale.plusDays(1).format(formato)
     var nOrdine= Random.nextInt(10000, 100000)
     var locker=viewModel.lockerSelezionato
-    var sportello=0
+    var sportello="P"
     var stato="ordinato"
     var totale=viewModel.tot
     var numeroProdotti=0
