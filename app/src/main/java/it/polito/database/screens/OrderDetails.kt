@@ -483,7 +483,7 @@ fun dettaglioProdotto(viewModel: AppViewModel, qty: Long, item: String, stato: S
             //RIGA CON RESTITUISCI ORDINE E ORDINA DI NUOVO
             Spacer(modifier = Modifier.height(8.dp))
             Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
+                //horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 12.dp)
@@ -615,36 +615,39 @@ fun dettaglioProdotto(viewModel: AppViewModel, qty: Long, item: String, stato: S
                         }
                     }
                 }
-                Text(
-                    modifier = Modifier.clickable {
-                        viewModel.prodottoSelezionato = item
-                        navController.navigate(Screen.Product.route) },
-                    text = "Ordina di nuovo",
-                    fontFamily = fontFamily,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    fontSize = 14.sp,
-                    fontStyle = FontStyle.Italic,
-                    textDecoration = TextDecoration.Underline,
-                )
-                Log.d("Reso avviato: ", resoAvviato.toString())
-                Text(
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
-                        .clickable {
-                            if(!resoAvviato)
-                                openAlertDialog = true
-                        }
-                        .alpha(if (stato == "ritirato" || resoAvviato) 0.3f else 1f),
-                    text = "Restituisci ordine",
-                    fontFamily = fontFamily,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    fontSize = 14.sp,
-                    fontStyle = FontStyle.Italic,
-                    textDecoration = TextDecoration.Underline,
-                )
-                
-                
-                
-                
+                        .fillMaxWidth()
+                ){
+                    Text(
+                        modifier = Modifier.clickable {
+                            viewModel.prodottoSelezionato = item
+                            navController.navigate(Screen.Product.route) },
+                        text = "Ordina di nuovo",
+                        fontFamily = fontFamily,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontSize = 14.sp,
+                        fontStyle = FontStyle.Italic,
+                        textDecoration = TextDecoration.Underline,
+                    )
+                    Log.d("Reso avviato: ", resoAvviato.toString())
+                    Text(
+                        modifier = Modifier
+                            .clickable {
+                                if(!resoAvviato)
+                                    openAlertDialog = true
+                            }
+                            .alpha(if (stato == "ritirato" || resoAvviato) 0.3f else 1f),
+                        text = "Restituisci ordine",
+                        fontFamily = fontFamily,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontSize = 14.sp,
+                        fontStyle = FontStyle.Italic,
+                        textDecoration = TextDecoration.Underline,
+                    )
+                }
+
             }
             Spacer(modifier = Modifier.height(8.dp))
         }
