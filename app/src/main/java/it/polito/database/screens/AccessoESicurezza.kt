@@ -44,8 +44,8 @@ fun AccessoESicureezzaScreen(viewModel: AppViewModel, navController: NavHostCont
     val pozioni = listOf(
         "Modifica mail",
         "Modifica password",
-        "Metodo di pagamento predefinito",
-        "Preferenze cookies",
+        "Metodo di pagamento",
+        //"Preferenze cookies",
         "Logout"
     )
     var credenziali= database.child("utenti").child(viewModel.uid)
@@ -74,7 +74,10 @@ fun AccessoESicureezzaScreen(viewModel: AppViewModel, navController: NavHostCont
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .background(MaterialTheme.colorScheme.secondary)
+                    .background(
+                        if(name == "Logout") MaterialTheme.colorScheme.secondaryContainer
+                        else MaterialTheme.colorScheme.secondary
+                    )
                     .fillMaxWidth()
                     .height(80.dp)
                     .padding(12.dp)
