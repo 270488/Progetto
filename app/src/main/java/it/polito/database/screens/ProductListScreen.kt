@@ -1,7 +1,9 @@
 package it.polito.database.screens
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,8 +18,10 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -28,8 +32,14 @@ import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.KeyboardArrowDown
+import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -37,6 +47,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -60,7 +72,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -92,6 +106,7 @@ fun ProductListScreen(viewModel: AppViewModel, navController: NavController) {
     ProductList(viewModel = viewModel, navController = navController)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductList(modifier: Modifier = Modifier
     .padding(top = 74.dp)
@@ -124,6 +139,29 @@ fun ProductList(modifier: Modifier = Modifier
 
     val products= filtroCategorieProdotti(categoria = categoria, sottocategoria = sottocategoria, viewModel = viewModel)
     println("Products $products")
+
+    //Prezzo crescente
+    val productsSortedByPrice = products.sortedBy { dataSnapshot ->
+        dataSnapshot.child("prezzo").value.toString().toDouble()
+    }
+    //Prezzo decrescente
+    val productsSortedByPriceDescending = products.sortedByDescending { dataSnapshot ->
+        dataSnapshot.child("prezzo").value.toString().toDouble()
+    }
+    //Nome crescente
+    val productsSortedByName = products.sortedBy { dataSnapshot ->
+        dataSnapshot.child("nome").value.toString()
+    }
+    //Nome decrescente
+    val productsSortedByNameDescending = products.sortedByDescending { dataSnapshot ->
+        dataSnapshot.child("nome").value.toString()
+    }
+    //Ordinata casualmente ratings
+    var productsSortedByRating by remember { mutableStateOf(products.shuffled()) }
+
+    //Ordinata casualmente venduti
+    var productsSortedBySales by remember { mutableStateOf(products.shuffled()) }
+
     Column (modifier= Modifier
         .padding(top = 74.dp)
         .padding(bottom = 74.dp)
@@ -133,85 +171,169 @@ fun ProductList(modifier: Modifier = Modifier
     ) {
 
         //barra superiore con filtri
-        val filtri= listOf<String>("Prezzo", "Rating", "Taglia")
+        val filtri= listOf<String>("Prezzo ↑", "Prezzo ↓", "Recensioni", "I più venduti")
+
+        var selectedOption by remember {
+            mutableStateOf<String>("")
+        }
 
         var expanded by remember { mutableStateOf(false) }
 
-        Row(modifier= Modifier
-            .fillMaxWidth()
-            .background(Blue40)
-            //.padding(5.dp)
-                )
-                 {
-
-            /*Text(text = "Filtri",
-                style = MaterialTheme.typography.headlineSmall
-                    .copy(fontWeight = FontWeight.Medium, color = Color.Yellow, fontFamily = fontFamily))*/
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .layoutId("menuOptions")
+                    .width(180.dp)
+                    .height(52.dp)
+                    .border(
+                        BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
+                        RoundedCornerShape(3.dp)
+                    )
+                    .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(3.dp))
+                    .padding(start = 12.dp)
+            ){
+                ExposedDropdownMenuBox(
+                    modifier = Modifier.fillMaxSize(),
+                    expanded = expanded,
+                    onExpandedChange = { expanded = it },
+                ) {
+                    TextField(
+                        value = "Ordina per :",
+                        onValueChange = {},
+                        readOnly = true,
+                        textStyle = TextStyle(
+                            fontFamily= fontFamily, fontWeight = FontWeight.Bold, fontSize = 16.sp),
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            textColor = Color.White),
+                        leadingIcon = {
+                            Icon(
+                                modifier = Modifier.size(25.dp),
+                                painter = painterResource(id = R.drawable.sort),
+                                contentDescription = "",
+                                tint = MaterialTheme.colorScheme.tertiary
+                            )
+                        },
+                        modifier = Modifier.menuAnchor()
+                    )
+                    DropdownMenu(
+                        offset = DpOffset(0.dp, (4).dp),
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                        modifier = Modifier
+                            .width(150.dp)
+                            .background(MaterialTheme.colorScheme.primary)
+                            .border(
+                                BorderStroke(2.dp, MaterialTheme.colorScheme.tertiary),
+                                RoundedCornerShape(3.dp)
+                            )
+                    ) {
+                        Column(
+                            verticalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxSize())
+                        {
+                            filtri.forEachIndexed() {index, o ->
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            modifier = Modifier.height(30.dp),
+                                            text = o,
+                                            color = Color.White,
+                                            fontFamily= fontFamily,
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 16.sp)
+                                    },
+                                    onClick = {
+                                        selectedOption = o
+                                        expanded =
+                                            false
+                                    })
+                                if (index < filtri.size - 1){
+                                    Divider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             Row(
                 modifier = Modifier
-                    .padding(horizontal = 12.dp)
-                    .background(Blue40)
-                    .animateContentSize()
-            ) {Column(
-                modifier = Modifier
-                    .weight(2f)
-                    .background(Blue40)
-                    .align(Alignment.Top)
+                    .border(2.dp, MaterialTheme.colorScheme.tertiary, RoundedCornerShape(15.dp))
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.filtri),
-                    contentDescription = "filtri",
-                    modifier = Modifier
-                        .size(80.dp)
-                        .padding(horizontal = 20.dp),
-                    tint = Yellow40
-                )
-            }
-                Column(
-                    modifier = Modifier
-                        .weight(4f)
-                        .background(Blue40)
-                        .padding(12.dp)
-                ) {
-                    Text(
-                        text = "Filtri",
-                        color = Yellow40,
-                        //modifier = Modifier.padding(bottom = 5.dp),
-                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.SemiBold, fontFamily = fontFamily, fontStyle = FontStyle.Italic)
-                    )
-                    if(expanded){
-                        filtri.forEach{f-> elementoFiltro(filtro = f)
-                        }
-
-                    }
-                }
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .background(Blue40)
-                ) {
-                    IconButton(onClick = { expanded = !expanded }) {
-                        Icon(
-                            imageVector = if (expanded) Icons.Filled.KeyboardArrowDown else Icons.Filled.KeyboardArrowRight,
-                            contentDescription =
-                            if (expanded) {
-                                "show less"
-                            } else {
-                                "show more"
-                            },
-                            tint = Yellow40,
-                            modifier = Modifier.size(30.dp)
+                if (selectedOption != "")
+                    Row {
+                        Text(
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                            text = selectedOption,
+                            fontFamily = fontFamily,
+                            color = MaterialTheme.colorScheme.tertiary,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            modifier = Modifier
+                                .clickable { selectedOption = "" }
+                                .padding(end = 16.dp, top = 8.dp, bottom = 8.dp),
+                            text = "X",
+                            fontFamily = fontFamily,
+                            color = MaterialTheme.colorScheme.tertiary,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
                         )
                     }
-                }
+
             }
         }
-        products.forEach{ prod->
-            val nome=prod.child("nome").value.toString()
-            val prezzo=prod.child("prezzo").value.toString()
-            val fileName=nome+".jpg"
-            val url= FindUrl(fileName = fileName)
-            contentCard(nome = nome, prezzo = prezzo, url=url, navController, viewModel )
+
+        when (selectedOption){
+            "" -> {
+                products.forEach{ prod->
+                    val nome=prod.child("nome").value.toString()
+                    val prezzo=prod.child("prezzo").value.toString()
+                    val fileName=nome+".jpg"
+                    val url= FindUrl(fileName = fileName)
+                    contentCard(nome = nome, prezzo = prezzo, url=url, navController, viewModel )
+                }
+            }
+            "Prezzo ↑" -> {
+                productsSortedByPrice.forEach{ prod->
+                    val nome=prod.child("nome").value.toString()
+                    val prezzo=prod.child("prezzo").value.toString()
+                    val fileName=nome+".jpg"
+                    val url= FindUrl(fileName = fileName)
+                    contentCard(nome = nome, prezzo = prezzo, url=url, navController, viewModel )
+                }
+            }
+            "Prezzo ↓" -> {
+                productsSortedByPriceDescending.forEach{ prod->
+                    val nome=prod.child("nome").value.toString()
+                    val prezzo=prod.child("prezzo").value.toString()
+                    val fileName=nome+".jpg"
+                    val url= FindUrl(fileName = fileName)
+                    contentCard(nome = nome, prezzo = prezzo, url=url, navController, viewModel )
+                }
+            }
+            "Recensioni" -> {
+                productsSortedByRating.forEach{ prod->
+                    val nome=prod.child("nome").value.toString()
+                    val prezzo=prod.child("prezzo").value.toString()
+                    val fileName=nome+".jpg"
+                    val url= FindUrl(fileName = fileName)
+                    contentCard(nome = nome, prezzo = prezzo, url=url, navController, viewModel )
+                }
+            }
+            "I più venduti" -> {
+                productsSortedBySales.forEach{ prod->
+                    val nome=prod.child("nome").value.toString()
+                    val prezzo=prod.child("prezzo").value.toString()
+                    val fileName=nome+".jpg"
+                    val url= FindUrl(fileName = fileName)
+                    contentCard(nome = nome, prezzo = prezzo, url=url, navController, viewModel )
+                }
+            }
         }
         Spacer(modifier = Modifier.height(16.dp))
     }
@@ -275,97 +397,97 @@ fun contentCard(nome: String, prezzo: String, url: String, navController: NavCon
                 .fillMaxWidth()
                 .background(Blue40),
         )  { Box (modifier = Modifier.fillMaxSize())
-                {
-                    AsyncImage(
-                        model = url,
-                        contentDescription = "Product Description",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Box(modifier = Modifier
-                        .fillMaxSize()
-                        .graphicsLayer {
-                            compositingStrategy = CompositingStrategy.ModulateAlpha
-                            alpha = 0.75f
-                        }
-                        .background(
-                            brush = Brush.verticalGradient(
-                                listOf(
-                                    Color.Transparent,
-                                    Color.Black
-                                )
-                            )
-                        )
-                    )
-                    Text(
-                        text = nome,
-                        style = MaterialTheme.typography.headlineSmall.copy(
-                            fontWeight = FontWeight.Medium,
-                            fontFamily = fontFamily,
-                            fontSize = 24.sp,
-                            shadow = Shadow(
-                                color = Color.Black,
-                                offset = Offset.Zero,
-                                blurRadius = 5f
-                            )
-                        ) ,
-                        color = Color.White,
-                        modifier = Modifier
-                            .align(Alignment.BottomStart)
-                            .padding(bottom = 3.dp, start = 6.dp)
-                    )
-                    Text(
-                        text = prezzo + "€",
-                        style = MaterialTheme.typography.headlineSmall.copy(
-                            fontWeight = FontWeight.Medium,
-                            fontFamily = fontFamily,
-                            fontSize = 32.sp,
-                            shadow = Shadow(
-                                color = Color.Black,
-                                offset = Offset.Zero,
-                                blurRadius = 5f
-                            )
-                        ),
-                        color = Color.White,
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd)
-                            .padding(bottom = 3.dp, end = 6.dp)
-                    )
-                    FloatingActionButton(
-                        onClick = {
-                            filledHeart = !filledHeart
-                            if (filledHeart) {
-                                aggiungiPreferito(prod = nome, id = id)
-                            } else
-                                eliminaPreferito(prod = nome, id = id)
-                        },
-                        containerColor = Color.Transparent,
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .layoutId("btnHeart"),
-                        elevation = FloatingActionButtonDefaults.elevation(
-                            defaultElevation = 0.dp,
-                            pressedElevation = 0.dp
-                        )
-                    ) {
-                        if (filledHeart == false) {
-                            Image(
-                                imageVector = Icons.Outlined.FavoriteBorder,
-                                colorFilter = ColorFilter.tint(Red20),
-                                contentDescription = "Empty Heart",
-                                modifier = Modifier
-                                    .size(40.dp)
-                            )
-                        } else {
-                            Image(
-                                imageVector = Icons.Outlined.Favorite,
-                                colorFilter = ColorFilter.tint(Red40),
-                                contentDescription = "Filled Heart",
-                                modifier = Modifier.size(40.dp)
-                            )
-                        }
-                    }
+        {
+            AsyncImage(
+                model = url,
+                contentDescription = "Product Description",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Box(modifier = Modifier
+                .fillMaxSize()
+                .graphicsLayer {
+                    compositingStrategy = CompositingStrategy.ModulateAlpha
+                    alpha = 0.75f
                 }
+                .background(
+                    brush = Brush.verticalGradient(
+                        listOf(
+                            Color.Transparent,
+                            Color.Black
+                        )
+                    )
+                )
+            )
+            Text(
+                text = nome,
+                style = MaterialTheme.typography.headlineSmall.copy(
+                    fontWeight = FontWeight.Medium,
+                    fontFamily = fontFamily,
+                    fontSize = 24.sp,
+                    shadow = Shadow(
+                        color = Color.Black,
+                        offset = Offset.Zero,
+                        blurRadius = 5f
+                    )
+                ) ,
+                color = Color.White,
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(bottom = 3.dp, start = 6.dp)
+            )
+            Text(
+                text = prezzo + "€",
+                style = MaterialTheme.typography.headlineSmall.copy(
+                    fontWeight = FontWeight.Medium,
+                    fontFamily = fontFamily,
+                    fontSize = 32.sp,
+                    shadow = Shadow(
+                        color = Color.Black,
+                        offset = Offset.Zero,
+                        blurRadius = 5f
+                    )
+                ),
+                color = Color.White,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(bottom = 3.dp, end = 6.dp)
+            )
+            FloatingActionButton(
+                onClick = {
+                    filledHeart = !filledHeart
+                    if (filledHeart) {
+                        aggiungiPreferito(prod = nome, id = id)
+                    } else
+                        eliminaPreferito(prod = nome, id = id)
+                },
+                containerColor = Color.Transparent,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .layoutId("btnHeart"),
+                elevation = FloatingActionButtonDefaults.elevation(
+                    defaultElevation = 0.dp,
+                    pressedElevation = 0.dp
+                )
+            ) {
+                if (filledHeart == false) {
+                    Image(
+                        imageVector = Icons.Outlined.FavoriteBorder,
+                        colorFilter = ColorFilter.tint(Red20),
+                        contentDescription = "Empty Heart",
+                        modifier = Modifier
+                            .size(40.dp)
+                    )
+                } else {
+                    Image(
+                        imageVector = Icons.Outlined.Favorite,
+                        colorFilter = ColorFilter.tint(Red40),
+                        contentDescription = "Filled Heart",
+                        modifier = Modifier.size(40.dp)
+                    )
+                }
+            }
+        }
 
         }
 
