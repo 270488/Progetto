@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -195,45 +196,43 @@ fun FavoriteCard(preferito: String, viewModel: AppViewModel, id:String, navContr
             modifier = Modifier
                 .fillMaxSize()
         ){
+
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxSize()
-            ){
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    AsyncImage(
-                        model = url,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(15.dp))
-                            .width(150.dp),
-                        contentScale = ContentScale.Crop
-                    )
+            ) {
+                AsyncImage(
+                    model = url,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(15.dp))
+                        .width(150.dp),
+                    contentScale = ContentScale.Crop
+                )
 
-                    Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(16.dp))
 
-                    Text(
-                        text = buildAnnotatedString {
-                            append("${nome.replaceFirstChar{ it.uppercase() }}\n")
-                            withStyle(
-                                style = SpanStyle(
-                                    fontSize = 24.sp
-                                )
-                            ){
-                                append("$prezzo€")
-                            }
-                        },
-                        fontFamily = fontFamily,
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        lineHeight = 32.sp,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Start
-                    )
-                }
+                Text(
+                    text = buildAnnotatedString {
+                        append("${nome.replaceFirstChar{ it.uppercase() }}\n")
+                        withStyle(
+                            style = SpanStyle(
+                                fontSize = 24.sp
+                            )
+                        ){
+                            append("$prezzo€")
+                        }
+                    },
+                    fontFamily = fontFamily,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    lineHeight = 32.sp,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Start
+                )
+            }
 
+            Box(modifier = Modifier.padding(12.dp).align(Alignment.BottomEnd)){
                 FloatingActionButton(
                     onClick = {
                         eliminaPreferito(prod = nome, id = id)
@@ -241,21 +240,21 @@ fun FavoriteCard(preferito: String, viewModel: AppViewModel, id:String, navContr
                     containerColor = Color.Transparent,
                     modifier = Modifier
                         .layoutId("btnHeart")
-                        .size(50.dp)
-                        .padding(end = 16.dp),
+                        .size(30.dp),
                     elevation = FloatingActionButtonDefaults.elevation(
-                        defaultElevation = 0.dp,
+                        defaultElevation = 16.dp,
                         pressedElevation = 0.dp
                     )
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Favorite,
                         contentDescription = "Filled Heart",
-                        modifier = Modifier.size(50.dp),
+                        modifier = Modifier.size(30.dp),
                         tint = MaterialTheme.colorScheme.errorContainer
                     )
                 }
             }
+
         }
     }
     Spacer(modifier = Modifier.height(16.dp))
@@ -310,7 +309,6 @@ fun aggiungiPreferito(prod: String, id: String){
         }
     })
 
-
-
 }
+
 
