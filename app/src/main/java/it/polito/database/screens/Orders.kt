@@ -4,6 +4,9 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,6 +46,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
@@ -232,6 +236,7 @@ fun Orders(viewModel: AppViewModel, navController: NavController){
         ) {
             Divider(thickness = 2.dp, color = MaterialTheme.colorScheme.tertiary)
             Spacer(modifier = Modifier.height(30.dp))
+
             Button(
                 shape = RoundedCornerShape(3.dp),
                 colors = ButtonDefaults.buttonColors(
@@ -240,8 +245,12 @@ fun Orders(viewModel: AppViewModel, navController: NavController){
                 ),
                 onClick = {
                     navController.navigate(Screen.FavoritesScreen.route)
-                }
-            ){
+                },
+                elevation = ButtonDefaults.buttonElevation(
+                    defaultElevation = 16.dp,
+                    pressedElevation = 0.dp
+                )
+            ) {
                 Text(
                     text = "I miei preferiti",
                     fontFamily = fontFamily,
@@ -249,6 +258,7 @@ fun Orders(viewModel: AppViewModel, navController: NavController){
                     fontWeight = FontWeight.Bold
                 )
             }
+
         }
     }
 }

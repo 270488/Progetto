@@ -136,6 +136,10 @@ fun FavoritesScreen(viewModel: AppViewModel, navController: NavController){
                     containerColor = MaterialTheme.colorScheme.tertiary,
                     contentColor = MaterialTheme.colorScheme.onTertiary
                 ),
+                elevation = ButtonDefaults.buttonElevation(
+                    defaultElevation = 16.dp,
+                    pressedElevation = 0.dp
+                ),
                 onClick = {
                     navController.navigate(Screen.Orders.route) //Va cambiato da HOME a I MIEI ORDINI
                 }

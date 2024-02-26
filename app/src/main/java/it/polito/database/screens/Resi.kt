@@ -250,9 +250,14 @@ fun ResiScreen(viewModel: AppViewModel, navController: NavController){
                     containerColor = MaterialTheme.colorScheme.tertiary,
                     contentColor = MaterialTheme.colorScheme.onTertiary
                 ),
+                elevation = ButtonDefaults.buttonElevation(
+                    defaultElevation = 16.dp,
+                    pressedElevation = 0.dp
+                ),
                 onClick = {
                     navController.navigate(Screen.Orders.route)
                 }
+
             ){
                 Text(
                     text = "I miei ordini",

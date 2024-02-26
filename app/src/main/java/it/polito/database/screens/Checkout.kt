@@ -252,6 +252,10 @@ fun CheckoutScreen(viewModel: AppViewModel, navController: NavController, modifi
                         .layoutId("payment")
                         .padding(top = 12.dp, end = 8.dp),
                     shape = RoundedCornerShape(3.dp),
+                    elevation = ButtonDefaults.buttonElevation(
+                        defaultElevation = 16.dp,
+                        pressedElevation = 0.dp
+                    ),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.tertiary,
                         contentColor = MaterialTheme.colorScheme.onTertiary

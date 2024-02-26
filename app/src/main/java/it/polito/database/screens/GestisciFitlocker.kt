@@ -104,6 +104,10 @@ fun GestisciFitlockerScreen(viewModel: AppViewModel, navController: NavHostContr
                     containerColor = MaterialTheme.colorScheme.tertiary,
                     contentColor = MaterialTheme.colorScheme.onTertiary
                 ),
+                elevation = ButtonDefaults.buttonElevation(
+                    defaultElevation = 16.dp,
+                    pressedElevation = 0.dp
+                ),
                 onClick = {
                     navController.navigate(Screen.AccountScreen.route)
                 }

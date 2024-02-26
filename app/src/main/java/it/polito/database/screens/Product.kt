@@ -366,10 +366,9 @@ fun ProductDetail(viewModel: AppViewModel, navController: NavController) {
                             .layoutId("btnBuy"),
                         colors = ButtonDefaults.buttonColors(Yellow40),
                         elevation = ButtonDefaults.buttonElevation(
-                            defaultElevation = 0.dp,
-                            pressedElevation = 0.dp,
-                            disabledElevation = 0.dp
-                        )
+                            defaultElevation = 16.dp,
+                            pressedElevation = 0.dp
+                        ),
                     ){
                         Text(
                             text = "Aggiungi al carrello",

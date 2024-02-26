@@ -120,6 +120,10 @@ fun DettaglioResiScreen (viewModel: AppViewModel, navController: NavController) 
                         containerColor = MaterialTheme.colorScheme.errorContainer,
                         contentColor = MaterialTheme.colorScheme.onErrorContainer
                     ),
+                    elevation = ButtonDefaults.buttonElevation(
+                        defaultElevation = 16.dp,
+                        pressedElevation = 0.dp
+                    ),
                     onClick = { eliminaReso(viewModel = viewModel)
                         navController.navigate(Screen.ResiScreen.route)} //TODO Aggiungere eliminazione reso
                 ){

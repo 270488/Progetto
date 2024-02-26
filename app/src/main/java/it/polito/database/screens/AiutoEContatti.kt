@@ -419,6 +419,10 @@ fun Request(navController: NavController){
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.tertiary
         ),
+        elevation = ButtonDefaults.buttonElevation(
+            defaultElevation = 16.dp,
+            pressedElevation = 0.dp
+        ),
         onClick = {
             navController.navigate(Screen.Home.route)
         }
