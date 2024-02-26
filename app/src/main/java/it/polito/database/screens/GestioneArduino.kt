@@ -1,10 +1,19 @@
 package it.polito.database.screens
 
+import android.media.AudioManager
+import android.media.MediaPlayer
+import android.os.CountDownTimer
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import it.polito.database.AppViewModel
 import it.polito.database.database
+import java.io.IOException
 import kotlin.random.Random
 
 fun writeVariables(variabili: GestioneArduino) {
@@ -131,4 +140,41 @@ fun generazioneCodiceCasuale(): String{
         .map { caratteriPossibili[Random.nextInt(caratteriPossibili.length)] }
         .joinToString("")
     return stringaCasuale
+}
+@Composable
+fun GestioneTempo(variabili: GestioneArduino){
+    var tempoScaduto by remember { mutableStateOf(false) }
+
+    if(variabili.CodiceErrato.equals(false) && (variabili.SportelloG == true || variabili.SportelloP == true)){
+        startTimer()
+    }
+
+}
+
+private fun playAudio(){
+    var mediaPlayer : MediaPlayer? = null
+    val audioUrl = "https://freesound.org/s/489598/"
+    mediaPlayer = MediaPlayer()
+    mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_ALARM)
+
+    try {
+        mediaPlayer!!.setDataSource(audioUrl)
+        mediaPlayer!!.prepare()
+        mediaPlayer!!.start()
+    }catch (e: IOException){
+        e.printStackTrace()
+    }
+}
+private fun startTimer(){
+    var timeCountDown: CountDownTimer? = null
+    timeCountDown = object : CountDownTimer(
+        (30*1000).toLong(),1000)
+    {
+        override fun onTick(p0: Long) {
+        }
+
+        override fun onFinish() {
+            playAudio()
+        }
+    }.start()
 }
