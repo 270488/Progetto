@@ -3,6 +3,7 @@ package it.polito.database.screens
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,7 +13,9 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,9 +25,15 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,13 +42,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -49,6 +63,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import it.polito.database.AppViewModel
 import it.polito.database.FindUrl
+import it.polito.database.R
 import it.polito.database.database
 import it.polito.database.ui.theme.Screen
 import it.polito.database.ui.theme.fontFamily
@@ -58,6 +73,7 @@ import kotlin.random.Random
 
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Orders(viewModel: AppViewModel, navController: NavController){
     var uid=viewModel.uid
@@ -103,8 +119,109 @@ fun Orders(viewModel: AppViewModel, navController: NavController){
 
                 }
             else{
+                //FILTRO ORDINI PER STATO
+
+                val listStates= listOf<String>("In corso", "Completati", "Tutti")
+
+                var selectedState by remember {
+                    mutableStateOf<String>("In corso")
+                }
+
+                var expanded by remember { mutableStateOf(false) }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .layoutId("menuOptions")
+                            .width(165.dp)
+                            .height(50.dp)
+                            .border(
+                                BorderStroke(2.dp, Color.Black),
+                                RoundedCornerShape(3.dp)
+                            )
+                            .background(
+                                MaterialTheme.colorScheme.secondary,
+                                RoundedCornerShape(3.dp)
+                            )
+                    ){
+                        ExposedDropdownMenuBox(
+                            modifier = Modifier.fillMaxSize(),
+                            expanded = expanded,
+                            onExpandedChange = { expanded = it },
+                        ) {
+                            TextField(
+                                value = selectedState,
+                                onValueChange = {},
+                                readOnly = true,
+                                textStyle = TextStyle(
+                                    fontFamily= fontFamily, fontWeight = FontWeight.Bold, fontSize = 15.sp),
+                                colors = TextFieldDefaults.outlinedTextFieldColors(
+                                    containerColor = MaterialTheme.colorScheme.secondary,
+                                    textColor = Color.White),
+                                leadingIcon = {
+                                    Icon(
+                                        modifier = Modifier.size(23.dp),
+                                        painter = painterResource(id = R.drawable.filtri),
+                                        contentDescription = "",
+                                        tint = MaterialTheme.colorScheme.tertiary
+                                    )
+                                },
+                                modifier = Modifier.menuAnchor()
+                            )
+                            DropdownMenu(
+                                offset = DpOffset((0).dp, (4).dp),
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false },
+                                modifier = Modifier
+                                    .width(165.dp)
+                                    .background(MaterialTheme.colorScheme.secondary)
+                                    .border(
+                                        BorderStroke(2.dp, Color.Black),
+                                        RoundedCornerShape(3.dp)
+                                    )
+                            ) {
+
+                                listStates.forEachIndexed() {index, o ->
+                                    DropdownMenuItem(
+                                        text = {
+                                            Row(
+                                                modifier = Modifier
+                                                    .fillMaxWidth(),
+                                                horizontalArrangement = Arrangement.Center
+                                            )
+                                            {
+                                                Text(
+                                                    modifier = Modifier
+                                                        .offset(y = if(index == 0)(-4).dp else if(index == 2) 4.dp else 0.dp),
+                                                    text = o,
+                                                    color = Color.White,
+                                                    fontFamily= fontFamily,
+                                                    fontSize = 15.sp)
+                                            }
+
+                                        },
+                                        onClick = {
+                                            selectedState = o
+                                            expanded =
+                                                false
+                                        })
+                                    if (index < listStates.size - 1){
+                                        Divider(thickness = 1.dp, color = MaterialTheme.colorScheme.primaryContainer)
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+                
+                Spacer(modifier = Modifier.height(16.dp))
+
                 listaOrdini.forEach{
-                        o->OrdineCard(o, viewModel, navController)
+                        o->OrdineCard(o, viewModel, navController, selectedState)
                 }
             }
         }
@@ -136,7 +253,7 @@ fun Orders(viewModel: AppViewModel, navController: NavController){
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OrdineCard(ordine: String, viewModel: AppViewModel, navController: NavController) {
+fun OrdineCard(ordine: String, viewModel: AppViewModel, navController: NavController, filtro: String) {
 
     var ordiniEffettuati= database.child("ordini").child(ordine)
     var dataConsegna by remember {
@@ -160,6 +277,9 @@ fun OrdineCard(ordine: String, viewModel: AppViewModel, navController: NavContro
     var uid by remember {
         mutableStateOf("")
     }
+    var filteredStates by remember {
+        mutableStateOf<List<String>>(emptyList())
+    }
     var prodotti by remember{ mutableStateOf<Map<String, Long>>(emptyMap())}
     ordiniEffettuati.addValueEventListener(object: ValueEventListener{
         override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -180,147 +300,168 @@ fun OrdineCard(ordine: String, viewModel: AppViewModel, navController: NavContro
             println("Errore nel leggere i dati dal database: ${databaseError.message}")
         }
     })
+// in corso: ordinato, spedito, consegnato
+// completati: ritirato, rispedito
 
-    Card(
-        modifier = Modifier.height(90.dp),
-        shape = RoundedCornerShape(15.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondary,
-            contentColor= MaterialTheme.colorScheme.onSecondary,
-        ),
-        border = BorderStroke(2.dp, MaterialTheme.colorScheme.outline),
-        onClick = {
-            viewModel.ordineSelezionato = ordine
-            navController.navigate(Screen.OrderDetails.route)
+    when(filtro){
+        "In corso" -> {
+            filteredStates = listOf("ordinato", "spedito", "consegnato")
         }
-    ){
-        Box(modifier = Modifier
-            .fillMaxSize()
-            )
-        {
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                //horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxSize()
-            ) {
-
-                var url= FindUrl(fileName = prodotti.keys.firstOrNull()+".jpg")
-                AsyncImage(
-                    model = url,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(15.dp))
-                        .width(150.dp),
-                    contentScale = ContentScale.Crop
-                )
-
-                //Spacer(modifier = Modifier.width(16.dp))
-
-                Column(
-                    verticalArrangement = Arrangement.SpaceAround,
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .padding(horizontal = 12.dp, vertical = 12.dp)
-                )
-                {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Top,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-
-                        Text(
-                            text = "Ordine No: "+ordine,
-                            fontFamily = fontFamily,
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Start
-                        )
-                    }
-
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Bottom,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "%.2f".format(totale)+"€",
-                            fontFamily = fontFamily,
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Start
-                        )
-
-                    }
-
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Top,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        Text(
-                            text = buildAnnotatedString {
-                                append("Stato ordine: ")
-                                withStyle(
-                                    style = SpanStyle(
-                                        color =
-                                        if (stato == "rispedito") MaterialTheme.colorScheme.errorContainer
-                                        else  MaterialTheme.colorScheme.tertiary,
-                                    )
-                                ){
-                                    append(stato)
-                                }
-                            },
-                            fontFamily = fontFamily,
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Start
-                        )
-
-
-
-                        /*Text(
-                            text = "Stato ordine: " +stato,
-                            fontFamily = fontFamily,
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Start
-                        )*/
-                        /*Box(modifier = Modifier.fillMaxSize().align(Alignment.CenterVertically))
-                        {
-                            if(stato=="ordinato"){
-                                Icon(painter = painterResource(id = R.drawable.ordinato), contentDescription = "ordinato", tint = Yellow40, modifier = Modifier.width(60.dp))
-                            }
-                            else if(stato=="spedito"){
-                                Icon(painter = painterResource(id = R.drawable.spedito), contentDescription = "spedito", tint = Yellow40, modifier = Modifier.width(80.dp))
-                            }
-                            else if(stato=="consegnato"){
-                                Icon(painter = painterResource(id = R.drawable.consegnato), contentDescription = "consegnato", tint = Yellow40, modifier = Modifier.width(60.dp))
-                            }
-                            else if(stato=="ritirato"){
-                                Icon(painter = painterResource(id = R.drawable.reso_completato), contentDescription = "ritirato", tint = Yellow40, modifier = Modifier.width(60.dp))
-                            }
-                            else if(stato=="rispedito"){
-                                Icon(painter = painterResource(id = R.drawable.reso_scaduto), contentDescription = "rispedito", tint = Yellow40, modifier = Modifier.width(60.dp))
-                            }
-                        }*/
-                    }
-                }
-
-               }
-
-
+        "Completati" -> {
+            filteredStates = listOf("ritirato","rispedito")
+        }
+        "Tutti" -> {
+            filteredStates = listOf("ritirato","rispedito", "ordinato", "spedito", "consegnato")
         }
     }
-    Spacer(modifier = Modifier.height(16.dp))
+
+
+    if(filteredStates.contains(stato)){
+
+        Card(
+            modifier = Modifier.height(95.dp),
+            shape = RoundedCornerShape(15.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor= MaterialTheme.colorScheme.onSecondary,
+            ),
+            border = BorderStroke(2.dp, MaterialTheme.colorScheme.outline),
+            onClick = {
+                viewModel.ordineSelezionato = ordine
+                navController.navigate(Screen.OrderDetails.route)
+            }
+        ){
+            Box(modifier = Modifier
+                .fillMaxSize()
+            )
+            {
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    //horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+
+                    var url= FindUrl(fileName = prodotti.keys.firstOrNull()+".jpg")
+                    AsyncImage(
+                        model = url,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(15.dp))
+                            .width(155.dp),
+                        contentScale = ContentScale.Crop
+                    )
+
+                    //Spacer(modifier = Modifier.width(16.dp))
+
+                    Column(
+                        verticalArrangement = Arrangement.SpaceAround,
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .padding(horizontal = 12.dp, vertical = 12.dp)
+                    )
+                    {
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.Top,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+
+                            Text(
+                                text = "Ordine No: "+ordine,
+                                fontFamily = fontFamily,
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Start
+                            )
+                        }
+
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.Bottom,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "%.2f".format(totale)+"€",
+                                fontFamily = fontFamily,
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Start
+                            )
+
+                        }
+
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.Top,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            Text(
+                                text = buildAnnotatedString {
+                                    append("Stato ordine: ")
+                                    withStyle(
+                                        style = SpanStyle(
+                                            color =
+                                            if (stato == "rispedito") MaterialTheme.colorScheme.errorContainer
+                                            else if (stato == "ritirato") Color.White
+                                            else  MaterialTheme.colorScheme.tertiary,
+                                        )
+                                    ){
+                                        append(stato)
+                                    }
+                                },
+                                fontFamily = fontFamily,
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Start
+                            )
+
+
+
+                            /*Text(
+                                text = "Stato ordine: " +stato,
+                                fontFamily = fontFamily,
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Start
+                            )*/
+                            /*Box(modifier = Modifier.fillMaxSize().align(Alignment.CenterVertically))
+                            {
+                                if(stato=="ordinato"){
+                                    Icon(painter = painterResource(id = R.drawable.ordinato), contentDescription = "ordinato", tint = Yellow40, modifier = Modifier.width(60.dp))
+                                }
+                                else if(stato=="spedito"){
+                                    Icon(painter = painterResource(id = R.drawable.spedito), contentDescription = "spedito", tint = Yellow40, modifier = Modifier.width(80.dp))
+                                }
+                                else if(stato=="consegnato"){
+                                    Icon(painter = painterResource(id = R.drawable.consegnato), contentDescription = "consegnato", tint = Yellow40, modifier = Modifier.width(60.dp))
+                                }
+                                else if(stato=="ritirato"){
+                                    Icon(painter = painterResource(id = R.drawable.reso_completato), contentDescription = "ritirato", tint = Yellow40, modifier = Modifier.width(60.dp))
+                                }
+                                else if(stato=="rispedito"){
+                                    Icon(painter = painterResource(id = R.drawable.reso_scaduto), contentDescription = "rispedito", tint = Yellow40, modifier = Modifier.width(60.dp))
+                                }
+                            }*/
+                        }
+                    }
+
+                }
+
+
+            }
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+
+    }
+
 
 }
 @SuppressLint("NewApi")
