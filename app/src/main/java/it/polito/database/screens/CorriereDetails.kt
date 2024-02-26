@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -87,9 +88,7 @@ fun DettaglioCard(viewModel: AppViewModel,
                         locker: String,
                   id:String) {
 
-    var currItem by remember {
-        mutableStateOf("")
-    }
+    var currState = viewModel.corriereState.observeAsState()
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier= Modifier
@@ -110,7 +109,7 @@ fun DettaglioCard(viewModel: AppViewModel,
                     .fillMaxSize()
                     .padding(start = 5.dp)
             ) {
-                Text(text = "Stato della spedizione:", color = Color.White, fontFamily = fontFamily)
+                Text(text = "Stato della spedizione: ${currState.value}", color = Color.White, fontFamily = fontFamily)
             }
 
             Row(
@@ -141,35 +140,25 @@ fun DettaglioCard(viewModel: AppViewModel,
             }
 
             if (stato == "ordinato") {
+                viewModel.corriereState.value = "In attesa di ritiro"
                 Button(
                     onClick = {
                         database.child("ordini").child(viewModel.ordineSelezionato).child("stato")
                             .setValue("spedito")
                         database.child("utenti").child(id).child("ordini")
                             .child(viewModel.ordineSelezionato).setValue("spedito")
-
+                        viewModel.corriereState.value = "In consegna"
                     }) {
-                    Text(text = "spedito")
+                    Text(text = "Conferma ritiro")
                 }
             } else if (stato == "spedito") {
+                viewModel.corriereState.value = "In consegna"
                 Button(
                     onClick = {
                         navController.navigate(Screen.DeliverOrder.route)
 
                     }) {
                     Text(text = "sblocca locker")
-                }
-            } else if (stato == "ritirato") {
-                Button(
-                    onClick = {
-                        database.child("ordini").child(viewModel.ordineSelezionato).child("stato")
-                            .setValue("ritirato")
-                        database.child("utenti").child(id).child("ordini")
-                            .child(viewModel.ordineSelezionato).setValue("ritirato")
-                        // TODO togliere dalla lista l'ordine
-
-                    }) {
-                    Text(text = "spedito")
                 }
             }
 

@@ -70,6 +70,7 @@ class AppViewModel: ViewModel() {
     var resoSelezionato=""
     var ordineSelezionato=""
     var lockerSelezionato="McFit Via San Paolo, 25/Torino (TO), 10141"
+    var corriereState= MutableLiveData("")
     var cat=""
     var sottocat=""
     var uid=""

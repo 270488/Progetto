@@ -156,6 +156,7 @@ fun Ordine(ordine: String, viewModel: AppViewModel, navController: NavController
             ),
             border = BorderStroke(2.dp, MaterialTheme.colorScheme.outline),
             onClick = {
+
                 viewModel.ordineSelezionato = ordine
                 navController.navigate(Screen.CorriereDetails.route)
             }
@@ -192,9 +193,13 @@ fun Ordine(ordine: String, viewModel: AppViewModel, navController: NavController
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-
+                    if (stato == "ordinato") {
+                        viewModel.corriereState.value = "In attesa di ritiro"}
+                    else if(stato == "spedito"){
+                        viewModel.corriereState.value = "In consegna"
+                    }}
                     Text(
-                        text = "Stato ordine: $stato",
+                        text = "Stato ordine: ${viewModel.corriereState.value}",
                         fontFamily = fontFamily,
                         color = MaterialTheme.colorScheme.onPrimary,
                         fontSize = 14.sp,
@@ -205,7 +210,7 @@ fun Ordine(ordine: String, viewModel: AppViewModel, navController: NavController
             }
 
         }
-    }
+
 
 
 
