@@ -47,20 +47,20 @@ fun CorriereHome(viewModel: AppViewModel, navController: NavController) {
     val currentCorriere = auth.currentUser
     cambiare in uid sotto*/
     val corriereReference = FirebaseDatabase.getInstance().getReference("corrieri").child("jSJNjHS9PENBjyBSz0NYOT3zz173")
-    var ordini= corriereReference.child("ordini")
     var listaOrdini by remember { mutableStateOf<List<String>>(emptyList()) }
+    val ordiniReference = FirebaseDatabase.getInstance().getReference("ordini")
 
-
-    ordini.addValueEventListener(object : ValueEventListener {
+    ordiniReference.addValueEventListener(object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
-            var lista= mutableListOf<String>()
-            for (childSnapshot in dataSnapshot.children)  { //per ogni ordine
-                lista.add(childSnapshot.key.toString())
-                Log.d("Child","qualcosa" + childSnapshot.toString())
-
+            var lista = mutableListOf<String>()
+            for (childSnapshot in dataSnapshot.children) {
+                val statoOrdine = childSnapshot.child("stato").value?.toString()
+                val codiceOrdine = childSnapshot.key // codice dell'ordine
+                if (statoOrdine != "ritirato" ) {
+                    codiceOrdine?.let { lista.add(it) }
+                //let garantisce che l'aggiunta avvenga solo quando codiceOrdine è !null
+                }
             }
-            Log.d("Snapshot","qualcosa" + dataSnapshot.toString())
-            Log.d("Lista","qualcosa" + lista)
             listaOrdini = lista
         }
 
@@ -111,12 +111,11 @@ fun CorriereHome(viewModel: AppViewModel, navController: NavController) {
 fun Ordine(ordine: String, viewModel: AppViewModel, navController: NavController) {
 
     var ordiniEffettuati= database.child("ordini").child(ordine)
+
     var dataConsegna by remember {
         mutableStateOf("")
     }
-    var dataOrdine by remember {
-        mutableStateOf("")
-    }
+
     var locker by remember {
         mutableStateOf("")
     }
@@ -133,7 +132,6 @@ fun Ordine(ordine: String, viewModel: AppViewModel, navController: NavController
     ordiniEffettuati.addValueEventListener(object: ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
             dataConsegna=dataSnapshot.child("Data Consegna").value.toString()
-            dataOrdine=dataSnapshot.child("Data Ordine").value.toString()
             locker=dataSnapshot.child("Locker").value.toString()
             sportello= dataSnapshot.child("Sportello").value.toString()
             stato=dataSnapshot.child("stato").value.toString()
@@ -148,7 +146,7 @@ fun Ordine(ordine: String, viewModel: AppViewModel, navController: NavController
             println("Errore nel leggere i dati dal database: ${databaseError.message}")
         }
     })
-    if (stato != "null") {
+
         Card(
             modifier = Modifier.height(90.dp),
             shape = RoundedCornerShape(15.dp),
@@ -208,7 +206,7 @@ fun Ordine(ordine: String, viewModel: AppViewModel, navController: NavController
 
         }
     }
-    }
+
 
 
 
