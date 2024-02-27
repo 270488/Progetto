@@ -52,6 +52,11 @@ sealed class Screen (
         title = "Notifications",
         icon = Icons.Default.Notifications
     )
+    object NotificationsCorriere: Screen(
+        route = "notificationsCorriere",
+        title = "NotificationsCorriere",
+        icon = Icons.Default.Notifications
+    )
     object Settings: Screen(
         route = "settings",
         title = "Settings",
@@ -150,12 +155,12 @@ sealed class Screen (
     object CorriereHome: Screen(
         route = "corriereHome",
         title = "CorriereHome",
-        icon = Icons.Default.AccountBox
+        icon = Icons.Default.Home
     )
     object CorriereProfile: Screen(
         route = "corriereProfile",
         title = "CorriereProfile",
-        icon = Icons.Default.AccountBox
+        icon = Icons.Default.Person
     )
 
     object CorriereDetails: Screen(

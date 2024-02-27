@@ -45,6 +45,7 @@ fun MainScreen(viewModel: AppViewModel){
     val schermateSmallTopBar = listOf(
         Screen.Settings.route,
         Screen.Notifications.route,
+        Screen.NotificationsCorriere.route,
         Screen.Product.route,
         Screen.ProductList.route,
         Screen.FavoritesScreen.route,
@@ -63,39 +64,35 @@ fun MainScreen(viewModel: AppViewModel){
         Screen.AreaLegale.route,
         Screen.PreferenzeCookies.route,
         Screen.GestisciFitlockerScreen.route,
-        Screen.CorriereProfile.route,
         Screen.DeliverOrder.route,
-        Screen.CorriereProfile.route,
         Screen.CorriereDetails.route,
         Screen.AccessoESicurezza.route,
         Screen.PaeseELingua.route,
         Screen.Checkout.route
     )
-        Scaffold(
+    Scaffold(
 
-                topBar = {
-                    if(currentDestination?.route !== Screen.AuthenticationScreen.route
-                        && currentDestination?.route !== Screen.NewAccount.route) {
-                    if (currentDestination?.route in schermateSmallTopBar)
-                        SmallTopAppBar(navController = navController, viewModel = viewModel)
-                    else
-                        TopBar(navController = navController)
+        topBar = {
+            if(currentDestination?.route !== Screen.AuthenticationScreen.route
+                && currentDestination?.route !== Screen.NewAccount.route) {
+                if (currentDestination?.route in schermateSmallTopBar)
+                    SmallTopAppBar(navController = navController, viewModel = viewModel)
+                else
+                    TopBar(navController = navController)
 
-                }},
-                bottomBar = {
-                    if(currentDestination?.route !== Screen.AuthenticationScreen.route
-                        && currentDestination?.route !== Screen.NewAccount.route &&
-                        currentDestination?.route !== Screen.CorriereProfile.route
-                        && currentDestination?.route !== Screen.CorriereHome.route) {
-                        BottomBar(navController = navController)
-                    }
-                }
+            }},
+        bottomBar = {
+            if(currentDestination?.route !== Screen.AuthenticationScreen.route
+                && currentDestination?.route !== Screen.NewAccount.route) {
+                BottomBar(navController = navController)
+            }
+        }
 
-   )
-   {
-       NavGraph(navController = navController,viewModel)
-   }
+    )
+    {
+        NavGraph(navController = navController,viewModel)
     }
+}
 
 
 @SuppressLint("SuspiciousIndentation")
@@ -105,11 +102,41 @@ fun BottomBar(navController: NavHostController) {
         Screen.Home,
         Screen.Category,
         Screen.Cart,
-        Screen.Profile,
+        Screen.Profile
+    )
+    val screensCorriere = listOf(
+        Screen.CorriereHome,
+        Screen.CorriereProfile
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 //serve ad osservare lo stato ed essere notificati quando questo cambia
     val currentDestination = navBackStackEntry?.destination
+
+    if(currentDestination?.route !== Screen.CorriereHome.route
+        && currentDestination?.route !== Screen.CorriereProfile.route
+        && currentDestination?.route !== Screen.CorriereDetails.route)
+    {
+        NavigationBar(
+            modifier = Modifier
+                .drawBehind {
+                    drawLine(
+                        color = Color(0xFFFFED37),
+                        start = Offset(0f, 0f),
+                        end = Offset(size.width, 0f),
+                        strokeWidth = 4.dp.toPx()
+                    )
+                },
+            containerColor = MaterialTheme.colorScheme.onBackground)
+        {
+            screens.forEach { screen ->
+                AddItem(
+                    screen = screen,
+                    currentDestination = currentDestination,
+                    navController = navController
+                )
+            }
+        }
+    }else{
 
         NavigationBar(
             modifier = Modifier
@@ -121,49 +148,54 @@ fun BottomBar(navController: NavHostController) {
                         strokeWidth = 4.dp.toPx()
                     )
                 },
-            containerColor = MaterialTheme.colorScheme.onBackground) 
+            containerColor = MaterialTheme.colorScheme.onBackground)
         {
-            screens.forEach { screen ->
+            screensCorriere.forEach { screen ->
                 AddItem(
                     screen = screen,
                     currentDestination = currentDestination,
                     navController = navController
                 )
             }
-
         }
+
+    }
+
+
+
+
 }
 
 
 @Composable
 fun RowScope.AddItem(
-        screen: Screen,
-        currentDestination: NavDestination?,
-        navController: NavHostController
-    ){
-        NavigationBarItem(
-            /*label = {
-                Text(text = screen.title, fontFamily = fontFamily, fontSize = 10.sp, fontWeight = FontWeight.Bold)
-            },*/
-            icon = {
-                Icon(imageVector = screen.icon,
-                    contentDescription = "Navigation Icon",
-                    modifier = Modifier.size(40.dp) //.padding(bottom = 3.dp)
-                )
-            },
-            colors = NavigationBarItemDefaults.colors(
-                indicatorColor = Color.Transparent,
-                selectedIconColor = MaterialTheme.colorScheme.onPrimary,
-                unselectedIconColor = MaterialTheme.colorScheme.tertiary,
-            ),
-            selected = currentDestination?.hierarchy?.any(){
-                it.route == screen.route
-            } == true,
-            onClick = {
-                navController.navigate(screen.route)
-            }
-        )
-    }
+    screen: Screen,
+    currentDestination: NavDestination?,
+    navController: NavHostController
+){
+    NavigationBarItem(
+        /*label = {
+            Text(text = screen.title, fontFamily = fontFamily, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+        },*/
+        icon = {
+            Icon(imageVector = screen.icon,
+                contentDescription = "Navigation Icon",
+                modifier = Modifier.size(40.dp) //.padding(bottom = 3.dp)
+            )
+        },
+        colors = NavigationBarItemDefaults.colors(
+            indicatorColor = Color.Transparent,
+            selectedIconColor = MaterialTheme.colorScheme.onPrimary,
+            unselectedIconColor = MaterialTheme.colorScheme.tertiary,
+        ),
+        selected = currentDestination?.hierarchy?.any(){
+            it.route == screen.route
+        } == true,
+        onClick = {
+            navController.navigate(screen.route)
+        }
+    )
+}
 @Composable
 fun TopBar(navController: NavHostController) {
     val screens = listOf(
@@ -171,8 +203,8 @@ fun TopBar(navController: NavHostController) {
         Screen.Settings,
     )
     val screensCorriere = listOf(
-        Screen.Notifications,
-        Screen.CorriereProfile,
+        Screen.NotificationsCorriere,
+        Screen.Settings,
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -180,7 +212,9 @@ fun TopBar(navController: NavHostController) {
     val currentDestination = navBackStackEntry?.destination
 
     if (currentDestination?.route !== Screen.AuthenticationScreen.route &&
-        currentDestination?.route !== Screen.CorriereHome.route) {
+        currentDestination?.route !== Screen.NewAccount.route &&
+        currentDestination?.route !== Screen.CorriereHome.route
+        && currentDestination?.route !== Screen.CorriereProfile.route) {
         NavigationBar(
             containerColor = MaterialTheme.colorScheme.primary
         ) {
@@ -191,8 +225,10 @@ fun TopBar(navController: NavHostController) {
             }
 
         }
-    } else if(currentDestination?.route == Screen.CorriereHome.route){
-
+    }
+    if(currentDestination?.route == Screen.CorriereHome.route
+        || currentDestination?.route == Screen.CorriereProfile.route)
+    {
         NavigationBar(
             containerColor = MaterialTheme.colorScheme.primary
         ) {
@@ -225,16 +261,22 @@ fun AddItem2(navController: NavHostController){
                     painter = painterResource(id = R.drawable.logomcfit),
                     contentDescription = "",
                 )
-            //aggiungere il logo
+                //aggiungere il logo
             }
-                },
+        },
         colors = TopAppBarDefaults.smallTopAppBarColors(
             containerColor =  MaterialTheme.colorScheme.primary,
         ),
         navigationIcon = {
             IconButton(
                 onClick = {
-                    navController.navigate(Screen.Notifications.route)
+                    if(currentDestination?.route == Screen.CorriereHome.route
+                        || currentDestination?.route == Screen.CorriereProfile.route)
+                    {
+                        navController.navigate(Screen.NotificationsCorriere.route)
+                    } else navController.navigate(Screen.Notifications.route)
+
+
                 },
                 colors = IconButtonDefaults.iconButtonColors(
                     contentColor = MaterialTheme.colorScheme.tertiary
@@ -242,10 +284,10 @@ fun AddItem2(navController: NavHostController){
             ){
                 BadgedBox( //è il pallino per le notifiche
                     //capire come abilitarlo quando il databse la manda
-                        badge = {
-                            Badge(modifier = Modifier.size(10.dp)) {
-                            }
-                        })
+                    badge = {
+                        Badge(modifier = Modifier.size(10.dp)) {
+                        }
+                    })
                 {
                     Icon(
                         imageVector = Screen.Notifications.icon,
@@ -254,28 +296,17 @@ fun AddItem2(navController: NavHostController){
                     )
                 }
             }
-                         },
+        },
         actions = {
-               if(currentDestination?.route !== Screen.CorriereHome.route &&
-                   currentDestination?.route !== Screen.CorriereProfile.route) {
-                   IconButton(onClick = {  navController.navigate(Screen.Settings.route) },
-                       colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.tertiary)) {
-                   Icon(
-                       imageVector = Screen.Settings.icon,
-                       contentDescription = "Impostazioni",
-                       modifier = Modifier.size(40.dp)
-                   )
-               }}else {
-                   IconButton(onClick = {  navController.navigate(Screen.CorriereProfile.route) },
-                       colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.tertiary)) {
-                       Icon(
-                           imageVector = Screen.CorriereProfile.icon,
-                           contentDescription = "Account",
-                           modifier = Modifier.size(40.dp)
-                       )
-                   }
-               }
 
+            IconButton(onClick = {  navController.navigate(Screen.Settings.route) },
+                colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.tertiary)) {
+                Icon(
+                    imageVector = Screen.Settings.icon,
+                    contentDescription = "Impostazioni",
+                    modifier = Modifier.size(40.dp)
+                )
+            }
         }
     )
 }
@@ -286,23 +317,23 @@ fun SmallTopAppBar(navController: NavHostController, viewModel: AppViewModel) {
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-        NavigationBar(
-            containerColor =
-            if(currentDestination?.route == Screen.Settings.route
-                || currentDestination?.route == Screen.PreferenzaNotifiche.route
-                || currentDestination?.route == Screen.AreaLegale.route
-                || currentDestination?.route == Screen.AiutoEContatti.route
-                ||currentDestination?.route == Screen.PaeseELingua.route
-            ){
-                MaterialTheme.colorScheme.background
-            } else MaterialTheme.colorScheme.primary
+    NavigationBar(
+        containerColor =
+        if(currentDestination?.route == Screen.Settings.route
+            || currentDestination?.route == Screen.PreferenzaNotifiche.route
+            || currentDestination?.route == Screen.AreaLegale.route
+            || currentDestination?.route == Screen.AiutoEContatti.route
+            ||currentDestination?.route == Screen.PaeseELingua.route
         ){
-                AddItem3(
-                    navController = navController,
-                    currentDestination = currentDestination, viewModel
-                    )
-            }
-        }
+            MaterialTheme.colorScheme.background
+        } else MaterialTheme.colorScheme.primary
+    ){
+        AddItem3(
+            navController = navController,
+            currentDestination = currentDestination, viewModel
+        )
+    }
+}
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -321,6 +352,7 @@ fun AddItem3(
             {
                 when (currentDestination?.route) {
                     Screen.Notifications.route -> Text(text = "Notifiche", fontFamily = fontFamily, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                    Screen.NotificationsCorriere.route -> Text(text = "Notifiche", fontFamily = fontFamily, fontSize = 24.sp, fontWeight = FontWeight.Bold)
                     Screen.Settings.route -> Text(text = "Impostazioni", fontFamily = fontFamily, fontSize = 24.sp, fontWeight = FontWeight.Bold)
                     Screen.Product.route -> Text(text = "", fontFamily = fontFamily, fontSize = 24.sp, fontWeight = FontWeight.Bold)
                     Screen.ProductList.route-> Text(text = viewModel.sottocat, fontFamily = fontFamily, fontSize = 22.sp, fontWeight = FontWeight.Bold)
@@ -354,7 +386,7 @@ fun AddItem3(
                 || currentDestination?.route == Screen.AreaLegale.route
                 || currentDestination?.route == Screen.AiutoEContatti.route
                 ||currentDestination?.route == Screen.PaeseELingua.route
-                ){
+            ){
                 MaterialTheme.colorScheme.background
             }else MaterialTheme.colorScheme.primary,
 
@@ -388,7 +420,7 @@ fun AddItem3(
                 MaterialTheme.colorScheme.onBackground
             }else MaterialTheme.colorScheme.onPrimary,
 
-        ),
+            ),
         navigationIcon = {
             IconButton(
                 onClick = {
@@ -402,26 +434,26 @@ fun AddItem3(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = "Back" ,
                     modifier = Modifier.size(40.dp)
-                    )
-                }
+                )
+            }
         },
         actions = {
             if(currentDestination?.route !== Screen.Settings.route
                 && currentDestination?.route !== Screen.NewAccount.route){
-            IconButton(
-                onClick = {
-                    navController.navigate(Screen.Settings.route)
-                },
-                /*colors = IconButtonDefaults.iconButtonColors(
-                    contentColor = MaterialTheme.colorScheme.tertiary
-                )*/
-            ) {
-                Icon(
-                    imageVector = Screen.Settings.icon,
-                    contentDescription = "Impostazioni",
-                    modifier = Modifier.size(40.dp)
-                )
-            }
+                IconButton(
+                    onClick = {
+                        navController.navigate(Screen.Settings.route)
+                    },
+                    /*colors = IconButtonDefaults.iconButtonColors(
+                        contentColor = MaterialTheme.colorScheme.tertiary
+                    )*/
+                ) {
+                    Icon(
+                        imageVector = Screen.Settings.icon,
+                        contentDescription = "Impostazioni",
+                        modifier = Modifier.size(40.dp)
+                    )
+                }
             }
             if(currentDestination?.route == Screen.Settings.route){
                 Box(modifier = Modifier.size(40.dp))
@@ -429,7 +461,6 @@ fun AddItem3(
         }
     )
 }
-
 
 
 
