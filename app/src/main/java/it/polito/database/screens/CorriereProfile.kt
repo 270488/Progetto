@@ -88,7 +88,7 @@ fun CorriereProfile(viewModel: AppViewModel,navController: NavController){
                 Image(
                     painter = painterResource(id = R.drawable.corriere_foto),
                     contentDescription = "Profile icon",
-                    contentScale = ContentScale.Fit,
+                    contentScale = ContentScale.Crop,
                 )
             }
             Spacer(modifier = Modifier.width(16.dp))
@@ -99,11 +99,11 @@ fun CorriereProfile(viewModel: AppViewModel,navController: NavController){
             ){
                 Text(
                     text = buildAnnotatedString {
-                        append("Buon lavoro\n")
+                        append("Buon lavoro,\n")
                         withStyle(
                             style = SpanStyle(
                                 color = MaterialTheme.colorScheme.tertiary,
-                                fontSize = 34.sp
+                                fontSize = 32.sp
                             )
                         ){
                             append(nome)
@@ -120,22 +120,38 @@ fun CorriereProfile(viewModel: AppViewModel,navController: NavController){
         }
         Spacer(modifier = Modifier.height(60.dp))
         Column(horizontalAlignment = Alignment.Start, modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "E-mail: " + email,
-                fontFamily = fontFamily,
-                color = MaterialTheme.colorScheme.onPrimary,
-                lineHeight = 40.sp,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.SemiBold,
-            )
-            Text(
-                text = "Tel: " + tel,
-                fontFamily = fontFamily,
-                color = MaterialTheme.colorScheme.onPrimary,
-                lineHeight = 40.sp,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.SemiBold,
-            )
+            Row {
+                Text(
+                    text = "E-mail: ",
+                    fontFamily = fontFamily,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+                Text(
+                    text = email,
+                    fontFamily = fontFamily,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontSize = 18.sp,
+                )
+            }
+            Row {
+                Text(
+                    text = "Tel: ",
+                    fontFamily = fontFamily,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+                Text(
+                    text = tel,
+                    fontFamily = fontFamily,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontSize = 18.sp
+                )
+            }
+
+
         }
         Spacer(modifier = Modifier.height(60.dp))
         Column(verticalArrangement = Arrangement.Bottom, modifier = Modifier.padding(bottom = 30.dp)) {

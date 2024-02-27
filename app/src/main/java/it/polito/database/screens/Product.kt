@@ -613,6 +613,7 @@ fun MySnackBar(navController: NavController, viewModel: AppViewModel, nome: Stri
                 )*/
 
                     Text(
+                        modifier = Modifier.clickable { navController.navigate(Screen.Cart.route) },
                         text = "Vai al carrello",
                         fontFamily = fontFamily,
                         fontSize = 15.sp,

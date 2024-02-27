@@ -118,7 +118,7 @@ fun CorriereHome(viewModel: AppViewModel, navController: NavController) {
             }
             else{
 
-                val listStates= listOf<String>("In consegna", "In attesa di ritiro", "Consegnati", "Tutti")
+                val listStates= listOf<String>("In consegna", "In attesa di ritiro", "Tutti")
 
                 var selectedState by remember {
                     mutableStateOf<String>("Tutti")
@@ -279,9 +279,6 @@ fun Ordine(ordine: String, viewModel: AppViewModel, navController: NavController
         }
         "In consegna" -> {
             filteredStates = listOf("spedito")
-        }
-        "Consegnati" -> {
-            filteredStates = listOf("consegnato")
         }
         "Tutti" -> {
             filteredStates = listOf("ordinato","spedito", "consegnato")
