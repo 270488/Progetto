@@ -40,6 +40,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProgressIndicatorDefaults
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -54,6 +55,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
@@ -62,6 +64,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -81,7 +84,9 @@ import it.polito.database.ui.theme.Red20
 import it.polito.database.ui.theme.Red40
 import it.polito.database.ui.theme.Screen
 import it.polito.database.ui.theme.Yellow40
+import it.polito.database.ui.theme.Yellow80
 import it.polito.database.ui.theme.fontFamily
+import kotlinx.coroutines.delay
 
 
 @SuppressLint("RememberReturnType")
@@ -96,6 +101,17 @@ fun ProductDetail(viewModel: AppViewModel, navController: NavController) {
     var id = viewModel.uid
     var quantita = viewModel.quantita
     var prod=viewModel.prodottoSelezionato
+
+    var clicked by remember {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(clicked) {
+        if (clicked) {
+            delay(3000)
+            clicked = false
+        }
+    }
 
     val product= viewModel.products.observeAsState(emptyList()).value
         .filter { it.child("nome").value.toString() == prod }
@@ -146,59 +162,61 @@ fun ProductDetail(viewModel: AppViewModel, navController: NavController) {
         filledHeart=false
 
     var rating by remember { mutableStateOf(4f) }
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.primary)
-            .padding(top = 90.dp, bottom = 76.dp)
-            .verticalScroll(rememberScrollState())
-    ){
+
+    Box {
         Column(
-            modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.primary)
+                .padding(top = 90.dp, bottom = 76.dp)
+                .verticalScroll(rememberScrollState())
         ){
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .height(205.dp))
-            {
-                var isLoading by remember { mutableStateOf(true) }
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ){
+                Box(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(205.dp))
+                {
+                    var isLoading by remember { mutableStateOf(true) }
 
-                if(isLoading){
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(50.dp)
-                            .align(Alignment.Center),
-                        color = MaterialTheme.colorScheme.tertiary,
-                        strokeWidth = ProgressIndicatorDefaults.CircularStrokeWidth
+                    if(isLoading){
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .size(50.dp)
+                                .align(Alignment.Center),
+                            color = MaterialTheme.colorScheme.tertiary,
+                            strokeWidth = ProgressIndicatorDefaults.CircularStrokeWidth
+                        )
+                    }
+                    AsyncImage(
+                        model=url,
+                        contentDescription = "Product Image",
+                        contentScale = ContentScale.Crop,
+                        onLoading = { isLoading = true },
+                        onSuccess = { isLoading = false },
+                        modifier = Modifier.fillMaxSize(),
                     )
-                }
-                AsyncImage(
-                    model=url,
-                    contentDescription = "Product Image",
-                    contentScale = ContentScale.Crop,
-                    onLoading = { isLoading = true },
-                    onSuccess = { isLoading = false },
-                    modifier = Modifier.fillMaxSize(),
-                )
 
-                if(!filledHeart && !isLoading) {
-                    Image(
-                        imageVector = Icons.Outlined.FavoriteBorder,
-                        colorFilter = ColorFilter.tint(Red20),
-                        contentDescription = "Empty Heart",
-                        modifier = Modifier
-                            .size(60.dp)
-                            .align(Alignment.BottomEnd)
-                            .padding(12.dp)
-                            .clickable {
-                                filledHeart = !filledHeart
-                                if (filledHeart) {
-                                    aggiungiPreferito(prod = nome, id = id)
-                                } else
-                                    eliminaPreferito(prod = nome, id = id)
-                            },
-                    )}else{
+                    if(!filledHeart && !isLoading) {
+                        Image(
+                            imageVector = Icons.Outlined.FavoriteBorder,
+                            colorFilter = ColorFilter.tint(Red20),
+                            contentDescription = "Empty Heart",
+                            modifier = Modifier
+                                .size(60.dp)
+                                .align(Alignment.BottomEnd)
+                                .padding(12.dp)
+                                .clickable {
+                                    filledHeart = !filledHeart
+                                    if (filledHeart) {
+                                        aggiungiPreferito(prod = nome, id = id)
+                                    } else
+                                        eliminaPreferito(prod = nome, id = id)
+                                },
+                        )}else{
                         if(!isLoading){
                             Image(
                                 imageVector = Icons.Outlined.Favorite,
@@ -217,162 +235,164 @@ fun ProductDetail(viewModel: AppViewModel, navController: NavController) {
                                     },
                             )
                         }
+                    }
                 }
-            }
-            //Spacer(modifier = Modifier.height(16.dp))
-            Column (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp)
-            ) {
-                Text(
-                    text = categoria+"/ "+sottocategoria,
-                    modifier = Modifier
-                        .layoutId("productCategory")
-                        .padding(top = 8.dp),
-                    fontSize = 12.sp,
-                    fontStyle = FontStyle.Italic,
-                    fontFamily= fontFamily,
-                    color = MaterialTheme.colorScheme.background
-                )
-                Row(
+                //Spacer(modifier = Modifier.height(16.dp))
+                Column (
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 6.dp),
-                    verticalAlignment = Alignment.Top,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                        .padding(horizontal = 12.dp)
                 ) {
                     Text(
-                        text = nome,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = fontFamily,
-                        color = Color.White,
+                        text = categoria+"/ "+sottocategoria,
                         modifier = Modifier
-                            .layoutId("productName")
+                            .layoutId("productCategory")
+                            .padding(top = 8.dp),
+                        fontSize = 12.sp,
+                        fontStyle = FontStyle.Italic,
+                        fontFamily= fontFamily,
+                        color = MaterialTheme.colorScheme.background
                     )
-                    Text(
-                        text = "%.2f".format(prezzo)+"€",
-                        fontSize = 40.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = fontFamily,
-                        color = Color.White,
+                    Row(
                         modifier = Modifier
-                            .layoutId("productPrice")
-                    )
-                }
-
-                /* RATING BAR CON PALLINE
-                RatingBar(
-                    value = rating,
-                    size = 26.dp,
-                    stepSize = StepSize.HALF,
-                    painterEmpty = painterResource(id = R.drawable.dot_empty),
-                    painterFilled = painterResource(id = R.drawable.dot_filled),
-                    onValueChange = {
-                        rating = it
-                    },
-                    onRatingChanged = {
-                        Log.d("TAG", "onRatingChanged: $it")
-                    }
-                )
-                */
-                RatingBar(
-                    modifier = Modifier.offset(y = (-8.dp)),
-                    value = rating,
-                    size = 28.dp,
-                    stepSize = StepSize.HALF,
-                    style = RatingBarStyle.Fill(
-                        inActiveColor = MaterialTheme.colorScheme.tertiaryContainer,
-                        activeColor = MaterialTheme.colorScheme.tertiary
-                    ),
-                    onValueChange = {
-                        rating = it
-                    },
-                    onRatingChanged = {
-                        Log.d("TAG", "onRatingChanged: $it")
-                    }
-                )
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ){
-                    OptionSelection()
-                    QtySelection(viewModel)
-                }
-
-                Text(
-                    text = "Descrizione",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp,
-                    fontFamily = fontFamily,
-                    modifier = Modifier
-                        .layoutId("txtDescriptionTitle")
-                        .padding(top = 8.dp),
-                    color = Color.White,
-                )
-
-                Card(
-                    modifier = Modifier
-                        .height(120.dp)
-                        .fillMaxWidth()
-                        .layoutId("txtDescription")
-                        .padding(top = 8.dp),
-                    colors = CardDefaults.cardColors(Blue20),
-                    border = BorderStroke(2.dp, Color.Black)
-                ) {
-                    Text(
-                        text = descrizione,
-                        color = Color.White,
-                        fontFamily = fontFamily,
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 14.sp,
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .verticalScroll(rememberScrollState())
-                    )
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                Row (
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ){
-                    var clicked by remember {
-                        mutableStateOf(false)
-                    }
-                    Button(
-                        onClick = {
-                            Log.d("quantità selezionata: ", viewModel.quantita.toString())
-                            aggiungiAlCarrello(item = nome, id = id, qty = viewModel.quantita, viewModel)
-                            clicked = true
-                        },
-                        shape = RoundedCornerShape(3.dp),
-                        modifier = Modifier
-                            .layoutId("btnBuy"),
-                        colors = ButtonDefaults.buttonColors(Yellow40),
-                        elevation = ButtonDefaults.buttonElevation(
-                            defaultElevation = 16.dp,
-                            pressedElevation = 0.dp
-                        ),
-                    ){
+                            .fillMaxWidth()
+                            .padding(top = 6.dp),
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
                         Text(
-                            text = "Aggiungi al carrello",
-                            fontFamily = fontFamily,
-                            fontSize = 18.sp,
-                            color = Color.Black,
+                            text = nome,
+                            fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.offset(x = 0.dp, y = (-2).dp),
+                            fontFamily = fontFamily,
+                            color = Color.White,
+                            modifier = Modifier
+                                .layoutId("productName")
                         )
-                        if(clicked==true)  MySnackBar(navController = navController, viewModel = viewModel, nome, id)
+                        Text(
+                            text = "%.2f".format(prezzo)+"€",
+                            fontSize = 40.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = fontFamily,
+                            color = Color.White,
+                            modifier = Modifier
+                                .layoutId("productPrice")
+                        )
                     }
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-        }
 
+                    /* RATING BAR CON PALLINE
+                    RatingBar(
+                        value = rating,
+                        size = 26.dp,
+                        stepSize = StepSize.HALF,
+                        painterEmpty = painterResource(id = R.drawable.dot_empty),
+                        painterFilled = painterResource(id = R.drawable.dot_filled),
+                        onValueChange = {
+                            rating = it
+                        },
+                        onRatingChanged = {
+                            Log.d("TAG", "onRatingChanged: $it")
+                        }
+                    )
+                    */
+                    RatingBar(
+                        modifier = Modifier.offset(y = (-8.dp)),
+                        value = rating,
+                        size = 28.dp,
+                        stepSize = StepSize.HALF,
+                        style = RatingBarStyle.Fill(
+                            inActiveColor = MaterialTheme.colorScheme.tertiaryContainer,
+                            activeColor = MaterialTheme.colorScheme.tertiary
+                        ),
+                        onValueChange = {
+                            rating = it
+                        },
+                        onRatingChanged = {
+                            Log.d("TAG", "onRatingChanged: $it")
+                        }
+                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ){
+                        OptionSelection()
+                        QtySelection(viewModel)
+                    }
+
+                    Text(
+                        text = "Descrizione",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
+                        fontFamily = fontFamily,
+                        modifier = Modifier
+                            .layoutId("txtDescriptionTitle")
+                            .padding(top = 8.dp),
+                        color = Color.White,
+                    )
+
+                    Card(
+                        modifier = Modifier
+                            .height(120.dp)
+                            .fillMaxWidth()
+                            .layoutId("txtDescription")
+                            .padding(top = 8.dp),
+                        colors = CardDefaults.cardColors(Blue20),
+                        border = BorderStroke(2.dp, Color.Black)
+                    ) {
+                        Text(
+                            text = descrizione,
+                            color = Color.White,
+                            fontFamily = fontFamily,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 14.sp,
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .verticalScroll(rememberScrollState())
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row (
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ){
+
+                        Button(
+                            onClick = {
+                                Log.d("quantità selezionata: ", viewModel.quantita.toString())
+                                aggiungiAlCarrello(item = nome, id = id, qty = viewModel.quantita, viewModel)
+                                clicked = true
+                            },
+                            shape = RoundedCornerShape(3.dp),
+                            modifier = Modifier
+                                .layoutId("btnBuy"),
+                            colors = ButtonDefaults.buttonColors(Yellow40),
+                            elevation = ButtonDefaults.buttonElevation(
+                                defaultElevation = 16.dp,
+                                pressedElevation = 0.dp
+                            ),
+                        ){
+                            Text(
+                                text = "Aggiungi al carrello",
+                                fontFamily = fontFamily,
+                                fontSize = 18.sp,
+                                color = Color.Black,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.offset(x = 0.dp, y = (-2).dp),
+                            )
+
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+            }
+
+        }
+        if(clicked)  MySnackBar(navController = navController, viewModel = viewModel, nome, id)
     }
+
 
 }
 
@@ -552,36 +572,59 @@ fun MySnackBar(navController: NavController, viewModel: AppViewModel, nome: Stri
     LaunchedEffect(key1 = message)
     {
         if (message.isNotEmpty()) {
-            snackbarHostState.showSnackbar(message)
+            snackbarHostState.showSnackbar(
+                message = message,
+                duration = SnackbarDuration.Long
+            )
         }
     }
 
     SnackbarHost(hostState = snackbarHostState) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        )
-        {
-            Button(onClick = {
-            navController.navigate(Screen.Cart.route)
-        }) {
-            Text(text = "Vai al carrello",
-                color = Color.Black )
-        }
 
-            Text(
+        Box(
+            contentAlignment = Alignment.BottomCenter,
+            modifier = Modifier.fillMaxSize().padding(start = 8.dp, end = 8.dp, top = 90.dp, bottom = 100.dp)
+        ){
+            Row(
                 modifier = Modifier
-                    .padding(4.dp)
                     .fillMaxWidth()
-                    .padding(vertical = 30.dp),
-                text = message,
-                color = Color.Black,
-                fontSize = 18.sp,
-                textAlign = TextAlign.Center
+                    .background(Yellow80, RoundedCornerShape(3.dp))
+                    .border(2.dp, MaterialTheme.colorScheme.tertiary, RoundedCornerShape(3.dp))
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             )
+            {
+                Text(
+                    text = message,
+                    fontFamily = fontFamily,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
 
+                /*Button(
+                    shape = RoundedCornerShape(15.dp),
+                    onClick = { navController.navigate(Screen.Cart.route) },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.tertiary,
+                        contentColor = MaterialTheme.colorScheme.secondary
+                    )
+                )*/
+
+                    Text(
+                        text = "Vai al carrello",
+                        fontFamily = fontFamily,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        textDecoration = TextDecoration.Underline
+                    )
+
+
+            }
         }
+
     }
 }
 
