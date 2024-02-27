@@ -17,4 +17,6 @@ val Grey40 = Color(0xFF9A9EA3) //colore caselle
 val Grey90 = Color(0xFFE5E5E5) //colore sfondo secondario
 val White00 = Color(0xFFFFFFFF) //colore scritte e icone su sfondi scuri e placeholder
 
+val Green = Color(0xFF57AC1A)
+
 

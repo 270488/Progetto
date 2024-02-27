@@ -114,11 +114,13 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
                             .padding(16.dp)
                     ) {
                         Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
+                            horizontalArrangement = Arrangement.Center,
                             modifier = Modifier
                                 .fillMaxWidth()
                         ) {
-                            Icon(imageVector = Icons.Default.Warning, contentDescription = "attenzione")
+                            Icon(imageVector = Icons.Default.Warning,
+                                contentDescription = "attenzione",
+                                tint = MaterialTheme.colorScheme.tertiary)
                         }
 
                         Spacer(modifier = Modifier.height(16.dp))
