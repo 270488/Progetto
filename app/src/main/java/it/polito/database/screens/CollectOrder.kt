@@ -20,8 +20,11 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -42,6 +46,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
 import androidx.navigation.NavController
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -71,6 +76,69 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
             println("Errore nel leggere i dati dal database: ${databaseError.message}")
         }
     })
+
+    var openAlertDialog by remember { mutableStateOf(false) }
+    var ctx = LocalContext.current
+
+    if (openAlertDialog) {
+        Popup(
+            onDismissRequest = { openAlertDialog = false },
+            //modifier = Modifier.fillMaxSize()
+        ) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0xCC1D232C))
+                    .padding(horizontal = 20.dp)
+            ) {
+                //EFFETTIVO BOX DEL POPUP
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(15.dp))
+                        .background(
+                            MaterialTheme.colorScheme.primary,
+                            RoundedCornerShape(15.dp)
+                        )
+                        .border(
+                            2.dp,
+                            MaterialTheme.colorScheme.tertiary,
+                            RoundedCornerShape(15.dp)
+                        )
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            //.fillMaxSize()
+                            .background(MaterialTheme.colorScheme.primary)
+                            .padding(16.dp)
+                    ) {
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            Icon(imageVector = Icons.Default.Warning, contentDescription = "attenzione")
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = buildAnnotatedString {
+                                append("Chiudi lo sportello del locker")
+                            },
+                            fontSize = 22.sp,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            fontFamily = fontFamily,
+                        )
+                    }
+                }
+            }
+        }
+    }
 
     database.child("variabili").addValueEventListener(object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) { //fa una foto al db in quel momento e la mette in dataSnapshot
@@ -102,7 +170,7 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
 
             }
             else if(viewModel.variabili.PGAperta==1L && sbloccoPG==0L){
-                audioPlayer.playAudioWithDelay(10000L, 10000L)
+                audioPlayer.playAudioWithDelay(10000L, 10000L, viewModel)
                 sbloccoPG=1L
             }
             if(viewModel.variabili.PPAperta==0L && sbloccoPP==1L){ //La porta si chiude
@@ -115,7 +183,11 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
             }
             if(viewModel.variabili.PPAperta==1L && sbloccoPP==0L){
                 sbloccoPP=1L
-                audioPlayer.playAudioWithDelay(10000L, 10000L)
+                openAlertDialog=true
+                audioPlayer.playAudioWithDelay(10000L, 10000L, viewModel)
+                if(viewModel.hoChiusoLoSportello==true){
+                    openAlertDialog=false
+                }
             }
             if(codiceTastierino!=viewModel.variabili.CodiceTastierino && viewModel.variabili.CodiceTastierino!="0000"){
                 confrontoCodici(viewModel.variabili)

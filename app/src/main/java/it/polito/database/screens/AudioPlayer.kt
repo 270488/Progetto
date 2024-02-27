@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
+import it.polito.database.AppViewModel
 import it.polito.database.R
 
 class AudioPlayer(private val context: Context) {
@@ -12,17 +13,19 @@ class AudioPlayer(private val context: Context) {
     private var startHandler: Handler? = null
     private var stopHandler: Handler? = null
 
-    fun playAudioWithDelay(delayMilliseconds: Long, stopDelayMilliseconds: Long) {
+    fun playAudioWithDelay(delayMilliseconds: Long, stopDelayMilliseconds: Long,viewModel: AppViewModel) {
         mediaPlayer = MediaPlayer.create(context, R.raw.alarm)
         startHandler = Handler(Looper.getMainLooper())
         stopHandler = Handler(Looper.getMainLooper())
 
         startHandler?.postDelayed({
             mediaPlayer?.start()
+
         }, delayMilliseconds)
 
         stopHandler?.postDelayed({
             stopAudio()
+            viewModel.hoChiusoLoSportello=true
         }, delayMilliseconds + stopDelayMilliseconds)
     }
 
