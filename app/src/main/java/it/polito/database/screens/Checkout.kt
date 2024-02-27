@@ -281,21 +281,7 @@ fun CheckoutScreen(viewModel: AppViewModel, navController: NavController, modifi
                     Popup(
                         onDismissRequest = { isDialogOpen = false
                             navController.navigate(Screen.Cart.route)},
-                        //modifier = Modifier.fillMaxSize()
-                    ) { Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Icon(
-                            modifier = Modifier
-                                .size(30.dp)
-                                .clickable { isDialogOpen = false },
-                            painter = painterResource(id = R.drawable.back_arrow),
-                            contentDescription = "",
-                            tint = MaterialTheme.colorScheme.tertiary
-                        )
+                    )  {
                         Box(
                             contentAlignment = Alignment.Center,
                             modifier = Modifier
@@ -315,21 +301,47 @@ fun CheckoutScreen(viewModel: AppViewModel, navController: NavController, modifi
                                         MaterialTheme.colorScheme.tertiary,
                                         RoundedCornerShape(15.dp)
                                     )
+                                    .padding(20.dp)
                             ) {
-                                Text(
-                                    text = "Siamo spiacenti: \nil locker selezionato è al momento pieno.\nSi prega di riprovare più tardi. ",
-                                    fontSize = 24.sp,
-                                    color = Color.White,
-                                    fontWeight = FontWeight.Bold,
-                                    textAlign = TextAlign.Center,
-                                    fontFamily = fontFamily,
-                                )
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Icon(
+                                            modifier = Modifier
+                                                .size(28.dp)
+                                                .clickable { isDialogOpen = false },
+                                            painter = painterResource(id = R.drawable.back_arrow),
+                                            contentDescription = "",
+                                            tint = MaterialTheme.colorScheme.tertiary
+                                        )
+                                        Text(
+                                            text = "Siamo spiacenti",
+                                            fontSize = 24.sp,
+                                            color = Color.White,
+                                            fontWeight = FontWeight.Bold,
+                                            fontFamily = fontFamily,
+                                        )
+                                        Box(modifier = Modifier.size(28.dp))
+                                    }
+                                    Spacer(modifier = Modifier.height(16.dp))
+                                    Text(
+                                        text = "Il locker selezionato è al momento pieno. Si prega di riprovare più tardi. ",
+                                        fontSize = 18.sp,
+                                        color = Color.White,
+                                        fontFamily = fontFamily,
+                                    )
+                                }
+
                             }
 
 
                         }
                     }
-                }
 
 
             }
