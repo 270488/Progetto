@@ -69,34 +69,37 @@ fun DeliverOrder(viewModel: AppViewModel, navController: NavController) {
                 if(sportello =="P" && !viewModel.variabili.SportelloP)
                 // sportello assegnato per l'ordine selezionato è P ed è libero
                 {
-                   viewModel.variabili.PPAperta=1L //apre la porta
-
+                   //viewModel.variabili.PPAperta=1L //apre la porta
+                    database.child("variabili").child("PPAperta").setValue(1L)
                     if(viewModel.variabili.PPAperta==0L){ //se la chiude
                         database.child("ordini").child(viewModel.ordineSelezionato).child("stato").setValue("consegnato")
                         database.child("utenti").child(viewModel.uid).child("ordini").child(viewModel.ordineSelezionato).setValue("consegnato")
                         viewModel.corriereState.value="consegnato"
-                        viewModel.variabili.SportelloP=true; //è occupato
-                        writeVariables(viewModel.variabili)
+                        database.child("variabili").child("SportelloP").setValue(true)
+
+                        //viewModel.variabili.SportelloP=true; //è occupato
+                        //writeVariables(viewModel.variabili)
                         // pop up conferma consegna e rimuovere ordine dalla lista del corriere
                         navController.navigate(Screen.CorriereHome.route)
                     }
                 }
                 else if(sportello =="G" && !viewModel.variabili.SportelloG)
                 {
-                    viewModel.variabili.PGAperta=1L //apre la porta
-
+                    //viewModel.variabili.PGAperta=1L //apre la porta
+                    database.child("variabili").child("PGAperta").setValue(1L)
                     if(viewModel.variabili.PGAperta==0L){ //se la chiude
                         navController.navigate(Screen.CorriereHome.route)
                         database.child("ordini").child(viewModel.ordineSelezionato).child("stato").setValue("consegnato")
                         database.child("utenti").child(viewModel.uid).child("ordini").child(viewModel.ordineSelezionato).setValue("consegnato")
                         viewModel.corriereState.value="consegnato"
-                        viewModel.variabili.SportelloG=true; //è occupato
-                        writeVariables(viewModel.variabili)
-                        // pop up conferma consegna e rimuovere ordine dalla lista del corriere
+                        database.child("variabili").child("SportelloG").setValue(true)
+                        //viewModel.variabili.SportelloG=true; //è occupato
+                        //writeVariables(viewModel.variabili)
+                        // TODO pop up conferma consegna e rimuovere ordine dalla lista del corriere
                     }
                 }
 
-              writeVariables(viewModel.variabili)
+              //writeVariables(viewModel.variabili)
 
 
             }) {

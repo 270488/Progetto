@@ -78,7 +78,7 @@ fun CorriereHome(viewModel: AppViewModel, navController: NavController) {
             for (childSnapshot in dataSnapshot.children) {
                 val statoOrdine = childSnapshot.child("stato").value?.toString()
                 val codiceOrdine = childSnapshot.key // codice dell'ordine
-                if (statoOrdine != "ritirato" ) {
+                if (statoOrdine != "ritirato" && statoOrdine != "consegnato"  ) {
                     codiceOrdine?.let { lista.add(it) }
                 //let garantisce che l'aggiunta avvenga solo quando codiceOrdine è !null
                 }

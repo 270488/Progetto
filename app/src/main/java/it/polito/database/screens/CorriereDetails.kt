@@ -155,6 +155,12 @@ fun DettaglioCard(viewModel: AppViewModel,
                 viewModel.corriereState.value = "In consegna"
                 Button(
                     onClick = {
+                        database.child("utenti").child(id).child("ordini")
+                            .child(viewModel.ordineSelezionato).setValue("consegnato")
+                        database.child("ordini").child(viewModel.ordineSelezionato).child("stato")
+                            .setValue("consegnato")
+                        // TODO pop up con ordine correttamente consegnato
+                        viewModel.corriereState.value = "Consegnato"
                         navController.navigate(Screen.DeliverOrder.route)
 
                     }) {
