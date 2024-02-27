@@ -27,6 +27,7 @@ import it.polito.database.screens.GestisciAccountScreen
 import it.polito.database.screens.GestisciFitlockerScreen
 import it.polito.database.screens.ModificaDati
 import it.polito.database.screens.NewsletterScreen
+import it.polito.database.screens.NotificationsCorriereScreen
 import it.polito.database.screens.NotificationsScreen
 import it.polito.database.screens.OrderDetails
 import it.polito.database.screens.Orders
@@ -64,6 +65,9 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel){
         }
         composable(route = Screen.Notifications.route) {
             NotificationsScreen(viewModel)
+        }
+        composable(route = Screen.NotificationsCorriere.route) {
+            NotificationsCorriereScreen(viewModel)
         }
         composable(route = Screen.Settings.route) {
             SettingsScreen(viewModel, navController)
