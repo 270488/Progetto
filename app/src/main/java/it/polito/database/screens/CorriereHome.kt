@@ -3,22 +3,34 @@ package it.polito.database.screens
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,9 +38,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -37,10 +57,12 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import it.polito.database.AppViewModel
+import it.polito.database.R
 import it.polito.database.database
 import it.polito.database.ui.theme.Screen
 import it.polito.database.ui.theme.fontFamily
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CorriereHome(viewModel: AppViewModel, navController: NavController) {
     /*val auth = Firebase.auth
@@ -56,7 +78,7 @@ fun CorriereHome(viewModel: AppViewModel, navController: NavController) {
             for (childSnapshot in dataSnapshot.children) {
                 val statoOrdine = childSnapshot.child("stato").value?.toString()
                 val codiceOrdine = childSnapshot.key // codice dell'ordine
-                if (statoOrdine != "ritirato" ) {
+                if (statoOrdine != "ritirato" && statoOrdine != "consegnato"  ) {
                     codiceOrdine?.let { lista.add(it) }
                 //let garantisce che l'aggiunta avvenga solo quando codiceOrdine è !null
                 }
@@ -88,16 +110,117 @@ fun CorriereHome(viewModel: AppViewModel, navController: NavController) {
                     text = "Non ci sono ordini da consegnare",
                     fontFamily = fontFamily,
                     color = MaterialTheme.colorScheme.onPrimary,
-                    fontSize = 24.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Normal,
                     fontStyle = FontStyle.Italic,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(top = 150.dp, bottom = 16.dp)
                 )
-
             }
             else{
+
+                val listStates= listOf<String>("In consegna", "In attesa di ritiro", "Consegnati", "Tutti")
+
+                var selectedState by remember {
+                    mutableStateOf<String>("Tutti")
+                }
+
+                var expanded by remember { mutableStateOf(false) }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .layoutId("menuOptions")
+                            .width(165.dp)
+                            .height(50.dp)
+                            .border(
+                                BorderStroke(2.dp, Color.Black),
+                                RoundedCornerShape(3.dp)
+                            )
+                            .background(
+                                MaterialTheme.colorScheme.secondary,
+                                RoundedCornerShape(3.dp)
+                            )
+                    ){
+                        ExposedDropdownMenuBox(
+                            modifier = Modifier.fillMaxSize(),
+                            expanded = expanded,
+                            onExpandedChange = { expanded = it },
+                        ) {
+                            TextField(
+                                value = selectedState,
+                                onValueChange = {},
+                                readOnly = true,
+                                textStyle = TextStyle(
+                                    fontFamily= fontFamily, fontWeight = FontWeight.Bold, fontSize = 15.sp),
+                                colors = TextFieldDefaults.outlinedTextFieldColors(
+                                    containerColor = MaterialTheme.colorScheme.secondary,
+                                    textColor = Color.White),
+                                leadingIcon = {
+                                    Icon(
+                                        modifier = Modifier.size(23.dp),
+                                        painter = painterResource(id = R.drawable.filtri),
+                                        contentDescription = "",
+                                        tint = MaterialTheme.colorScheme.tertiary
+                                    )
+                                },
+                                modifier = Modifier.menuAnchor()
+                            )
+                            DropdownMenu(
+                                offset = DpOffset((0).dp, (4).dp),
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false },
+                                modifier = Modifier
+                                    .width(165.dp)
+                                    .background(MaterialTheme.colorScheme.secondary)
+                                    .border(
+                                        BorderStroke(2.dp, Color.Black),
+                                        RoundedCornerShape(3.dp)
+                                    )
+                            ) {
+
+                                listStates.forEachIndexed() {index, o ->
+                                    DropdownMenuItem(
+                                        text = {
+                                            Row(
+                                                modifier = Modifier
+                                                    .fillMaxWidth(),
+                                                horizontalArrangement = Arrangement.Center
+                                            )
+                                            {
+                                                Text(
+                                                    modifier = Modifier
+                                                        .offset(y = if(index == 0)(-4).dp else if(index == 2) 4.dp else 0.dp),
+                                                    text = o,
+                                                    color = Color.White,
+                                                    fontStyle = FontStyle.Italic,
+                                                    fontFamily= fontFamily,
+                                                    fontSize = 15.sp)
+                                            }
+
+                                        },
+                                        onClick = {
+                                            selectedState = o
+                                            expanded =
+                                                false
+                                        })
+                                    if (index < listStates.size - 1){
+                                        Divider(thickness = 1.dp, color = MaterialTheme.colorScheme.primaryContainer)
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
                 listaOrdini.forEach{
-                        o->Ordine(o, viewModel, navController)
+                        o->Ordine(o, viewModel, navController, selectedState)
                 }
             }
         }
@@ -108,7 +231,7 @@ fun CorriereHome(viewModel: AppViewModel, navController: NavController) {
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Ordine(ordine: String, viewModel: AppViewModel, navController: NavController) {
+fun Ordine(ordine: String, viewModel: AppViewModel, navController: NavController, filtro: String) {
 
     var ordiniEffettuati= database.child("ordini").child(ordine)
 
@@ -128,6 +251,9 @@ fun Ordine(ordine: String, viewModel: AppViewModel, navController: NavController
     var uid by remember {
         mutableStateOf("")
     }
+    var filteredStates by remember {
+        mutableStateOf<List<String>>(emptyList())
+    }
     var prodotti by remember{ mutableStateOf<Map<String, Long>>(emptyMap()) }
     ordiniEffettuati.addValueEventListener(object: ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -146,6 +272,23 @@ fun Ordine(ordine: String, viewModel: AppViewModel, navController: NavController
             println("Errore nel leggere i dati dal database: ${databaseError.message}")
         }
     })
+
+    when(filtro){
+        "In attesa di ritiro" -> {
+            filteredStates = listOf("ordinato")
+        }
+        "In consegna" -> {
+            filteredStates = listOf("spedito")
+        }
+        "Consegnati" -> {
+            filteredStates = listOf("consegnato")
+        }
+        "Tutti" -> {
+            filteredStates = listOf("ordinato","spedito", "consegnato")
+        }
+    }
+
+    if(filteredStates.contains(stato)){
 
         Card(
             modifier = Modifier.height(90.dp),
@@ -198,18 +341,41 @@ fun Ordine(ordine: String, viewModel: AppViewModel, navController: NavController
                     else if(stato == "spedito"){
                         viewModel.corriereState.value = "In consegna"
                     }}
-                    Text(
-                        text = "Stato ordine: ${viewModel.corriereState.value}",
-                        fontFamily = fontFamily,
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Start
-                    )
-                }
-            }
+                /*Text(
+                    text = "Stato ordine: ${viewModel.corriereState.value}",
+                    fontFamily = fontFamily,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Start
+                )*/
 
+                Text(
+                    text = buildAnnotatedString {
+                        append("Stato ordine: ")
+                        withStyle(
+                            style = SpanStyle(
+                                color =
+                                if (viewModel.corriereState.value == "Consegnato") Color.White
+                                else  MaterialTheme.colorScheme.tertiary,
+                            )
+                        ){
+                            append(viewModel.corriereState.value)
+                        }
+                    },
+                    fontFamily = fontFamily,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Start
+                )
+            }
         }
+        Spacer(modifier = Modifier.height(16.dp))
+    }
+
+
+}
 
 
 

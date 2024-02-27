@@ -489,18 +489,60 @@ fun aggiungiOrdine(viewModel: AppViewModel): Boolean {
     var ordini=database.child("ordini")
 
     var flag=false
-    if(assegnazioneSportello(numeroProdotti, viewModel, codiceF = codiceSbloccoFattorino, codiceU=codiceSbloccoUtente )){
-        flag=true
+
+    if(!viewModel.variabili.SportelloG && numeroProdotti>2){
+        viewModel.variabili.SportelloG=true
+        viewModel.variabili.CodeG=codiceSbloccoUtente
         ordini.child(nOrdine.toString()).child("stato").setValue(stato)
         ordini.child(nOrdine.toString()).child("uid").setValue(uid)
         ordini.child(nOrdine.toString()).child("Locker").setValue(locker)
-        ordini.child(nOrdine.toString()).child("Sportello").setValue(sportello)
+        ordini.child(nOrdine.toString()).child("Sportello").setValue("G")
+        ordini.child(nOrdine.toString()).child("Data Ordine").setValue(dataOrdine)
+        ordini.child(nOrdine.toString()).child("Data Consegna").setValue(dataConsegna)
+        ordini.child(nOrdine.toString()).child("Totale").setValue(totale)
+        ordini.child(nOrdine.toString()).child("CodiceSbloccoUtente").setValue(codiceSbloccoUtente)
+        ordini.child(nOrdine.toString()).child("CodiceSbloccoFattorino").setValue(codiceSbloccoFattorino)
+        writeVariables(variabili = viewModel.variabili)
+        flag=true
+
+    }
+    if(numeroProdotti<=2 && !viewModel.variabili.SportelloP){
+        viewModel.variabili.SportelloP=true
+        viewModel.variabili.CodeP=codiceSbloccoUtente
+        ordini.child(nOrdine.toString()).child("stato").setValue(stato)
+        ordini.child(nOrdine.toString()).child("uid").setValue(uid)
+        ordini.child(nOrdine.toString()).child("Locker").setValue(locker)
+        ordini.child(nOrdine.toString()).child("Sportello").setValue("P")
+        ordini.child(nOrdine.toString()).child("Data Ordine").setValue(dataOrdine)
+        ordini.child(nOrdine.toString()).child("Data Consegna").setValue(dataConsegna)
+        ordini.child(nOrdine.toString()).child("Totale").setValue(totale)
+        ordini.child(nOrdine.toString()).child("CodiceSbloccoUtente").setValue(codiceSbloccoUtente)
+        ordini.child(nOrdine.toString()).child("CodiceSbloccoFattorino").setValue(codiceSbloccoFattorino)
+        writeVariables(variabili = viewModel.variabili)
+        flag=true
+    }
+    else if(numeroProdotti<=2 && !viewModel.variabili.SportelloG){
+        viewModel.variabili.SportelloG=true
+        viewModel.variabili.CodeP=codiceSbloccoUtente
+        ordini.child(nOrdine.toString()).child("stato").setValue(stato)
+        ordini.child(nOrdine.toString()).child("uid").setValue(uid)
+        ordini.child(nOrdine.toString()).child("Locker").setValue(locker)
+        ordini.child(nOrdine.toString()).child("Sportello").setValue("G")
         ordini.child(nOrdine.toString()).child("Data Ordine").setValue(dataOrdine)
         ordini.child(nOrdine.toString()).child("Data Consegna").setValue(dataConsegna)
         ordini.child(nOrdine.toString()).child("Totale").setValue(totale)
         ordini.child(nOrdine.toString()).child("CodiceSbloccoUtente").setValue(codiceSbloccoUtente)
         ordini.child(nOrdine.toString()).child("CodiceSbloccoFattorino").setValue(codiceSbloccoFattorino)
 
+        writeVariables(variabili = viewModel.variabili)
+        flag=true
+    }
+
+
+
+
+
+    if(flag){
 
         //prodotti e quantità
         var carrello=viewModel.carrello.value.orEmpty()
@@ -520,6 +562,9 @@ fun aggiungiOrdine(viewModel: AppViewModel): Boolean {
         database.child("corrieri").child("jSJNjHS9PENBjyBSz0NYOT3zz173").child("ordini").child(nOrdine.toString()).setValue("")
         viewModel.ordineSelezionato=nOrdine.toString()
     }
+
+
+
 
 
     return flag

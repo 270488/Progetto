@@ -100,7 +100,7 @@ fun confrontoCodici(variabili: GestioneArduino){
 
 }
 
-fun assegnazioneSportello(numeroProdotti: Int, viewModel: AppViewModel, codiceF: String, codiceU: String): Boolean{
+fun assegnazioneSportello(numeroProdotti: Int, viewModel: AppViewModel, codiceF: String, codiceU: String, nOrdine: Int): Boolean{
     var flag=false
 
     var codiceCasualeU= codiceU
@@ -117,7 +117,7 @@ fun assegnazioneSportello(numeroProdotti: Int, viewModel: AppViewModel, codiceF:
     if(!viewModel.variabili.SportelloG && numeroProdotti>2){
         viewModel.variabili.SportelloG=true
         viewModel.variabili.CodeG=codiceCasualeU
-        database.child("ordini").child(viewModel.ordineSelezionato).child("Sportello").setValue("G")
+        database.child("ordini").child(nOrdine.toString()).child("Sportello").setValue("G")
         writeVariables(variabili = viewModel.variabili)
         flag=true
 
@@ -125,15 +125,14 @@ fun assegnazioneSportello(numeroProdotti: Int, viewModel: AppViewModel, codiceF:
     if(numeroProdotti<=2 && !viewModel.variabili.SportelloP){
         viewModel.variabili.SportelloP=true
         viewModel.variabili.CodeP=codiceCasualeU
-        database.child("ordini").child(viewModel.ordineSelezionato).child("Sportello").setValue("P")
-
+        database.child("ordini").child(nOrdine.toString()).child("Sportello").setValue("P")
         writeVariables(variabili = viewModel.variabili)
         flag=true
     }
     else if(numeroProdotti<=2 && !viewModel.variabili.SportelloG){
         viewModel.variabili.SportelloG=true
         viewModel.variabili.CodeP=codiceCasualeU
-        database.child("ordini").child(viewModel.ordineSelezionato).child("Sportello").setValue("G")
+        database.child("ordini").child(nOrdine.toString()).child("Sportello").setValue("G")
 
         writeVariables(variabili = viewModel.variabili)
         flag=true
