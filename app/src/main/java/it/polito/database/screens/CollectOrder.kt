@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -61,6 +62,7 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
     var codice by remember {
         mutableStateOf("")
     }
+    val audioPlayer = AudioPlayer(LocalContext.current)
     codiceDB.addValueEventListener(object: ValueEventListener{
         override fun onDataChange(dataSnapshot: DataSnapshot) {
             codice=dataSnapshot.value.toString()
@@ -100,6 +102,7 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
 
             }
             else if(viewModel.variabili.PGAperta==1L && sbloccoPG==0L){
+                audioPlayer.playAudioWithDelay(10000L, 10000L)
                 sbloccoPG=1L
             }
             if(viewModel.variabili.PPAperta==0L && sbloccoPP==1L){ //La porta si chiude
@@ -112,6 +115,7 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
             }
             if(viewModel.variabili.PPAperta==1L && sbloccoPP==0L){
                 sbloccoPP=1L
+                audioPlayer.playAudioWithDelay(10000L, 10000L)
             }
             if(codiceTastierino!=viewModel.variabili.CodiceTastierino && viewModel.variabili.CodiceTastierino!="0000"){
                 confrontoCodici(viewModel.variabili)
@@ -142,7 +146,9 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
         ){
             if(sblocco){
                 Column(
-                    modifier = Modifier.padding(16.dp).align(Alignment.TopStart)
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .align(Alignment.TopStart)
                 ) {
                     Text(
                         text = "Codice per il ritiro:",
@@ -246,5 +252,7 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
         }
 
     }
+
+
     //cambioVariabili(variabili = viewModel.variabili)
 }

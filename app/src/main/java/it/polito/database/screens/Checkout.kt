@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -31,12 +32,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
 import androidx.navigation.NavController
 import it.polito.database.AppViewModel
 import it.polito.database.R
@@ -54,6 +58,7 @@ fun CheckoutScreen(viewModel: AppViewModel, navController: NavController, modifi
     .padding(bottom = 74.dp)) {
 
     val totale = viewModel.tot
+    var isDialogOpen by remember { mutableStateOf(false) }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -245,8 +250,12 @@ fun CheckoutScreen(viewModel: AppViewModel, navController: NavController, modifi
             {
                 Button(
                     onClick = {
-                        aggiungiOrdine(viewModel)
-                        navController.navigate(Screen.Orders.route)
+                        if(!aggiungiOrdine(viewModel)){ //ritorna false se non ci sono sportelli disponibili
+                            isDialogOpen=true
+
+                        }
+                        else
+                            navController.navigate(Screen.Orders.route)
                     },
                     modifier = Modifier
                         .layoutId("payment")
@@ -268,8 +277,64 @@ fun CheckoutScreen(viewModel: AppViewModel, navController: NavController, modifi
                         fontWeight = FontWeight.Bold
                     )
                 }
+                if(isDialogOpen){
+                    Popup(
+                        onDismissRequest = { isDialogOpen = false
+                            navController.navigate(Screen.Cart.route)},
+                        //modifier = Modifier.fillMaxSize()
+                    ) { Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Icon(
+                            modifier = Modifier
+                                .size(30.dp)
+                                .clickable { isDialogOpen = false },
+                            painter = painterResource(id = R.drawable.back_arrow),
+                            contentDescription = "",
+                            tint = MaterialTheme.colorScheme.tertiary
+                        )
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(Color(0xCC1D232C))
+                                .padding(horizontal = 20.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(15.dp))
+                                    .background(
+                                        MaterialTheme.colorScheme.primary,
+                                        RoundedCornerShape(15.dp)
+                                    )
+                                    .border(
+                                        2.dp,
+                                        MaterialTheme.colorScheme.tertiary,
+                                        RoundedCornerShape(15.dp)
+                                    )
+                            ) {
+                                Text(
+                                    text = "Siamo spiacenti: \nil locker selezionato è al momento pieno.\nSi prega di riprovare più tardi. ",
+                                    fontSize = 24.sp,
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                    textAlign = TextAlign.Center,
+                                    fontFamily = fontFamily,
+                                )
+                            }
+
+
+                        }
+                    }
+                }
+
+
             }
         }
     }
 
+}
 }

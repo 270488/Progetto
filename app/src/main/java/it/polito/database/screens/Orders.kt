@@ -472,7 +472,7 @@ fun OrdineCard(ordine: String, viewModel: AppViewModel, navController: NavContro
 
 }
 @SuppressLint("NewApi")
-fun aggiungiOrdine(viewModel: AppViewModel){
+fun aggiungiOrdine(viewModel: AppViewModel): Boolean {
     var uid=viewModel.uid
     val dataAttuale = LocalDate.now()
     val formato = DateTimeFormatter.ofPattern("dd/MM/yyyy")
@@ -488,36 +488,41 @@ fun aggiungiOrdine(viewModel: AppViewModel){
     var codiceSbloccoFattorino= generazioneCodiceCasuale()
     var ordini=database.child("ordini")
 
+    var flag=false
+    if(assegnazioneSportello(numeroProdotti, viewModel, codiceF = codiceSbloccoFattorino, codiceU=codiceSbloccoUtente )){
+        flag=true
+        ordini.child(nOrdine.toString()).child("stato").setValue(stato)
+        ordini.child(nOrdine.toString()).child("uid").setValue(uid)
+        ordini.child(nOrdine.toString()).child("Locker").setValue(locker)
+        ordini.child(nOrdine.toString()).child("Sportello").setValue(sportello)
+        ordini.child(nOrdine.toString()).child("Data Ordine").setValue(dataOrdine)
+        ordini.child(nOrdine.toString()).child("Data Consegna").setValue(dataConsegna)
+        ordini.child(nOrdine.toString()).child("Totale").setValue(totale)
+        ordini.child(nOrdine.toString()).child("CodiceSbloccoUtente").setValue(codiceSbloccoUtente)
+        ordini.child(nOrdine.toString()).child("CodiceSbloccoFattorino").setValue(codiceSbloccoFattorino)
 
-    ordini.child(nOrdine.toString()).child("stato").setValue(stato)
-    ordini.child(nOrdine.toString()).child("uid").setValue(uid)
-    ordini.child(nOrdine.toString()).child("Locker").setValue(locker)
-    ordini.child(nOrdine.toString()).child("Sportello").setValue(sportello)
-    ordini.child(nOrdine.toString()).child("Data Ordine").setValue(dataOrdine)
-    ordini.child(nOrdine.toString()).child("Data Consegna").setValue(dataConsegna)
-    ordini.child(nOrdine.toString()).child("Totale").setValue(totale)
-    ordini.child(nOrdine.toString()).child("CodiceSbloccoUtente").setValue(codiceSbloccoUtente)
-    ordini.child(nOrdine.toString()).child("CodiceSbloccoFattorino").setValue(codiceSbloccoFattorino)
+
+        //prodotti e quantità
+        var carrello=viewModel.carrello.value.orEmpty()
+
+        println("carrello: "+carrello.toString())
+
+        carrello.forEach{(item, qty)->
+            numeroProdotti+=qty
+            println("Prodotto: "+item+" Quantità: "+qty.toString())
+            ordini.child(nOrdine.toString()).child("Prodotti").child(item).setValue(qty)
+            eliminaDalCarrello(item = item, uid, viewModel)
+        }
 
 
-    //prodotti e quantità
-    var carrello=viewModel.carrello.value.orEmpty()
-
-    println("carrello: "+carrello.toString())
-
-    carrello.forEach{(item, qty)->
-        numeroProdotti+=qty
-        println("Prodotto: "+item+" Quantità: "+qty.toString())
-        ordini.child(nOrdine.toString()).child("Prodotti").child(item).setValue(qty)
-        eliminaDalCarrello(item = item, uid, viewModel)
+        viewModel.carrello.value= emptyMap()
+        database.child("utenti").child(uid).child("ordini").child(nOrdine.toString()).setValue(stato)
+        database.child("corrieri").child("jSJNjHS9PENBjyBSz0NYOT3zz173").child("ordini").child(nOrdine.toString()).setValue("")
+        viewModel.ordineSelezionato=nOrdine.toString()
     }
 
 
-    viewModel.carrello.value= emptyMap()
-    database.child("utenti").child(uid).child("ordini").child(nOrdine.toString()).setValue(stato)
-    database.child("corrieri").child("jSJNjHS9PENBjyBSz0NYOT3zz173").child("ordini").child(nOrdine.toString()).setValue("")
-    viewModel.ordineSelezionato=nOrdine.toString()
-    //Generazione codice
-    assegnazioneSportello(numeroProdotti, viewModel, codiceF = codiceSbloccoFattorino, codiceU=codiceSbloccoUtente, )
+    return flag
+
 }
 

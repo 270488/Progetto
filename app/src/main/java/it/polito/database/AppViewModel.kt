@@ -56,6 +56,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import it.polito.database.screens.GestioneArduino
+import it.polito.database.screens.cambioVariabili
 import it.polito.database.ui.theme.Blue40
 import it.polito.database.ui.theme.Screen
 import it.polito.database.ui.theme.Yellow40
@@ -195,7 +196,8 @@ fun HomePage(viewModel: AppViewModel, navController: NavController){
 
 
     }
-    //cambioVariabili(viewModel.variabili)
+
+    cambioVariabili(viewModel.variabili)
 
 
 }

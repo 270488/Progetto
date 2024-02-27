@@ -1,5 +1,8 @@
 package it.polito.database.screens
 
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import it.polito.database.AppViewModel
 import it.polito.database.database
 import kotlin.random.Random
@@ -31,7 +34,7 @@ data class GestioneArduino(
 
 
 }
-/*fun cambioVariabili(variabili: GestioneArduino){
+fun cambioVariabili(variabili: GestioneArduino){
 
     variabili.variabiliPath.addValueEventListener(object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) { //fa una foto al db in quel momento e la mette in dataSnapshot
@@ -63,7 +66,7 @@ data class GestioneArduino(
             println("Errore nel leggere i dati dal database: ${databaseError.message}")
         }
     })
-}*/
+}
 
 fun confrontoCodici(variabili: GestioneArduino){
 
@@ -97,16 +100,27 @@ fun confrontoCodici(variabili: GestioneArduino){
 
 }
 
-fun assegnazioneSportello(numeroProdotti: Int, viewModel: AppViewModel, codiceF: String, codiceU: String){
-
+fun assegnazioneSportello(numeroProdotti: Int, viewModel: AppViewModel, codiceF: String, codiceU: String): Boolean{
+    var flag=false
 
     var codiceCasualeU= codiceU
+    println("CodeP: "+viewModel.variabili.CodeP)
+    println("CodeG: "+viewModel.variabili.CodeG)
+    println("CodiceTastierino: "+viewModel.variabili.CodiceTastierino)
+    println("PPAPerta: "+viewModel.variabili.PPAperta)
+    println("PGAperta: "+viewModel.variabili.PGAperta)
+    println("Sblocco: "+viewModel.variabili.Sblocco)
+    println("SportelloP: "+viewModel.variabili.SportelloP)
+    println("SportelloG: "+viewModel.variabili.SportelloG)
+    println("CodiceErrato: "+viewModel.variabili.CodiceErrato)
 
     if(!viewModel.variabili.SportelloG && numeroProdotti>2){
         viewModel.variabili.SportelloG=true
         viewModel.variabili.CodeG=codiceCasualeU
         database.child("ordini").child(viewModel.ordineSelezionato).child("Sportello").setValue("G")
         writeVariables(variabili = viewModel.variabili)
+        flag=true
+
     }
     if(numeroProdotti<=2 && !viewModel.variabili.SportelloP){
         viewModel.variabili.SportelloP=true
@@ -114,6 +128,7 @@ fun assegnazioneSportello(numeroProdotti: Int, viewModel: AppViewModel, codiceF:
         database.child("ordini").child(viewModel.ordineSelezionato).child("Sportello").setValue("P")
 
         writeVariables(variabili = viewModel.variabili)
+        flag=true
     }
     else if(numeroProdotti<=2 && !viewModel.variabili.SportelloG){
         viewModel.variabili.SportelloG=true
@@ -121,7 +136,10 @@ fun assegnazioneSportello(numeroProdotti: Int, viewModel: AppViewModel, codiceF:
         database.child("ordini").child(viewModel.ordineSelezionato).child("Sportello").setValue("G")
 
         writeVariables(variabili = viewModel.variabili)
+        flag=true
     }
+    //ritorna false se non ci sono sportelli disponibili
+    return flag
 }
 
 fun generazioneCodiceCasuale(): String{
@@ -134,42 +152,3 @@ fun generazioneCodiceCasuale(): String{
     return stringaCasuale
 }
 
-/*
-@Composable
-fun GestioneTempo(variabili: GestioneArduino){
-    var tempoScaduto by remember { mutableStateOf(false) }
-
-    if(variabili.CodiceErrato.equals(false) && (variabili.SportelloG == true || variabili.SportelloP == true)){
-        startTimer()
-    }
-
-}
-
-private fun playAudio(){
-    var mediaPlayer : MediaPlayer? = null
-    val audioUrl = "https://freesound.org/s/489598/"
-    mediaPlayer = MediaPlayer()
-    mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_ALARM)
-
-    try {
-        mediaPlayer!!.setDataSource(audioUrl)
-        mediaPlayer!!.prepare()
-        mediaPlayer!!.start()
-    }catch (e: IOException){
-        e.printStackTrace()
-    }
-}
-private fun startTimer(){
-    var timeCountDown: CountDownTimer? = null
-    timeCountDown = object : CountDownTimer(
-        (30*1000).toLong(),1000)
-    {
-        override fun onTick(p0: Long) {
-        }
-
-        override fun onFinish() {
-            playAudio()
-        }
-    }.start()
-}
-*/
