@@ -56,7 +56,7 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
     var sblocco by remember{ mutableStateOf(false) }
     var sbloccoPP by remember{ mutableStateOf(0L) }
     var sbloccoPG by remember{ mutableStateOf(0L) }
-    //var codiceTastierino by remember{ mutableStateOf("") }
+    var codiceTastierino by remember{ mutableStateOf("") }
     var codiceDB= database.child("ordini").child(viewModel.ordineSelezionato).child("CodiceSbloccoUtente")
     var codice by remember {
         mutableStateOf("")
@@ -70,7 +70,7 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
         }
     })
 
-    viewModel.variabili.variabiliPath.addValueEventListener(object : ValueEventListener {
+    database.child("variabili").addValueEventListener(object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) { //fa una foto al db in quel momento e la mette in dataSnapshot
             viewModel.variabili.CodeP=dataSnapshot.child("CodeP").value.toString()
             viewModel.variabili.CodeG=dataSnapshot.child("CodeG").value.toString()
@@ -113,12 +113,12 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
             if(viewModel.variabili.PPAperta==1L && sbloccoPP==0L){
                 sbloccoPP=1L
             }
-            /*if(codiceTastierino!=viewModel.variabili.CodiceTastierino && viewModel.variabili.CodiceTastierino!="0000"){
+            if(codiceTastierino!=viewModel.variabili.CodiceTastierino && viewModel.variabili.CodiceTastierino!="0000"){
                 confrontoCodici(viewModel.variabili)
                 codiceTastierino=viewModel.variabili.CodiceTastierino
-            }*/
+            }
 
-            confrontoCodici(viewModel.variabili)
+            //confrontoCodici(viewModel.variabili)
 
 
         }
@@ -246,5 +246,5 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
         }
 
     }
-    cambioVariabili(variabili = viewModel.variabili)
+    //cambioVariabili(variabili = viewModel.variabili)
 }

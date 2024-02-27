@@ -56,7 +56,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import it.polito.database.screens.GestioneArduino
-import it.polito.database.screens.cambioVariabili
 import it.polito.database.ui.theme.Blue40
 import it.polito.database.ui.theme.Screen
 import it.polito.database.ui.theme.Yellow40
@@ -82,7 +81,46 @@ class AppViewModel: ViewModel() {
     var tot = 0.00
     var carrello=MutableLiveData<Map<String, Int>>(emptyMap())
 
-    var variabili= GestioneArduino("", "","0000",0L,0L,0L,false, false, 0L)
+
+    var variabili=GestioneArduino("",
+        "",
+        "0000",
+        0L,
+        0L,
+        0L,
+        false,
+        false,
+        0L)
+    /*val variabili = MutableLiveData<GestioneArduino>()
+
+    init {
+        // Inizializza variabili con i valori desiderati
+        variabili.value = GestioneArduino(
+            "",
+            "",
+            "0000",
+            0L,
+            0L,
+            0L,
+            false,
+            false,
+            0L
+        )
+    }*/
+
+    /*var variabili = MutableLiveData<GestioneArduino>().apply {
+        value = GestioneArduino(
+            CodeG = "",
+            CodeP = "",
+            Sblocco = 0L,
+            CodiceErrato = 0L,
+            PGAperta = 0L,
+            PPAperta = 0L,
+            CodiceTastierino = "0000",
+            SportelloG = false,
+            SportelloP = false
+        )
+    }*/
 
     var listaPalestre = listOf<String>(
         "McFit Via San Paolo, 25/Torino (TO), 10141",
@@ -157,7 +195,7 @@ fun HomePage(viewModel: AppViewModel, navController: NavController){
 
 
     }
-    cambioVariabili(viewModel.variabili)
+    //cambioVariabili(viewModel.variabili)
 
 
 }

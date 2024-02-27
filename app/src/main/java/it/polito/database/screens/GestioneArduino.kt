@@ -1,8 +1,5 @@
 package it.polito.database.screens
 
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 import it.polito.database.AppViewModel
 import it.polito.database.database
 import kotlin.random.Random
@@ -34,7 +31,7 @@ data class GestioneArduino(
 
 
 }
-fun cambioVariabili(variabili: GestioneArduino){
+/*fun cambioVariabili(variabili: GestioneArduino){
 
     variabili.variabiliPath.addValueEventListener(object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) { //fa una foto al db in quel momento e la mette in dataSnapshot
@@ -66,33 +63,37 @@ fun cambioVariabili(variabili: GestioneArduino){
             println("Errore nel leggere i dati dal database: ${databaseError.message}")
         }
     })
-}
+}*/
 
 fun confrontoCodici(variabili: GestioneArduino){
-    if(variabili.CodiceTastierino==variabili.CodeP){
-        variabili.Sblocco=0L
-        variabili.PPAperta=1L
-        variabili.CodeP=""
-        variabili.CodiceTastierino="0000"
-        variabili.CodiceErrato=0L
-        writeVariables(variabili)
 
-    }
-    else if(variabili.CodiceTastierino==variabili.CodeG){
-        variabili.Sblocco=0L
-        variabili.PGAperta=1L
-        variabili.CodeG=""
-        variabili.CodiceTastierino="0000"
-        variabili.CodiceErrato=0L
-        writeVariables(variabili)
-    }
-    if(variabili.CodiceTastierino!="0000" ){
-        if(variabili.CodiceTastierino!= variabili.CodeG || variabili.CodiceTastierino!= variabili.CodeP){
-            variabili.CodiceErrato=1L
+        if(variabili.CodiceTastierino==variabili.CodeP){
+            variabili.Sblocco=0L
+            variabili.PPAperta=1L
+            variabili.CodeP=""
+            database.child("variabili").child("CodiceTastierino").setValue("0000")
+            variabili.CodiceTastierino="0000"
+            variabili.CodiceErrato=0L
+            writeVariables(variabili)
+
+        }
+        else if(variabili.CodiceTastierino==variabili.CodeG){
+            variabili.Sblocco=0L
+            variabili.PGAperta=1L
+            variabili.CodeG=""
+            database.child("variabili").child("CodiceTastierino").setValue("0000")
+            variabili.CodiceTastierino="0000"
+            variabili.CodiceErrato=0L
             writeVariables(variabili)
         }
+        else if(variabili.CodiceTastierino!= variabili.CodeG || variabili.CodiceTastierino!= variabili.CodeP){
+            if(variabili.CodiceTastierino!="0000") {
+                variabili.CodiceErrato = 1L
+                writeVariables(variabili)
+            }
+        }
 
-    }
+
 
 }
 
