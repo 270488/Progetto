@@ -523,7 +523,7 @@ fun aggiungiOrdine(viewModel: AppViewModel): Boolean {
     }
     else if(numeroProdotti<=2 && !viewModel.variabili.SportelloG){
         viewModel.variabili.SportelloG=true
-        viewModel.variabili.CodeP=codiceSbloccoUtente
+        viewModel.variabili.CodeG=codiceSbloccoUtente
         ordini.child(nOrdine.toString()).child("stato").setValue(stato)
         ordini.child(nOrdine.toString()).child("uid").setValue(uid)
         ordini.child(nOrdine.toString()).child("Locker").setValue(locker)

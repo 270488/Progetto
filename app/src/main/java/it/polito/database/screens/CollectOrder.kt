@@ -162,38 +162,43 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
             println("SportelloP: "+viewModel.variabili.SportelloP)
             println("SportelloG: "+viewModel.variabili.SportelloG)
 
-            if(viewModel.variabili.PGAperta==0L && sbloccoPG==1L){ //La porta si chiude
-                sbloccoPG=0L
-                database.child("ordini").child(viewModel.ordineSelezionato).child("stato").setValue("ritirato")
-                database.child("utenti").child(viewModel.uid).child("ordini").child(viewModel.ordineSelezionato).setValue("ritirato")
-                viewModel.variabili.SportelloG=false;
-                writeVariables(viewModel.variabili)
-                navController.navigate(Screen.OrderDetails.route)
+            if(sblocco) {
+                if (viewModel.variabili.PGAperta == 0L && sbloccoPG == 1L) { //La porta si chiude
+                    sbloccoPG = 0L
+                    database.child("ordini").child(viewModel.ordineSelezionato).child("stato")
+                        .setValue("ritirato")
+                    database.child("utenti").child(viewModel.uid).child("ordini")
+                        .child(viewModel.ordineSelezionato).setValue("ritirato")
+                    viewModel.variabili.SportelloG = false;
+                    writeVariables(viewModel.variabili)
+                    navController.navigate(Screen.OrderDetails.route)
 
-            }
-            else if(viewModel.variabili.PGAperta==1L && sbloccoPG==0L){
-                audioPlayer.playAudioWithDelay(10000L, 10000L, viewModel)
-                sbloccoPG=1L
-            }
-            if(viewModel.variabili.PPAperta==0L && sbloccoPP==1L){ //La porta si chiude
-                sbloccoPP=0L
-                database.child("ordini").child(viewModel.ordineSelezionato).child("stato").setValue("ritirato")
-                database.child("utenti").child(viewModel.uid).child("ordini").child(viewModel.ordineSelezionato).setValue("ritirato")
-                viewModel.variabili.SportelloP=false;
-                writeVariables(viewModel.variabili)
-                navController.navigate(Screen.OrderDetails.route)
-            }
-            if(viewModel.variabili.PPAperta==1L && sbloccoPP==0L){
-                sbloccoPP=1L
-                openAlertDialog=true
-                audioPlayer.playAudioWithDelay(10000L, 10000L, viewModel)
-                if(viewModel.hoChiusoLoSportello==true){
-                    openAlertDialog=false
+                } else if (viewModel.variabili.PGAperta == 1L && sbloccoPG == 0L) {
+                    audioPlayer.playAudioWithDelay(10000L, 10000L, viewModel)
+                    sbloccoPG = 1L
                 }
-            }
-            if(codiceTastierino!=viewModel.variabili.CodiceTastierino && viewModel.variabili.CodiceTastierino!="0000"){
-                confrontoCodici(viewModel.variabili)
-                codiceTastierino=viewModel.variabili.CodiceTastierino
+                if (viewModel.variabili.PPAperta == 0L && sbloccoPP == 1L) { //La porta si chiude
+                    sbloccoPP = 0L
+                    database.child("ordini").child(viewModel.ordineSelezionato).child("stato")
+                        .setValue("ritirato")
+                    database.child("utenti").child(viewModel.uid).child("ordini")
+                        .child(viewModel.ordineSelezionato).setValue("ritirato")
+                    viewModel.variabili.SportelloP = false;
+                    writeVariables(viewModel.variabili)
+                    navController.navigate(Screen.OrderDetails.route)
+                }
+                if (viewModel.variabili.PPAperta == 1L && sbloccoPP == 0L) {
+                    sbloccoPP = 1L
+                    openAlertDialog = true
+                    audioPlayer.playAudioWithDelay(10000L, 10000L, viewModel)
+                    if (viewModel.hoChiusoLoSportello == true) {
+                        openAlertDialog = false
+                    }
+                }
+                if (codiceTastierino != viewModel.variabili.CodiceTastierino && viewModel.variabili.CodiceTastierino != "0000") {
+                    confrontoCodici(viewModel.variabili)
+                    codiceTastierino = viewModel.variabili.CodiceTastierino
+                }
             }
 
             //confrontoCodici(viewModel.variabili)
