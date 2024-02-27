@@ -81,7 +81,7 @@ class AppViewModel: ViewModel() {
     var quantita = 1
     var tot = 0.00
     var carrello=MutableLiveData<Map<String, Int>>(emptyMap())
-    var hoChiusoLoSportello =MutableLiveData<Boolean>(true)
+    var hoChiusoLoSportello =MutableLiveData(true)
 
     var variabili=GestioneArduino("",
         "",

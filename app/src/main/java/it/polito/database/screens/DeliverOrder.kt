@@ -1,6 +1,5 @@
 package it.polito.database.screens
 
-import android.util.Log
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -20,9 +19,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
@@ -66,7 +63,7 @@ fun DeliverOrder(viewModel: AppViewModel, navController: NavController) {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
             sp=dataSnapshot.value.toString()
             sportello = sp
-            Log.d("Verify", "Sportello : $sportello")
+            //Log.d("Verify", "Sportello : $sportello")
         }
 
         override fun onCancelled(databaseError: DatabaseError) {
@@ -208,7 +205,7 @@ fun DeliverOrder(viewModel: AppViewModel, navController: NavController) {
                 //sia per nodo ordini e utenti che corriere
                 // aggiorna variabili ( solo PGaperta e PPaperta)
 
-                if(sportello =="P" && !viewModel.variabili.SportelloP)
+                if(sportello =="P")
                 // sportello assegnato per l'ordine selezionato è P ed è libero
                 {
                    //viewModel.variabili.PPAperta=1L //apre la porta
@@ -224,9 +221,8 @@ fun DeliverOrder(viewModel: AppViewModel, navController: NavController) {
 
                         openAlertDialog=true
 
-                    }
-                }
-                else if(sportello =="G" && !viewModel.variabili.SportelloG)
+                }}
+                else if(sportello =="G")
                 {
                     //viewModel.variabili.PGAperta=1L //apre la porta
                     database.child("variabili").child("PGAperta").setValue(1L)
