@@ -487,6 +487,13 @@ fun aggiungiOrdine(viewModel: AppViewModel): Boolean {
     var codiceSbloccoUtente= generazioneCodiceCasuale()
     var codiceSbloccoFattorino= generazioneCodiceCasuale()
     var ordini=database.child("ordini")
+    var carrello=viewModel.carrello.value.orEmpty()
+
+    println("carrello: "+carrello.toString())
+
+    carrello.forEach{(item, qty)->
+        numeroProdotti+=qty
+    }
 
     var flag=false
 
@@ -550,7 +557,6 @@ fun aggiungiOrdine(viewModel: AppViewModel): Boolean {
         println("carrello: "+carrello.toString())
 
         carrello.forEach{(item, qty)->
-            numeroProdotti+=qty
             println("Prodotto: "+item+" Quantità: "+qty.toString())
             ordini.child(nOrdine.toString()).child("Prodotti").child(item).setValue(qty)
             eliminaDalCarrello(item = item, uid, viewModel)

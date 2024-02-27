@@ -38,6 +38,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -331,30 +332,37 @@ fun Cart(viewModel: AppViewModel, navController: NavController, modifier: Modifi
 fun aggiungiAlCarrello(item: String, id: String, qty: Int, viewModel: AppViewModel) {
     var items= database.child("utenti").child(id).child("carrello")
     val currentMap = viewModel.carrello.value.orEmpty()
-    val updatedMap = currentMap + (item to qty )
-    viewModel.carrello.value = updatedMap
+    if(!currentMap.containsKey(item)){
+        val updatedMap = currentMap + (item to qty )
+        viewModel.carrello.value = updatedMap
 
-    items.orderByKey().limitToLast(1).addListenerForSingleValueEvent(object : ValueEventListener {
-        override fun onDataChange(dataSnapshot: DataSnapshot) {
-            var lastKey = 0
-            if(dataSnapshot.exists()){
-                for (childSnapshot in dataSnapshot.children) {
-                    val i = childSnapshot.key?.toInt() ?: 0
-                    lastKey= i+1
+        items.orderByKey().limitToLast(1).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                var lastKey = 0
+                if(dataSnapshot.exists()){
+                    for (childSnapshot in dataSnapshot.children) {
+                        val i = childSnapshot.key?.toInt() ?: 0
+                        lastKey= i+1
+                    }
+
+
+                    database.child("utenti").child(id).child("carrello").child(lastKey.toString()).child("nome").setValue(item)
                 }
+                else{
+                    //val itemsMap = mapOf(lastKey.toString() to item)
+                    database.child("utenti").child(id).child("carrello").child(0.toString()).child("nome").setValue(item)
+                }
+                database.child("utenti").child(id).child("carrello").child(lastKey.toString()).child("qty").setValue(qty)
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("Errore nel leggere i dati dal database: ${databaseError.message}")
+            }
+        }
 
-                database.child("utenti").child(id).child("carrello").child(lastKey.toString()).child("nome").setValue(item)
-            }
-            else{
-                //val itemsMap = mapOf(lastKey.toString() to item)
-                database.child("utenti").child(id).child("carrello").child(0.toString()).child("nome").setValue(item)
-            }
-            database.child("utenti").child(id).child("carrello").child(lastKey.toString()).child("qty").setValue(qty)
-        }
-        override fun onCancelled(databaseError: DatabaseError) {
-            println("Errore nel leggere i dati dal database: ${databaseError.message}")
-        }
-    })}
+
+    )
+    }
+}
 
 fun eliminaDalCarrello(item: String, id: String, viewModel: AppViewModel){
     var items= database.child("utenti").child(id).child("carrello")
@@ -581,7 +589,7 @@ fun ItemCard(
 @Composable
 fun SelettoreQuantita(viewModel: AppViewModel, quantita: Long) {
     var count = quantita
-    // var count by remember { mutableIntStateOf(quantita.toInt()) } // TODO Cambiare valore iniziale con valore della quantità inserita e aggiornare vm e db di conseguenza (possiamo anche lasciarlo finto)
+    //var count by remember { mutableIntStateOf(quantita.toInt()) }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,

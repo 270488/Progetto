@@ -289,7 +289,6 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp, top = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Bottom
             ) {
                 Text(
@@ -298,14 +297,7 @@ fun ScrollableColumn(viewModel: AppViewModel, navController: NavController) {
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
-                Text(
-                    text = "Cerca", color = MaterialTheme.colorScheme.onPrimary,
-                    fontFamily = fontFamily,
-                    fontSize = 18.sp,
-                    textDecoration = TextDecoration.Underline,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.clickable { navController.navigate(Screen.Category.route) }
-                )
+
             }
             //Contiene i bottoni con i prodotti
             Spacer(modifier = Modifier.height(4.dp))
