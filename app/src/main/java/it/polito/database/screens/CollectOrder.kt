@@ -176,6 +176,12 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
                 } else if (viewModel.variabili.PGAperta == 1L && sbloccoPG == 0L) {
                     audioPlayer.playAudioWithDelay(10000L, 10000L, viewModel)
                     sbloccoPG = 1L
+                    if (viewModel.hoChiusoLoSportello.value == true) {
+                        openAlertDialog = false
+                    }
+                    else{
+                        openAlertDialog = true
+                    }
                 }
                 if (viewModel.variabili.PPAperta == 0L && sbloccoPP == 1L) { //La porta si chiude
                     sbloccoPP = 0L
@@ -189,10 +195,13 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
                 }
                 if (viewModel.variabili.PPAperta == 1L && sbloccoPP == 0L) {
                     sbloccoPP = 1L
-                    openAlertDialog = true
+
                     audioPlayer.playAudioWithDelay(10000L, 10000L, viewModel)
-                    if (viewModel.hoChiusoLoSportello == true) {
+                    if (viewModel.hoChiusoLoSportello.value == true) {
                         openAlertDialog = false
+                    }
+                    else{
+                        openAlertDialog = true
                     }
                 }
                 if (codiceTastierino != viewModel.variabili.CodiceTastierino && viewModel.variabili.CodiceTastierino != "0000") {

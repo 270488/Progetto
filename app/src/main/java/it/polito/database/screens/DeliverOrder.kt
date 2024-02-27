@@ -141,6 +141,7 @@ fun DeliverOrder(viewModel: AppViewModel, navController: NavController) {
                                 ),
                                 onClick = {
                                     openAlertDialog = false
+                                    navController.navigate(Screen.CorriereHome.route)
                                 }
                             ) {
                                 Text(
@@ -173,12 +174,13 @@ fun DeliverOrder(viewModel: AppViewModel, navController: NavController) {
                 .padding(horizontal = 20.dp)
         ) {
 
-            Button(onClick = { //TODO cambiare valori variabili di sblocco nel DB
+            Button(onClick = {
                 // controlla quale porta aprire, se è chiusa la apre ma sblocco resta a zero->
                 //non inserisce nessun codice
                 // se la porta da aperta passa a chiusa, cambio lo stato dell'ordine->
                 //sia per nodo ordini e utenti che corriere
                 // aggiorna variabili ( solo PGaperta e PPaperta)
+
                 if(sportello =="P" && !viewModel.variabili.SportelloP)
                 // sportello assegnato per l'ordine selezionato è P ed è libero
                 {
@@ -192,9 +194,9 @@ fun DeliverOrder(viewModel: AppViewModel, navController: NavController) {
 
                         //viewModel.variabili.SportelloP=true; //è occupato
                         //writeVariables(viewModel.variabili)
-                        // TOdo pop up conferma consegna e rimuovere ordine dalla lista del corriere
+
                         openAlertDialog=true
-                        navController.navigate(Screen.CorriereHome.route)
+
                     }
                 }
                 else if(sportello =="G" && !viewModel.variabili.SportelloG)
@@ -202,13 +204,13 @@ fun DeliverOrder(viewModel: AppViewModel, navController: NavController) {
                     //viewModel.variabili.PGAperta=1L //apre la porta
                     database.child("variabili").child("PGAperta").setValue(1L)
                     if(viewModel.variabili.PGAperta==0L){ //se la chiude
-                        navController.navigate(Screen.CorriereHome.route)
+
                         database.child("ordini").child(viewModel.ordineSelezionato).child("stato").setValue("consegnato")
                         database.child("utenti").child(viewModel.uid).child("ordini").child(viewModel.ordineSelezionato).setValue("consegnato")
                         viewModel.corriereState.value="consegnato"
                         database.child("variabili").child("SportelloG").setValue(true)
                         openAlertDialog=true
-                        navController.navigate(Screen.CorriereHome.route)
+
                         //viewModel.variabili.SportelloG=true; //è occupato
                         //writeVariables(viewModel.variabili)
                     }

@@ -20,12 +20,13 @@ class AudioPlayer(private val context: Context) {
 
         startHandler?.postDelayed({
             mediaPlayer?.start()
+            viewModel.hoChiusoLoSportello.value=false
 
         }, delayMilliseconds)
 
         stopHandler?.postDelayed({
             stopAudio()
-            viewModel.hoChiusoLoSportello=true
+            viewModel.hoChiusoLoSportello.value=true
         }, delayMilliseconds + stopDelayMilliseconds)
     }
 
