@@ -68,7 +68,8 @@ fun MainScreen(viewModel: AppViewModel){
         Screen.CorriereProfile.route,
         Screen.CorriereDetails.route,
         Screen.AccessoESicurezza.route,
-        Screen.PaeseELingua.route
+        Screen.PaeseELingua.route,
+        Screen.Checkout.route
     )
         Scaffold(
 
