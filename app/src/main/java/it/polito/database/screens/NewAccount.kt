@@ -1,5 +1,6 @@
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -33,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -276,7 +278,15 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity,
                     fontSize = 18.sp,
                     color = Color.Black)
             )
-
+            Text(
+                text = "La password deve essere lunga almeno 6 caratteri.",
+                color = MaterialTheme.colorScheme.onSecondary,
+                fontSize = 14.sp,
+                fontFamily = fontFamily,
+                fontWeight = FontWeight.Normal,
+                fontStyle =FontStyle.Italic,
+                modifier = Modifier.align(CenterHorizontally)
+            )
             Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(
@@ -320,7 +330,7 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity,
                 )
 
         Spacer(modifier = Modifier.height(24.dp))
-
+            val ctx = LocalContext.current
         Button(
             modifier = Modifier
                 .fillMaxWidth()
@@ -332,63 +342,69 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity,
                 containerColor = MaterialTheme.colorScheme.secondary
             ),
             onClick = {
-                if(password.value == confermaPassword.value) {
-                    val user = User(
-                        nome = nome.value.text.trim(),
-                        cognome = cognome.value.text.trim(),
-                        city = selectedCity.value?.name ?: "",
-                        gender = selectedGender.value?.name ?: "",
-                        email = email.value.text.trim(),
-                        username = username.value.text.trim(),
-                        password = password.value.text.trim(),
-                        preferiti = emptyList(),
-                        resi = emptyList(),
-                        ordini = emptyList()
-                    )
+                if(nome.value==null||selectedCity.value==null||selectedGender.value==null||
+                    email.value==null||username.value==null || password.value==null||cognome.value==null){
+                    Toast.makeText(ctx,"Per favore, compila tutti i campi contrassegnati",Toast.LENGTH_SHORT).show()
+                } else {
 
-                    auth.createUserWithEmailAndPassword(
-                        user.email,
-                        user.password
-                    ).addOnCompleteListener(context) { task ->
-                        if (task.isSuccessful) {
-                            //TODO finire il controllo sul match delle password
-                            Log.d("AUTH", "Registration Success")
-                            val userId = task.result?.user?.uid
-                            if (userId != null) {
-                                val databaseReference = FirebaseDatabase.getInstance().getReference("utenti")
-                                val userReference = databaseReference.child(userId)
+                    if (password.value == confermaPassword.value) {
+                        val user = User(
+                            nome = nome.value.text.trim(),
+                            cognome = cognome.value.text.trim(),
+                            city = selectedCity.value?.name ?: "",
+                            gender = selectedGender.value?.name ?: "",
+                            email = email.value.text.trim(),
+                            username = username.value.text.trim(),
+                            password = password.value.text.trim(),
+                            preferiti = emptyList(),
+                            resi = emptyList(),
+                            ordini = emptyList()
+                        )
 
-                                userReference.child("id").setValue(userId)
-                                userReference.child("nome").setValue(user.nome)
-                                userReference.child("cognome").setValue(user.cognome)
-                                userReference.child("city").setValue(user.city)
-                                userReference.child("gender").setValue(user.gender)
-                                userReference.child("email").setValue(user.email)
-                                userReference.child("username").setValue(user.username)
-                                userReference.child("password").setValue(user.password)
+                        auth.createUserWithEmailAndPassword(
+                            user.email,
+                            user.password
+                        ).addOnCompleteListener(context) { task ->
+                            if (task.isSuccessful) {
+                                //TODO finire il controllo sul match delle password
+                                Log.d("AUTH", "Registration Success")
+                                val userId = task.result?.user?.uid
+                                if (userId != null) {
+                                    val databaseReference =
+                                        FirebaseDatabase.getInstance().getReference("utenti")
+                                    val userReference = databaseReference.child(userId)
 
-                                auth.signInWithEmailAndPassword(
-                                    user.email,
-                                    user.password
-                                ).addOnCompleteListener(context) { signInTask ->
-                                    if (signInTask.isSuccessful) {
-                                        Log.d("AUTH", "Login Success")
-                                        navController.navigate(Screen.Home.route)
-                                    } else {
-                                        Log.d("AUTH", "Login Failed: ${signInTask.exception}")
+                                    userReference.child("id").setValue(userId)
+                                    viewModel.uid=userId
+                                    userReference.child("nome").setValue(user.nome)
+                                    userReference.child("cognome").setValue(user.cognome)
+                                    userReference.child("city").setValue(user.city)
+                                    userReference.child("gender").setValue(user.gender)
+                                    userReference.child("email").setValue(user.email)
+                                    userReference.child("username").setValue(user.username)
+                                    userReference.child("password").setValue(user.password)
+
+                                    auth.signInWithEmailAndPassword(
+                                        user.email,
+                                        user.password
+                                    ).addOnCompleteListener(context) { signInTask ->
+                                        if (signInTask.isSuccessful) {
+                                            Log.d("AUTH", "Login Success")
+                                            navController.navigate(Screen.Home.route)
+                                        } else {
+                                            Log.d("AUTH", "Login Failed: ${signInTask.exception}")
+                                        }
                                     }
                                 }
+                            } else {
+                                Log.e("AUTH", "Registration Failed: ${task.exception?.message}")
                             }
-                        } else {
-                            Log.e("AUTH", "Registration Failed: ${task.exception?.message}")
                         }
+                    } else {
+                        Toast.makeText(ctx,"Le password non coincidono",Toast.LENGTH_SHORT).show()
+                        Log.e("AUTH", "Passwords don't match")
                     }
                 }
-                else{
-                    // Alert pop-up
-                    Log.e("AUTH", "Passwords don't match")
-                }
-
             })
         {
             Text(
