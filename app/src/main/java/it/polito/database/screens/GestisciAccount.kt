@@ -154,24 +154,42 @@ fun Edit(navController: NavHostController) {
                                     Text(
                                         modifier = Modifier.fillMaxWidth(),
                                         text = buildAnnotatedString {
-                                            append("Sei sicuro di voler uscire?\n")
+                                            append("Sei sicuro di voler uscire?")
                                         },
-                                        fontSize = 24.sp,
+                                        fontSize = 22.sp,
                                         color = Color.White,
                                         fontWeight = FontWeight.Bold,
                                         textAlign = TextAlign.Center,
                                         fontFamily = fontFamily,
                                     )
 
-                                    Spacer(modifier = Modifier.height(22.dp))
+                                    Spacer(modifier = Modifier.height(16.dp))
                                     Row(
                                         horizontalArrangement = Arrangement.SpaceBetween,
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .padding(horizontal = 12.dp)
                                     ) {
                                         TextButton(
-                                            modifier = Modifier.width(135.dp),
+                                            modifier = Modifier.width(146.dp),
+                                            shape = RoundedCornerShape(3.dp),
+                                            colors = ButtonDefaults.buttonColors(
+                                                containerColor = MaterialTheme.colorScheme.errorContainer,
+                                                contentColor = MaterialTheme.colorScheme.onErrorContainer
+                                            ),
+                                            onClick = {
+                                                openAlertDialog = false
+                                            }
+                                        ) {
+                                            Text(
+                                                text = "Annulla",
+                                                fontFamily = fontFamily,
+                                                fontSize = 16.sp,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        }
+
+                                        TextButton(
+                                            modifier = Modifier.width(146.dp),
                                             shape = RoundedCornerShape(3.dp),
                                             colors = ButtonDefaults.buttonColors(
                                                 containerColor = MaterialTheme.colorScheme.tertiary,
@@ -185,25 +203,7 @@ fun Edit(navController: NavHostController) {
                                             Text(
                                                 text = "Si, voglio uscire",
                                                 fontFamily = fontFamily,
-                                                fontSize = 18.sp,
-                                                fontWeight = FontWeight.Bold
-                                            )
-                                        }
-                                        TextButton(
-                                            modifier = Modifier.width(135.dp),
-                                            shape = RoundedCornerShape(3.dp),
-                                            colors = ButtonDefaults.buttonColors(
-                                                containerColor = MaterialTheme.colorScheme.errorContainer,
-                                                contentColor = MaterialTheme.colorScheme.onErrorContainer
-                                            ),
-                                            onClick = {
-                                                openAlertDialog = false
-                                            }
-                                        ) {
-                                            Text(
-                                                text = "Annulla",
-                                                fontFamily = fontFamily,
-                                                fontSize = 18.sp,
+                                                fontSize = 16.sp,
                                                 fontWeight = FontWeight.Bold
                                             )
                                         }
