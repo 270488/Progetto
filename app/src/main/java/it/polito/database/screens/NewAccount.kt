@@ -342,68 +342,77 @@ fun NewAccount(navController: NavHostController,context: AuthenticationActivity,
                 containerColor = MaterialTheme.colorScheme.secondary
             ),
             onClick = {
-                if(nome.value==null||selectedCity.value==null||selectedGender.value==null||
+                if(nome.value==null||selectedGender.value==null||
                     email.value==null||username.value==null || password.value==null||cognome.value==null){
                     Toast.makeText(ctx,"Per favore, compila tutti i campi contrassegnati",Toast.LENGTH_SHORT).show()
-                } else {
+                }
+                else {
+                    if (selectedCity.value == null){
+                        Toast.makeText(ctx,"Seleziona la città",Toast.LENGTH_SHORT).show()
+                    }
+                    else{
+                        if (password.value == confermaPassword.value) {
+                            val user = User(
+                                nome = nome.value.text.trim(),
+                                cognome = cognome.value.text.trim(),
+                                city = selectedCity.value?.name ?: "",
+                                gender = selectedGender.value?.name ?: "",
+                                email = email.value.text.trim(),
+                                username = username.value.text.trim(),
+                                password = password.value.text.trim(),
+                                preferiti = emptyList(),
+                                resi = emptyList(),
+                                ordini = emptyList()
+                            )
 
-                    if (password.value == confermaPassword.value) {
-                        val user = User(
-                            nome = nome.value.text.trim(),
-                            cognome = cognome.value.text.trim(),
-                            city = selectedCity.value?.name ?: "",
-                            gender = selectedGender.value?.name ?: "",
-                            email = email.value.text.trim(),
-                            username = username.value.text.trim(),
-                            password = password.value.text.trim(),
-                            preferiti = emptyList(),
-                            resi = emptyList(),
-                            ordini = emptyList()
-                        )
+                            auth.createUserWithEmailAndPassword(
+                                user.email,
+                                user.password
+                            ).addOnCompleteListener(context) { task ->
+                                if (task.isSuccessful) {
+                                    //TODO finire il controllo sul match delle password
+                                    Log.d("AUTH", "Registration Success")
+                                    val userId = task.result?.user?.uid
+                                    if (userId != null) {
+                                        val databaseReference =
+                                            FirebaseDatabase.getInstance().getReference("utenti")
+                                        val userReference = databaseReference.child(userId)
 
-                        auth.createUserWithEmailAndPassword(
-                            user.email,
-                            user.password
-                        ).addOnCompleteListener(context) { task ->
-                            if (task.isSuccessful) {
-                                //TODO finire il controllo sul match delle password
-                                Log.d("AUTH", "Registration Success")
-                                val userId = task.result?.user?.uid
-                                if (userId != null) {
-                                    val databaseReference =
-                                        FirebaseDatabase.getInstance().getReference("utenti")
-                                    val userReference = databaseReference.child(userId)
+                                        userReference.child("id").setValue(userId)
+                                        viewModel.uid = userId
+                                        userReference.child("nome").setValue(user.nome)
+                                        userReference.child("cognome").setValue(user.cognome)
+                                        userReference.child("city").setValue(user.city)
+                                        userReference.child("gender").setValue(user.gender)
+                                        userReference.child("email").setValue(user.email)
+                                        userReference.child("username").setValue(user.username)
+                                        userReference.child("password").setValue(user.password)
 
-                                    userReference.child("id").setValue(userId)
-                                    viewModel.uid=userId
-                                    userReference.child("nome").setValue(user.nome)
-                                    userReference.child("cognome").setValue(user.cognome)
-                                    userReference.child("city").setValue(user.city)
-                                    userReference.child("gender").setValue(user.gender)
-                                    userReference.child("email").setValue(user.email)
-                                    userReference.child("username").setValue(user.username)
-                                    userReference.child("password").setValue(user.password)
-
-                                    auth.signInWithEmailAndPassword(
-                                        user.email,
-                                        user.password
-                                    ).addOnCompleteListener(context) { signInTask ->
-                                        if (signInTask.isSuccessful) {
-                                            Log.d("AUTH", "Login Success")
-                                            navController.navigate(Screen.Home.route)
-                                        } else {
-                                            Log.d("AUTH", "Login Failed: ${signInTask.exception}")
+                                        auth.signInWithEmailAndPassword(
+                                            user.email,
+                                            user.password
+                                        ).addOnCompleteListener(context) { signInTask ->
+                                            if (signInTask.isSuccessful) {
+                                                Log.d("AUTH", "Login Success")
+                                                navController.navigate(Screen.Home.route)
+                                            } else {
+                                                Log.d(
+                                                    "AUTH",
+                                                    "Login Failed: ${signInTask.exception}"
+                                                )
+                                            }
                                         }
                                     }
+                                } else {
+                                    Log.e("AUTH", "Registration Failed: ${task.exception?.message}")
                                 }
-                            } else {
-                                Log.e("AUTH", "Registration Failed: ${task.exception?.message}")
                             }
+                        } else {
+                            Toast.makeText(ctx, "Le password non coincidono", Toast.LENGTH_SHORT)
+                                .show()
+                            Log.e("AUTH", "Passwords don't match")
                         }
-                    } else {
-                        Toast.makeText(ctx,"Le password non coincidono",Toast.LENGTH_SHORT).show()
-                        Log.e("AUTH", "Passwords don't match")
-                    }
+                }
                 }
             })
         {
