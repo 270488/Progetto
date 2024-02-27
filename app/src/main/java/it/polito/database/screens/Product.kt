@@ -1,6 +1,5 @@
 package it.polito.database.screens
 
-import android.R.attr
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
@@ -8,8 +7,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTransformGestures
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,11 +20,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
@@ -35,7 +30,6 @@ import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
@@ -43,16 +37,16 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProgressIndicatorDefaults
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -60,44 +54,34 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.ConstraintSet
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.gowtham.ratingbar.RatingBar
+import com.gowtham.ratingbar.RatingBarStyle
+import com.gowtham.ratingbar.StepSize
 import it.polito.database.AppViewModel
 import it.polito.database.FindUrl
 import it.polito.database.database
 import it.polito.database.ui.theme.Blue20
-import it.polito.database.ui.theme.Blue40
 import it.polito.database.ui.theme.Red20
 import it.polito.database.ui.theme.Red40
 import it.polito.database.ui.theme.Screen
 import it.polito.database.ui.theme.Yellow40
-import it.polito.database.ui.theme.Yellow60
 import it.polito.database.ui.theme.fontFamily
-import com.gowtham.ratingbar.RatingBarStyle
-import com.gowtham.ratingbar.StepSize
-import it.polito.database.R
 
 
 @SuppressLint("RememberReturnType")
@@ -355,11 +339,14 @@ fun ProductDetail(viewModel: AppViewModel, navController: NavController) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ){
+                    var clicked by remember {
+                        mutableStateOf(false)
+                    }
                     Button(
                         onClick = {
                             Log.d("quantità selezionata: ", viewModel.quantita.toString())
                             aggiungiAlCarrello(item = nome, id = id, qty = viewModel.quantita, viewModel)
-                            navController.navigate(Screen.Cart.route)
+                            clicked = true
                         },
                         shape = RoundedCornerShape(3.dp),
                         modifier = Modifier
@@ -378,6 +365,7 @@ fun ProductDetail(viewModel: AppViewModel, navController: NavController) {
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.offset(x = 0.dp, y = (-2).dp),
                         )
+                        if(clicked==true)  MySnackBar(navController = navController, viewModel = viewModel, nome, id)
                     }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
@@ -554,4 +542,86 @@ fun QtySelection(viewModel: AppViewModel) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MySnackBar(navController: NavController, viewModel: AppViewModel, nome: String, id: String) {
 
+    val message = "Aggiunto al carrello"
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(key1 = message)
+    {
+        if (message.isNotEmpty()) {
+            snackbarHostState.showSnackbar(message)
+        }
+    }
+
+    SnackbarHost(hostState = snackbarHostState) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        )
+        {
+            Button(onClick = {
+            navController.navigate(Screen.Cart.route)
+        }) {
+            Text(text = "Vai al carrello",
+                color = Color.Black )
+        }
+
+            Text(
+                modifier = Modifier
+                    .padding(4.dp)
+                    .fillMaxWidth()
+                    .padding(vertical = 30.dp),
+                text = message,
+                color = Color.Black,
+                fontSize = 18.sp,
+                textAlign = TextAlign.Center
+            )
+
+        }
+    }
+}
+
+/*
+    @OptIn(ExperimentalMaterial3Api::class)
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+    @Composable
+    fun DemoSnackBar() {
+        val snackBarHostState = remember {
+            SnackbarHostState()
+        }
+        val coroutineScope = rememberCoroutineScope()
+        Scaffold(content = {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Button(onClick = {
+                    coroutineScope.launch {
+
+                        val snackBarResult = snackBarHostState.showSnackbar(
+                            message = "Snackbar is here",
+                            actionLabel = "Undo",
+                            duration = SnackbarDuration.Short
+                        )
+                        when (snackBarResult) {
+                            SnackbarResult.ActionPerformed -> {
+                                Log.d("Snackbar", "Action Performed")
+                            }
+                            else -> {
+                                Log.d("Snackbar", "Snackbar dismissed")
+                            }
+                        }
+                    }
+
+                }) {
+                    Text(text = "Show Snack Bar", color = Color.White)
+                }
+            }
+        }, snackbarHost = { SnackbarHost(hostState = snackBarHostState) })
+    }
+*/
