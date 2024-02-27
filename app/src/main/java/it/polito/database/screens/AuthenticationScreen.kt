@@ -1,6 +1,7 @@
 package it.polito.database.screens
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -29,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -148,7 +150,7 @@ fun AuthenticationScreen(navController: NavHostController,context: Authenticatio
             )
 
             Spacer(modifier = Modifier.height(26.dp))
-
+            var ctx = LocalContext.current
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -181,6 +183,8 @@ fun AuthenticationScreen(navController: NavHostController,context: Authenticatio
                                     viewModel.uid=userId}
 
                             } else {
+                                Toast.makeText(ctx,"Email o password errate",
+                                    Toast.LENGTH_SHORT).show()
                                 Log.d("AUTH", "Failed: ${task.exception}")
                                 //errore login fallito
                             }
