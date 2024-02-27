@@ -134,7 +134,7 @@ fun CorriereHome(viewModel: AppViewModel, navController: NavController) {
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .layoutId("menuOptions")
-                            .width(165.dp)
+                            .width(200.dp)
                             .height(50.dp)
                             .border(
                                 BorderStroke(2.dp, Color.Black),
