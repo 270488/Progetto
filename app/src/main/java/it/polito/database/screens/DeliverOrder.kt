@@ -1,6 +1,12 @@
 package it.polito.database.screens
 
 import android.util.Log
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -11,6 +17,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -32,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.buildAnnotatedString
@@ -165,16 +173,35 @@ fun DeliverOrder(viewModel: AppViewModel, navController: NavController) {
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary)
-            .verticalScroll(rememberScrollState())
-            .padding(top = 90.dp, bottom = 110.dp)
+            .padding(top = 90.dp, bottom = 130.dp, start = 20.dp, end = 20.dp)
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .padding(horizontal = 20.dp)
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
         ) {
 
-            Button(onClick = {
+            val scaleAnimation = rememberInfiniteTransition(label = "")
+            val scale by scaleAnimation.animateFloat(
+                initialValue = 1.15f,
+                targetValue = 0.95f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(
+                        durationMillis = 1800,
+                        easing = FastOutSlowInEasing
+                    ),
+                    repeatMode = RepeatMode.Reverse
+                ), label = ""
+            )
+            Button(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .scale(scale),
+                shape = RoundedCornerShape(3.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.tertiary,
+                    contentColor = MaterialTheme.colorScheme.onTertiary
+                ),
+                onClick = {
                 // controlla quale porta aprire, se è chiusa la apre ma sblocco resta a zero->
                 //non inserisce nessun codice
                 // se la porta da aperta passa a chiusa, cambio lo stato dell'ordine->
@@ -220,7 +247,13 @@ fun DeliverOrder(viewModel: AppViewModel, navController: NavController) {
 
 
             }) {
-                Text(text = "Sblocca Locker")
+                Text(
+                    text = "SBLOCCA LOCKER",
+                    fontFamily = fontFamily,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.offset(x = 0.dp, y = (-2).dp)
+                )
             }
         }
 
