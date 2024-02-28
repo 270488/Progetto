@@ -360,7 +360,7 @@ fun OrdineCard(ordine: String, viewModel: AppViewModel, navController: NavContro
                         if (isLoading)
                             CircularProgressIndicator(
                                 modifier = Modifier
-                                    .size(30.dp),
+                                    .size(32.dp),
                                 color = MaterialTheme.colorScheme.tertiary,
                                 strokeWidth = ProgressIndicatorDefaults.CircularStrokeWidth
                             )

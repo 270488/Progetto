@@ -25,6 +25,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -32,6 +33,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -335,15 +337,32 @@ fun resiCard(numeroReso: String, viewModel: AppViewModel, navController: NavCont
         {
             Column(){
                 Row(){
-                    AsyncImage(
-                        model = url,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(15.dp))
-                            .height(90.dp)
-                            .width(150.dp),
-                        contentScale = ContentScale.Crop
-                    )
+
+                    var isLoading by remember { mutableStateOf(true) }
+
+                    Box(contentAlignment = Alignment.Center,
+                        modifier = Modifier.width(150.dp).height(90.dp))
+                    {
+                        if (isLoading)
+                            CircularProgressIndicator(
+                                modifier = Modifier
+                                    .size(32.dp),
+                                color = MaterialTheme.colorScheme.tertiary,
+                                strokeWidth = ProgressIndicatorDefaults.CircularStrokeWidth
+                            )
+
+                        AsyncImage(
+                            model = url,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(15.dp))
+                                .height(90.dp)
+                                .width(150.dp),
+                            contentScale = ContentScale.Crop,
+                            onLoading = { isLoading = true },
+                            onSuccess = { isLoading = false },
+                        )
+                    }
                     Spacer(modifier = Modifier.width(12.dp))
                     Column(
                         modifier = Modifier
