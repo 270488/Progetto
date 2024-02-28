@@ -227,7 +227,7 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
         }
     })
     LaunchedEffect(audioShouldRun){
-        audioPlayer.playAudioWithDelay(3000, 10000, viewModel, audioShouldRun)
+        audioPlayer.playAudioWithDelay(3000, 5000, viewModel, audioShouldRun)
 
     }
     Column (horizontalAlignment = Alignment.CenterHorizontally,
