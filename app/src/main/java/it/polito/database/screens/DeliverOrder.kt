@@ -57,6 +57,7 @@ import it.polito.database.ui.theme.fontFamily
 @Composable
 fun DeliverOrder(viewModel: AppViewModel, navController: NavController) {
     var sportello by remember { mutableStateOf("") }
+
     var ordine=database.child("ordini").child(viewModel.ordineSelezionato).child("Sportello")
     ordine.addValueEventListener(object: ValueEventListener {
         var sp=""

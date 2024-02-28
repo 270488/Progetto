@@ -13,7 +13,7 @@ class AudioPlayer(private val context: Context) {
     private var startHandler: Handler? = null
     private var stopHandler: Handler? = null
 
-    fun playAudioWithDelay(delayMilliseconds: Long, stopDelayMilliseconds: Long,viewModel: AppViewModel) {
+    fun playAudioWithDelay(delayMilliseconds: Long, stopDelayMilliseconds: Long,viewModel: AppViewModel, audioPlayerShouldRun: Boolean) {
         mediaPlayer = MediaPlayer.create(context, R.raw.alarm)
         startHandler = Handler(Looper.getMainLooper())
         stopHandler = Handler(Looper.getMainLooper())
@@ -21,6 +21,9 @@ class AudioPlayer(private val context: Context) {
         startHandler?.postDelayed({
             mediaPlayer?.start()
             viewModel.hoChiusoLoSportello.value=false
+            if(!audioPlayerShouldRun){
+                stopAudio()
+            }
 
         }, delayMilliseconds)
 

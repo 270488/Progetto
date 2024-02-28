@@ -66,7 +66,9 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
     var codiceDB= database.child("ordini").child(viewModel.ordineSelezionato).child("CodiceSbloccoUtente")
     var codice by remember {
         mutableStateOf("")
+
     }
+    var audioShouldRun by remember { mutableStateOf(false) }
     val audioPlayer = AudioPlayer(LocalContext.current)
     codiceDB.addValueEventListener(object: ValueEventListener{
         override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -170,11 +172,12 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
                     database.child("utenti").child(viewModel.uid).child("ordini")
                         .child(viewModel.ordineSelezionato).setValue("ritirato")
                     viewModel.variabili.SportelloG = false;
+                    audioShouldRun=false
                     writeVariables(viewModel.variabili)
                     navController.navigate(Screen.OrderDetails.route)
 
                 } else if (viewModel.variabili.PGAperta == 1L && sbloccoPG == 0L) {
-                    audioPlayer.playAudioWithDelay(10000L, 10000L, viewModel)
+                    audioShouldRun=true
                     sbloccoPG = 1L
                     openAlertDialog = viewModel.hoChiusoLoSportello.value != true
                 }
@@ -185,19 +188,22 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
                     database.child("utenti").child(viewModel.uid).child("ordini")
                         .child(viewModel.ordineSelezionato).setValue("ritirato")
                     viewModel.variabili.SportelloP = false;
+                    audioShouldRun=false
                     writeVariables(viewModel.variabili)
                     navController.navigate(Screen.OrderDetails.route)
                 }
                 if (viewModel.variabili.PPAperta == 1L && sbloccoPP == 0L) {
                     sbloccoPP = 1L
-
-                    audioPlayer.playAudioWithDelay(10000L, 10000L, viewModel)
+                    audioShouldRun=true
                     openAlertDialog = viewModel.hoChiusoLoSportello.value != true
                 }
                 if (codiceTastierino != viewModel.variabili.CodiceTastierino && viewModel.variabili.CodiceTastierino != "0000") {
                     confrontoCodici(viewModel.variabili)
                     codiceTastierino = viewModel.variabili.CodiceTastierino
                 }
+
+                audioPlayer.playAudioWithDelay(10000, 10000, viewModel, audioShouldRun)
+
             }
 
             //confrontoCodici(viewModel.variabili)
