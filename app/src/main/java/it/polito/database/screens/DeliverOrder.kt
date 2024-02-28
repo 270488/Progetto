@@ -149,7 +149,7 @@ fun DeliverOrder(viewModel: AppViewModel, navController: NavController) {
                             fontFamily = fontFamily,
                         )
                         Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
+                            horizontalArrangement = Arrangement.Center,
                             modifier = Modifier
                                 .fillMaxWidth()
                         ) {
