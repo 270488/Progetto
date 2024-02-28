@@ -57,6 +57,9 @@ import it.polito.database.ui.theme.fontFamily
 @Composable
 fun DeliverOrder(viewModel: AppViewModel, navController: NavController) {
     var sportello by remember { mutableStateOf("") }
+    var utenteId by remember {
+        mutableStateOf("")
+    }
 
     var ordine=database.child("ordini").child(viewModel.ordineSelezionato).child("Sportello")
     ordine.addValueEventListener(object: ValueEventListener {
@@ -65,6 +68,18 @@ fun DeliverOrder(viewModel: AppViewModel, navController: NavController) {
             sp=dataSnapshot.value.toString()
             sportello = sp
             //Log.d("Verify", "Sportello : $sportello")
+        }
+
+        override fun onCancelled(databaseError: DatabaseError) {
+            println("Errore nel leggere i dati dal database: ${databaseError.message}")
+        }
+
+    })
+    database.child("ordini").child(viewModel.ordineSelezionato).child("uid").addValueEventListener(object: ValueEventListener {
+        var sp=""
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            sp=dataSnapshot.value.toString()
+            utenteId = sp
         }
 
         override fun onCancelled(databaseError: DatabaseError) {
@@ -213,7 +228,7 @@ fun DeliverOrder(viewModel: AppViewModel, navController: NavController) {
                     database.child("variabili").child("PPAperta").setValue(1L)
                     if(viewModel.variabili.PPAperta==0L){ //se la chiude
                         database.child("ordini").child(viewModel.ordineSelezionato).child("stato").setValue("consegnato")
-                        database.child("utenti").child(viewModel.uid).child("ordini").child(viewModel.ordineSelezionato).setValue("consegnato")
+                        database.child("utenti").child(utenteId).child("ordini").child(viewModel.ordineSelezionato).setValue("consegnato")
                         viewModel.corriereState.value="consegnato"
                         database.child("variabili").child("SportelloP").setValue(true)
 
@@ -230,7 +245,7 @@ fun DeliverOrder(viewModel: AppViewModel, navController: NavController) {
                     if(viewModel.variabili.PGAperta==0L){ //se la chiude
 
                         database.child("ordini").child(viewModel.ordineSelezionato).child("stato").setValue("consegnato")
-                        database.child("utenti").child(viewModel.uid).child("ordini").child(viewModel.ordineSelezionato).setValue("consegnato")
+                        database.child("utenti").child(utenteId).child("ordini").child(viewModel.ordineSelezionato).setValue("consegnato")
                         viewModel.corriereState.value="consegnato"
                         database.child("variabili").child("SportelloG").setValue(true)
                         openAlertDialog=true

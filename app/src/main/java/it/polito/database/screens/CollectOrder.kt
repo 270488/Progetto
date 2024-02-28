@@ -1,5 +1,6 @@
 package it.polito.database.screens
 
+import android.util.Log
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -28,6 +29,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,6 +57,8 @@ import it.polito.database.AppViewModel
 import it.polito.database.database
 import it.polito.database.ui.theme.Screen
 import it.polito.database.ui.theme.fontFamily
+import java.util.Timer
+import java.util.TimerTask
 
 
 @Composable
@@ -174,6 +178,8 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
                     viewModel.variabili.SportelloG = false;
                     audioShouldRun=false
                     writeVariables(viewModel.variabili)
+                    sblocco=false
+
                     navController.navigate(Screen.OrderDetails.route)
 
                 } else if (viewModel.variabili.PGAperta == 1L && sbloccoPG == 0L) {
@@ -189,6 +195,8 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
                         .child(viewModel.ordineSelezionato).setValue("ritirato")
                     viewModel.variabili.SportelloP = false;
                     audioShouldRun=false
+                    sblocco=false
+
                     writeVariables(viewModel.variabili)
                     navController.navigate(Screen.OrderDetails.route)
                 }
@@ -200,9 +208,11 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
                 if (codiceTastierino != viewModel.variabili.CodiceTastierino && viewModel.variabili.CodiceTastierino != "0000") {
                     confrontoCodici(viewModel.variabili)
                     codiceTastierino = viewModel.variabili.CodiceTastierino
+                    Log.d("codiceTastierino", codiceTastierino)
+                    Log.d("CodiceTastierino", viewModel.variabili.CodiceTastierino)
+
                 }
 
-                audioPlayer.playAudioWithDelay(10000, 10000, viewModel, audioShouldRun)
 
             }
 
@@ -216,7 +226,10 @@ fun CollectOrder(viewModel: AppViewModel, navController: NavController){
             println("Errore nel leggere i dati dal database: ${databaseError.message}")
         }
     })
+    LaunchedEffect(audioShouldRun){
+        audioPlayer.playAudioWithDelay(3000, 10000, viewModel, audioShouldRun)
 
+    }
     Column (horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween,
         modifier= Modifier

@@ -75,6 +75,7 @@ fun confrontoCodici(variabili: GestioneArduino){
             variabili.PPAperta=1L
             variabili.CodeP=""
             database.child("variabili").child("CodiceTastierino").setValue("0000")
+            database.child("variabili").child("CodiceErrato").setValue(0L)
             variabili.CodiceTastierino="0000"
             variabili.CodiceErrato=0L
             writeVariables(variabili)
@@ -85,14 +86,16 @@ fun confrontoCodici(variabili: GestioneArduino){
             variabili.PGAperta=1L
             variabili.CodeG=""
             database.child("variabili").child("CodiceTastierino").setValue("0000")
+            database.child("variabili").child("CodiceErrato").setValue(0L)
             variabili.CodiceTastierino="0000"
             variabili.CodiceErrato=0L
             writeVariables(variabili)
         }
-        else if(variabili.CodiceTastierino!= variabili.CodeG || variabili.CodiceTastierino!= variabili.CodeP){
+        else if(variabili.CodiceTastierino!= variabili.CodeG && variabili.CodiceTastierino!= variabili.CodeP){
             if(variabili.CodiceTastierino!="0000") {
-                variabili.CodiceErrato = 1L
-                writeVariables(variabili)
+                database.child("variabili").child("CodiceErrato").setValue(1L)
+                variabili.CodiceErrato=1L
+
             }
         }
 
