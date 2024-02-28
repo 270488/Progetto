@@ -35,6 +35,7 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -45,6 +46,7 @@ import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -398,10 +400,27 @@ fun contentCard(nome: String, prezzo: String, url: String, navController: NavCon
                 .background(Blue40),
         )  { Box (modifier = Modifier.fillMaxSize())
         {
+            var isLoading by remember { mutableStateOf(true) }
+
+            if (isLoading){
+                Box(contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()){
+
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(50.dp)
+                            .align(Alignment.Center),
+                        color = MaterialTheme.colorScheme.tertiary,
+                        strokeWidth = ProgressIndicatorDefaults.CircularStrokeWidth
+                    )
+                }
+            }
             AsyncImage(
                 model = url,
                 contentDescription = "Product Description",
                 contentScale = ContentScale.Crop,
+                onLoading = { isLoading = true },
+                onSuccess = { isLoading = false },
                 modifier = Modifier.fillMaxWidth()
             )
             Box(modifier = Modifier
