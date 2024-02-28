@@ -27,12 +27,14 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -201,14 +203,30 @@ fun FavoriteCard(preferito: String, viewModel: AppViewModel, id:String, navContr
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxSize()
             ) {
-                AsyncImage(
-                    model = url,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(15.dp))
-                        .width(150.dp),
-                    contentScale = ContentScale.Crop
-                )
+                var isLoading by remember { mutableStateOf(true) }
+
+                    Box(contentAlignment = Alignment.Center,
+                        modifier = Modifier.width(150.dp))
+                    {
+                        if (isLoading)
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .size(30.dp),
+                            color = MaterialTheme.colorScheme.errorContainer,
+                            strokeWidth = ProgressIndicatorDefaults.CircularStrokeWidth
+                        )
+
+                        AsyncImage(
+                            model = url,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(15.dp))
+                                .width(150.dp),
+                            contentScale = ContentScale.Crop,
+                            onLoading = { isLoading = true },
+                            onSuccess = { isLoading = false },
+                        )
+                    }
 
                 Spacer(modifier = Modifier.width(16.dp))
 
@@ -232,7 +250,9 @@ fun FavoriteCard(preferito: String, viewModel: AppViewModel, id:String, navContr
                 )
             }
 
-            Box(modifier = Modifier.padding(12.dp).align(Alignment.BottomEnd)){
+            Box(modifier = Modifier
+                .padding(12.dp)
+                .align(Alignment.BottomEnd)){
                 FloatingActionButton(
                     onClick = {
                         eliminaPreferito(prod = nome, id = id)
