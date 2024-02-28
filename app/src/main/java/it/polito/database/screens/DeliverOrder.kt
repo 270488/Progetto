@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -121,7 +122,7 @@ fun DeliverOrder(viewModel: AppViewModel, navController: NavController) {
                         modifier = Modifier
                             //.fillMaxSize()
                             .background(MaterialTheme.colorScheme.primary)
-                            .padding(16.dp)
+                            .padding(8.dp)
                     ) {
                         Row(
                             horizontalArrangement = Arrangement.Center,
@@ -131,23 +132,25 @@ fun DeliverOrder(viewModel: AppViewModel, navController: NavController) {
                             Icon(
                                 imageVector = Icons.Default.Check,
                                 contentDescription = "success",
-                                tint = Color.Green
+                                tint = Color.Green,
+                                modifier = Modifier.size(40.dp)
                             )
                         }
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
 
                         Text(
                             modifier = Modifier.fillMaxWidth(),
                             text = buildAnnotatedString {
                                 append("Ordine consegnato correttamente")
                             },
-                            fontSize = 22.sp,
+                            fontSize = 20.sp,
                             color = Color.White,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center,
                             fontFamily = fontFamily,
                         )
+                        Spacer(modifier = Modifier.height(8.dp))
                         Row(
                             horizontalArrangement = Arrangement.Center,
                             modifier = Modifier
@@ -157,8 +160,8 @@ fun DeliverOrder(viewModel: AppViewModel, navController: NavController) {
                                 modifier = Modifier.width(146.dp),
                                 shape = RoundedCornerShape(3.dp),
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = MaterialTheme.colorScheme.errorContainer,
-                                    contentColor = MaterialTheme.colorScheme.onErrorContainer
+                                    containerColor = MaterialTheme.colorScheme.tertiary,
+                                    contentColor = Color.White
                                 ),
                                 onClick = {
                                     openAlertDialog = false
